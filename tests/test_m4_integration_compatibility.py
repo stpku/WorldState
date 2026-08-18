@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from examples.integrations.agentreality_vectors import canonical_vectors_json
 from examples.integrations.agentreality_wire import (
     AGENTREALITY_WORLDSTATE_PROJECTION_REVISION,
     project_query_result_for_agentreality,
@@ -199,3 +200,17 @@ def test_m4_fixture_is_outside_core_and_has_point_in_time_revision_pin() -> None
     assert "agentreality" not in core_text
     assert AGENTREALITY_WORLDSTATE_PROJECTION_REVISION.startswith("sha256:")
     assert len(AGENTREALITY_WORLDSTATE_PROJECTION_REVISION) == len("sha256:") + 64
+
+
+def test_checked_in_cross_repo_vectors_match_deterministic_producer_output() -> None:
+    fixture = (
+        Path(__file__).parents[1]
+        / "examples"
+        / "integrations"
+        / "agentreality_vectors.json"
+    )
+    checked_in = fixture.read_text(encoding="utf-8")
+
+    assert checked_in == canonical_vectors_json()
+    assert '"disposition"' not in checked_in
+    assert '"admission"' not in checked_in

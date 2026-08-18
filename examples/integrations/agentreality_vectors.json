@@ -1,0 +1,65 @@
+{
+  "schema": "worldstate.agentreality.projection-v1",
+  "vectors": [
+    {
+      "name": "assertion",
+      "projection": {
+        "assertionId": "state_9118f66b8383892323245f451ae7091bf52ab4cb960d565d68428e017eca3d63",
+        "entityId": "thing-1",
+        "epistemicMode": "observed",
+        "evidenceRefs": [
+          "worldstate://evidence/evidence-a"
+        ],
+        "kind": "assertion",
+        "propertyKey": "status",
+        "sourceRefs": [
+          "worldstate://source/source-a"
+        ],
+        "validity": {
+          "resolvedAt": "2026-08-18T15:00:00.000Z",
+          "validFrom": "2026-08-18T14:50:00.000Z",
+          "validUntil": "2026-08-18T15:10:00.000Z"
+        },
+        "value": {
+          "sequence": [
+            1,
+            2
+          ],
+          "state": "open"
+        },
+        "version": "0.1"
+      },
+      "snapshotRef": "worldstate://snapshot/snap_781f6cdcd1f8e6eb87e6a66679673f0b1edfc96b7b4b6124c502d9fe17bc3286"
+    },
+    {
+      "name": "unknown_insufficient_evidence",
+      "projection": {
+        "asOf": "2026-08-18T15:00:00.000Z",
+        "kind": "unknown",
+        "missing": [
+          "missing-evidence"
+        ],
+        "reason": "insufficient_evidence",
+        "unknownId": "unknown_69eb2f33df1b239f049fcd9a2167a2a06c6875588153b41b292e6ff49b652700"
+      }
+    },
+    {
+      "name": "conflict",
+      "projection": {
+        "asOf": "2026-08-18T15:00:00.000Z",
+        "candidateRefs": [
+          "claim-a",
+          "claim-b"
+        ],
+        "conflictId": "conflict_e7e57ef7fb0cbca06c3b71a7e9b23ca5f49306c74c3ac55c04cecadbbd4c8c45",
+        "evidenceRefs": [
+          "worldstate://evidence/evidence-a",
+          "worldstate://evidence/evidence-b"
+        ],
+        "kind": "conflict",
+        "reason": "materially incompatible claims"
+      }
+    }
+  ],
+  "worldstateContractBaseline": "24e8a6888097df6f9ea2a9f9a04375c236e45454"
+}
