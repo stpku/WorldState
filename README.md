@@ -8,9 +8,9 @@ It turns observations, evidence, authoritative records, and external providers i
 
 ## Status
 
-**M0 — Contract & Semantic Foundation**
+**M4 — Integration Compatibility Proofs**
 
-The project is intentionally starting with contracts and invariants before persistence, services, integrations, or scale infrastructure.
+M0 contracts, the M1 deterministic reference engine, M2 native/projection/external-provider parity, and M3 cross-domain generalization are frozen baselines. The current phase proves thin interoperability with the wider stack while keeping production adapters consumer-owned and keeping GeoTask, AgentReality, Lowa, Harness, and domain dependencies out of WorldState Core.
 
 ## Core idea
 
@@ -69,16 +69,15 @@ The long-term interoperability seam is `WorldStateProvider`:
 
 ```python
 get_snapshot(scope, time) -> WorldStateSnapshot
-query_state(entity, property, time) -> StateAssertion
-query_relation(subject, relation, object, time) -> StateAssertion
+query_state(entity, property, time) -> StateQueryResult
+query_relation(subject, relation, object, time) -> StateQueryResult
 get_evidence(state_ref) -> EvidenceSet
-get_unknowns(scope) -> list[Unknown]
-get_conflicts(scope) -> list[Conflict]
-get_history(entity, interval) -> list[StateTransition]
-subscribe_changes(scope) -> StateEventStream
+get_unknowns(scope) -> tuple[Unknown, ...]
+get_conflicts(scope) -> tuple[Conflict, ...]
+get_history(entity, interval) -> tuple[StateTransition, ...]
 ```
 
-The first reference implementation will support the synchronous read subset. Change subscriptions remain a later capability and MUST NOT force an event-platform dependency into Core.
+`StateQueryResult` is the explicit union `StateAssertion | Unknown | Conflict`. The mandatory provider contract is synchronous. Change subscriptions belong to the separate optional `WorldStateChangeProvider` seam and MUST NOT force an event-platform dependency into Core.
 
 ## Three deployment modes
 

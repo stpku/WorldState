@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from types import MappingProxyType
 from typing import Mapping, TypeAlias
@@ -15,17 +16,27 @@ def _require_text(value: str, name: str) -> None:
         raise ValueError(f"{name} must be a non-empty string")
 
 
-def _require_aware(value: datetime | None, name: str) -> None:
-    if value is not None and (value.tzinfo is None or value.utcoffset() is None):
-        raise ValueError(f"{name} must be timezone-aware")
+def _require_utc(value: datetime | None, name: str) -> None:
+    if value is None:
+        return
+    if value.tzinfo is None or value.utcoffset() is None:
+        raise ValueError(f"{name} must be timezone-aware UTC")
+    if value.utcoffset() != timedelta(0):
+        raise ValueError(f"{name} must be UTC")
 
 
 def freeze_json(value: object) -> JSONValue:
     """Recursively freeze a JSON-compatible value into immutable containers."""
-    if value is None or isinstance(value, (bool, int, float, str)):
+    if value is None or isinstance(value, (bool, int, str)):
+        return value
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError("JSON-compatible floats must be finite")
         return value
     if isinstance(value, Mapping):
-        frozen = {str(key): freeze_json(item) for key, item in value.items()}
+        if any(not isinstance(key, str) for key in value):
+            raise TypeError("JSON-compatible mappings require string keys")
+        frozen = {key: freeze_json(item) for key, item in value.items()}
         return MappingProxyType(frozen)
     if isinstance(value, (list, tuple)):
         return tuple(freeze_json(item) for item in value)
@@ -89,8 +100,8 @@ class TemporalScope:
     end: datetime | None = None
 
     def __post_init__(self) -> None:
-        _require_aware(self.start, "start")
-        _require_aware(self.end, "end")
+        _require_utc(self.start, "start")
+        _require_utc(self.end, "end")
         if self.start is not None and self.end is not None and self.end < self.start:
             raise ValueError("end must not be earlier than start")
 
@@ -129,8 +140,8 @@ class Observation:
     def __post_init__(self) -> None:
         _require_text(self.observation_id, "observation_id")
         _require_text(self.property_key, "property_key")
-        _require_aware(self.recorded_at, "recorded_at")
-        _require_aware(self.observed_at, "observed_at")
+        _require_utc(self.recorded_at, "recorded_at")
+        _require_utc(self.observed_at, "observed_at")
         object.__setattr__(self, "value", freeze_json(self.value))
         object.__setattr__(self, "metadata", freeze_metadata(self.metadata))
 
@@ -147,7 +158,7 @@ class Evidence:
 
     def __post_init__(self) -> None:
         _require_text(self.evidence_id, "evidence_id")
-        _require_aware(self.recorded_at, "recorded_at")
+        _require_utc(self.recorded_at, "recorded_at")
         if any(not ref.strip() for ref in self.observation_refs):
             raise ValueError("observation_refs must not contain empty references")
         object.__setattr__(self, "metadata", freeze_metadata(self.metadata))
@@ -203,7 +214,7 @@ class Claim:
     def __post_init__(self) -> None:
         _require_text(self.claim_id, "claim_id")
         _require_text(self.property_key, "property_key")
-        _require_aware(self.created_at, "created_at")
+        _require_utc(self.created_at, "created_at")
         object.__setattr__(self, "value", freeze_json(self.value))
 
 
@@ -215,9 +226,9 @@ class Validity:
     superseded_by: str | None = None
 
     def __post_init__(self) -> None:
-        _require_aware(self.resolved_at, "resolved_at")
-        _require_aware(self.valid_from, "valid_from")
-        _require_aware(self.valid_until, "valid_until")
+        _require_utc(self.resolved_at, "resolved_at")
+        _require_utc(self.valid_from, "valid_from")
+        _require_utc(self.valid_until, "valid_until")
         if (
             self.valid_from is not None
             and self.valid_until is not None
@@ -277,7 +288,7 @@ class Unknown:
 
     def __post_init__(self) -> None:
         _require_text(self.unknown_id, "unknown_id")
-        _require_aware(self.as_of, "as_of")
+        _require_utc(self.as_of, "as_of")
         if self.property_key is not None:
             _require_text(self.property_key, "property_key")
         object.__setattr__(self, "metadata", freeze_metadata(self.metadata))
@@ -298,7 +309,7 @@ class Conflict:
         _require_text(self.conflict_id, "conflict_id")
         _require_text(self.property_key, "property_key")
         _require_text(self.reason, "reason")
-        _require_aware(self.as_of, "as_of")
+        _require_utc(self.as_of, "as_of")
         if len(self.candidate_refs) < 2:
             raise ValueError("conflict requires at least two candidate_refs")
         object.__setattr__(self, "metadata", freeze_metadata(self.metadata))
@@ -322,8 +333,23 @@ class WorldStateSnapshot:
     def __post_init__(self) -> None:
         _require_text(self.snapshot_id, "snapshot_id")
         _require_text(self.version, "version")
-        _require_aware(self.as_of, "as_of")
-        _require_aware(self.created_at, "created_at")
+        _require_utc(self.as_of, "as_of")
+        _require_utc(self.created_at, "created_at")
+        object.__setattr__(
+            self,
+            "assertions",
+            tuple(sorted(self.assertions, key=lambda item: item.assertion_id)),
+        )
+        object.__setattr__(
+            self,
+            "unknowns",
+            tuple(sorted(self.unknowns, key=lambda item: item.unknown_id)),
+        )
+        object.__setattr__(
+            self,
+            "conflicts",
+            tuple(sorted(self.conflicts, key=lambda item: item.conflict_id)),
+        )
         object.__setattr__(
             self,
             "source_versions",
@@ -345,6 +371,6 @@ class StateTransition:
     def __post_init__(self) -> None:
         _require_text(self.transition_id, "transition_id")
         _require_text(self.property_key, "property_key")
-        _require_aware(self.transition_time, "transition_time")
+        _require_utc(self.transition_time, "transition_time")
         if self.from_assertion_ref is None and self.to_assertion_ref is None:
             raise ValueError("transition requires a from or to assertion reference")

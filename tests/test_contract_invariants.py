@@ -1,5 +1,5 @@
 from dataclasses import FrozenInstanceError
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -43,6 +43,20 @@ def test_temporal_scope_rejects_naive_datetime() -> None:
         TemporalScope(start=datetime(2026, 8, 18))
 
 
+def test_temporal_scope_rejects_non_utc_datetime() -> None:
+    with pytest.raises(ValueError, match="must be UTC"):
+        TemporalScope(
+            start=datetime(
+                2026,
+                8,
+                18,
+                20,
+                0,
+                tzinfo=timezone(timedelta(hours=8)),
+            )
+        )
+
+
 def test_uncertainty_rejects_invalid_confidence() -> None:
     with pytest.raises(ValueError, match=r"\[0, 1\]"):
         Uncertainty(confidence=1.01)
@@ -67,6 +81,24 @@ def test_metadata_is_recursively_frozen() -> None:
     assert nested["inner"] == (1, 2)  # type: ignore[index]
     with pytest.raises(TypeError):
         nested["inner"] = (3,)  # type: ignore[index]
+
+
+def test_metadata_rejects_non_string_mapping_keys() -> None:
+    with pytest.raises(TypeError, match="string keys"):
+        Source(
+            source_id="source_1",
+            source_type="example",
+            metadata={1: "value"},  # type: ignore[dict-item]
+        )
+
+
+def test_metadata_rejects_non_finite_float() -> None:
+    with pytest.raises(ValueError, match="finite"):
+        Source(
+            source_id="source_1",
+            source_type="example",
+            metadata={"value": float("inf")},
+        )
 
 
 def test_epistemic_mode_is_preserved_on_assertion() -> None:
@@ -127,3 +159,79 @@ def test_snapshot_and_source_versions_are_immutable() -> None:
         snapshot.source_versions["c"] = "3"  # type: ignore[index]
 
     assert tuple(snapshot.source_versions) == ("a", "b")
+
+
+def test_snapshot_result_order_is_canonical() -> None:
+    entity = EntityRef("thing-1")
+    validity = Validity(resolved_at=NOW)
+    assertion_b = StateAssertion(
+        assertion_id="state_b",
+        entity=entity,
+        property_key="status",
+        value="b",
+        epistemic_mode=EpistemicMode.OBSERVED,
+        validity=validity,
+        provenance=provenance(),
+        version="0.1",
+    )
+    assertion_a = StateAssertion(
+        assertion_id="state_a",
+        entity=entity,
+        property_key="status",
+        value="a",
+        epistemic_mode=EpistemicMode.OBSERVED,
+        validity=validity,
+        provenance=provenance(),
+        version="0.1",
+    )
+    unknown_b = Unknown(
+        unknown_id="unknown_b",
+        reason=UnknownReason.NO_EVIDENCE,
+        as_of=NOW,
+    )
+    unknown_a = Unknown(
+        unknown_id="unknown_a",
+        reason=UnknownReason.NO_EVIDENCE,
+        as_of=NOW,
+    )
+    conflict_b = Conflict(
+        conflict_id="conflict_b",
+        entity=entity,
+        property_key="status",
+        candidate_refs=("claim_2", "claim_3"),
+        evidence_refs=("ev_2", "ev_3"),
+        reason="incompatible values",
+        as_of=NOW,
+    )
+    conflict_a = Conflict(
+        conflict_id="conflict_a",
+        entity=entity,
+        property_key="status",
+        candidate_refs=("claim_0", "claim_1"),
+        evidence_refs=("ev_0", "ev_1"),
+        reason="incompatible values",
+        as_of=NOW,
+    )
+
+    snapshot = WorldStateSnapshot(
+        snapshot_id="snap_1",
+        as_of=NOW,
+        created_at=NOW,
+        version="0.1",
+        assertions=(assertion_b, assertion_a),
+        unknowns=(unknown_b, unknown_a),
+        conflicts=(conflict_b, conflict_a),
+    )
+
+    assert tuple(item.assertion_id for item in snapshot.assertions) == (
+        "state_a",
+        "state_b",
+    )
+    assert tuple(item.unknown_id for item in snapshot.unknowns) == (
+        "unknown_a",
+        "unknown_b",
+    )
+    assert tuple(item.conflict_id for item in snapshot.conflicts) == (
+        "conflict_a",
+        "conflict_b",
+    )

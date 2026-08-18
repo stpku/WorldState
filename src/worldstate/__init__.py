@@ -1,6 +1,8 @@
 """WorldState public semantic contracts."""
 
+from .history import build_transition
 from .ids import canonical_json, semantic_id
+from .memory import InMemoryWorldState
 from .models import (
     Claim,
     Conflict,
@@ -24,6 +26,13 @@ from .models import (
     WorldStateSnapshot,
 )
 from .provider import EvidenceSet, WorldStateChangeProvider, WorldStateProvider
+from .resolution import (
+    REFERENCE_RESOLVER_ID,
+    REFERENCE_RESOLVER_VERSION,
+    ReferenceResolver,
+    ResolutionInputs,
+)
+from .snapshot import build_snapshot
 
 __all__ = [
     "Claim",
@@ -32,10 +41,15 @@ __all__ = [
     "EpistemicMode",
     "Evidence",
     "EvidenceSet",
+    "InMemoryWorldState",
     "JSONValue",
     "Observation",
     "Provenance",
+    "REFERENCE_RESOLVER_ID",
+    "REFERENCE_RESOLVER_VERSION",
+    "ReferenceResolver",
     "RelationAssertion",
+    "ResolutionInputs",
     "Source",
     "SpatialScope",
     "StateAssertion",
@@ -49,6 +63,8 @@ __all__ = [
     "WorldStateChangeProvider",
     "WorldStateProvider",
     "WorldStateSnapshot",
+    "build_snapshot",
+    "build_transition",
     "canonical_json",
     "semantic_id",
 ]

@@ -54,6 +54,6 @@ Before merging Core changes:
 
 ## Current phase
 
-**M0 — Contract & Semantic Foundation.**
+**M4 — Integration Compatibility Proofs.**
 
-Do not implement production persistence, remote services, GeoTask integration logic, AgentReality hooks, or Lowa migration in M0.
+M0 contracts, the M1 conservative reference engine, M2 provider modes, and M3 cross-domain generalization are frozen baselines. Prove thin, consumer-owned interoperability without importing GeoTask, AgentReality, Lowa, DeepSeek Harness, or domain runtime dependencies into Core. Integration fixtures MAY live outside `src/worldstate`; production adapters remain owned by the consuming project. Do not add production persistence, remote services, business writes, task policy, grounding policy, or domain authorization to WorldState in M4.
