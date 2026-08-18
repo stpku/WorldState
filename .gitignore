@@ -1,0 +1,16 @@
+.ai-bridge/
+.codexpro/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.dist/
+dist/
+build/
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
