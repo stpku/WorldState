@@ -1,0 +1,146 @@
+{
+  "schema": "worldstate.provider-wire-v1",
+  "vectors": [
+    {
+      "name": "assertion",
+      "projection": {
+        "assertion_id": "state-provider-assertion-1",
+        "contract": "worldstate.state-query-result",
+        "contract_version": "0.1",
+        "entity": {
+          "entity_id": "asset-1",
+          "entity_type": "example_asset",
+          "namespace": "example://worldstate-provider-wire"
+        },
+        "epistemic_mode": "observed",
+        "kind": "assertion",
+        "property_key": "operational_status",
+        "provenance": {
+          "evidence_refs": [
+            "evidence-provider-1"
+          ],
+          "method": "reference-resolution",
+          "parent_assertion_refs": [
+            "state-parent-1"
+          ],
+          "resolver": "worldstate.reference-conservative@0.1",
+          "source_refs": [
+            "source-provider-1"
+          ]
+        },
+        "spatial_scope": {
+          "bbox": [
+            113.1,
+            22.1,
+            113.9,
+            22.9
+          ],
+          "kind": "bbox",
+          "metadata": {
+            "crs": "EPSG:4326",
+            "resolution_m": 1000
+          },
+          "reference": "scope://example/asset-1"
+        },
+        "uncertainty": {
+          "confidence": 0.82,
+          "metadata": {
+            "interval": [
+              0.75,
+              0.9
+            ]
+          },
+          "method": "provider-reported",
+          "reason": "measurement uncertainty"
+        },
+        "validity": {
+          "resolved_at": "2026-08-19T02:00:00.123456Z",
+          "superseded_by": null,
+          "valid_from": "2026-08-19T01:45:00Z",
+          "valid_until": "2026-08-19T02:30:00Z"
+        },
+        "value": {
+          "sequence": [
+            1,
+            2
+          ],
+          "state": "open"
+        },
+        "version": "0.1"
+      }
+    },
+    {
+      "name": "unknown",
+      "projection": {
+        "as_of": "2026-08-19T02:00:00.123456Z",
+        "contract": "worldstate.state-query-result",
+        "contract_version": "0.1",
+        "entity": {
+          "entity_id": "asset-1",
+          "entity_type": "example_asset",
+          "namespace": "example://worldstate-provider-wire"
+        },
+        "kind": "unknown",
+        "metadata": {
+          "retryable": true
+        },
+        "missing": [
+          "authoritative-record"
+        ],
+        "property_key": "operational_status",
+        "reason": "insufficient_evidence",
+        "unknown_id": "unknown-provider-1"
+      }
+    },
+    {
+      "name": "conflict",
+      "projection": {
+        "as_of": "2026-08-19T02:00:00.123456Z",
+        "candidate_refs": [
+          "claim-a",
+          "claim-b"
+        ],
+        "conflict_id": "conflict-provider-1",
+        "contract": "worldstate.state-query-result",
+        "contract_version": "0.1",
+        "entity": {
+          "entity_id": "asset-1",
+          "entity_type": "example_asset",
+          "namespace": "example://worldstate-provider-wire"
+        },
+        "evidence_refs": [
+          "evidence-a",
+          "evidence-b"
+        ],
+        "kind": "conflict",
+        "metadata": {
+          "resolution_required": true
+        },
+        "property_key": "operational_status",
+        "reason": "materially incompatible claims"
+      }
+    },
+    {
+      "name": "provider_unavailable",
+      "projection": {
+        "as_of": "2026-08-19T02:00:00.123456Z",
+        "contract": "worldstate.state-query-result",
+        "contract_version": "0.1",
+        "entity": {
+          "entity_id": "asset-1",
+          "entity_type": "example_asset",
+          "namespace": "example://worldstate-provider-wire"
+        },
+        "kind": "unknown",
+        "metadata": {
+          "provider_ref": "provider://external-worldstate"
+        },
+        "missing": [],
+        "property_key": "operational_status",
+        "reason": "provider_unavailable",
+        "unknown_id": "unknown-provider-unavailable-1"
+      }
+    }
+  ],
+  "worldstateProviderWireBaseline": "fe9cc199d2e632122346d1bdffb9ad5ebe375c59"
+}
