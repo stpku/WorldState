@@ -33,6 +33,18 @@ from .resolution import (
     ResolutionInputs,
 )
 from .snapshot import build_snapshot
+from .wire import (
+    SNAPSHOT_CONTRACT_ID,
+    STATE_QUERY_RESULT_CONTRACT_ID,
+    WIRE_CONTRACT_VERSION,
+    entity_ref_payload,
+    provenance_payload,
+    snapshot_payload,
+    spatial_scope_payload,
+    state_query_result_payload,
+    uncertainty_payload,
+    validity_payload,
+)
 
 __all__ = [
     "Claim",
@@ -47,6 +59,8 @@ __all__ = [
     "Provenance",
     "REFERENCE_RESOLVER_ID",
     "REFERENCE_RESOLVER_VERSION",
+    "SNAPSHOT_CONTRACT_ID",
+    "STATE_QUERY_RESULT_CONTRACT_ID",
     "ReferenceResolver",
     "RelationAssertion",
     "ResolutionInputs",
@@ -60,11 +74,19 @@ __all__ = [
     "Unknown",
     "UnknownReason",
     "Validity",
+    "WIRE_CONTRACT_VERSION",
     "WorldStateChangeProvider",
     "WorldStateProvider",
     "WorldStateSnapshot",
     "build_snapshot",
     "build_transition",
     "canonical_json",
+    "entity_ref_payload",
+    "provenance_payload",
     "semantic_id",
+    "snapshot_payload",
+    "spatial_scope_payload",
+    "state_query_result_payload",
+    "uncertainty_payload",
+    "validity_payload",
 ]

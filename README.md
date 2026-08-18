@@ -79,6 +79,15 @@ get_history(entity, interval) -> tuple[StateTransition, ...]
 
 `StateQueryResult` is the explicit union `StateAssertion | Unknown | Conflict`. The mandatory provider contract is synchronous. Change subscriptions belong to the separate optional `WorldStateChangeProvider` seam and MUST NOT force an event-platform dependency into Core.
 
+For cross-process and cross-repository consumers, WorldState also publishes a consumer-neutral JSON-safe provider wire:
+
+```text
+worldstate.state-query-result / 0.1
+worldstate.snapshot           / 0.1
+```
+
+The general wire preserves complete entity identity, validity, provenance, uncertainty and spatial scope while keeping `StateAssertion`, `Unknown` and `Conflict` distinct. It contains no GeoTask applicability/sufficiency, AgentReality grounding/admission, or Lowa business authorization semantics. See [`docs/specification/worldstate-provider-wire-v0.1.md`](docs/specification/worldstate-provider-wire-v0.1.md).
+
 ## Three deployment modes
 
 WorldState semantics do not require WorldState to own the authoritative database.
