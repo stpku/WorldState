@@ -10,7 +10,7 @@ Prove interoperability with the wider stack without moving task semantics, groun
 
 ## WorldState ↔ AgentReality
 
-### Result: compatibility fixture PASS
+### Result: committed-head parity PASS
 
 A read-only inspection of the current AgentReality workspace found that AgentReality already owns `packages/adapter-worldstate/` and maps already-resolved WorldState outcomes into grounding signals.
 
@@ -40,6 +40,21 @@ Targeted tests verify:
 - Conflict candidate/evidence preservation with no blocking policy;
 - provider outage remains Unknown;
 - the compatibility fixture stays outside `src/worldstate`.
+
+Committed-head parity is now pinned as:
+
+```text
+WorldState producer vectors:
+14ea74e2b8e9a1c75b83581934f588e27da2d147
+fixture sha256:
+127b8030f58f2d07186980cd95a25863ee49d1db6c21169e82b057e4e8600373
+
+AgentReality consumer parity:
+0dd10f85ff949416b1346c2f32f61eea80afa0ed
+npm run check: 51/51 PASS
+```
+
+The AgentReality test reads an exact hash-pinned copy of the WorldState-produced vectors; the WorldState fixture itself contains no grounding disposition or admission policy.
 
 ### Fidelity note
 
@@ -98,13 +113,13 @@ These observations are not a cross-repository contract freeze.
 M4 targeted WorldState compatibility tests:
 
 ```text
-5 passed
+6 passed
 ```
 
-Full repository regression after the M4 compatibility slice:
+Full repository regression after publishing committed producer vectors:
 
 ```text
-51 passed
+52 passed
 ```
 
 Compile validation:
@@ -120,14 +135,14 @@ PASS
 
 - WorldState Core remains stack-neutral.
 - Consumer-owned AgentReality adapter responsibility is preserved.
-- Current WorldState results can be projected into the observed AgentReality transport shape without recomputing truth.
+- WorldState ↔ AgentReality committed-head producer/consumer parity is frozen on exact commits and fixture SHA.
+- Current WorldState results are mapped without recomputing truth.
 - Failure, Unknown and Conflict semantics remain fail-closed.
 
 ### REMAINS OPEN
 
-- freeze a stable cross-repository AgentReality compatibility checkpoint on committed heads;
 - integrate with GeoTask only after its target explicit sufficiency/provider seam is stable;
 - add a Lowa-owned read-only WorldState shadow adapter only from a clean, migration-safe Lowa checkpoint;
-- run cross-repository parity tests before any promotion.
+- keep AgentReality shadow-by-default until the wider Promotion Gate is satisfied.
 
 Therefore **M4 remains IN PROGRESS**, not failed and not prematurely declared complete.

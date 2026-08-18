@@ -1,6 +1,6 @@
 # Stack Compatibility Observation — 2026-08-18
 
-**Status:** Point-in-time evidence; not a cross-repository contract freeze
+**Status:** WorldState ↔ AgentReality committed-head parity frozen; GeoTask/Lowa observations remain point-in-time
 **WorldState phase:** M4 Integration Compatibility Proofs
 
 ## Purpose
@@ -74,6 +74,28 @@ WorldState M4 therefore provides only a point-in-time wire fixture in:
 > `examples/integrations/agentreality_wire.py`
 
 It is intentionally outside `src/worldstate` and pins the observed AgentReality adapter source SHA. It is not a production adapter.
+
+### Committed-head parity update — 2026-08-19
+
+The producer and consumer are now both clean committed checkpoints:
+
+```text
+WorldState producer-vector commit:
+14ea74e2b8e9a1c75b83581934f588e27da2d147
+
+WorldState fixture sha256:
+127b8030f58f2d07186980cd95a25863ee49d1db6c21169e82b057e4e8600373
+
+AgentReality consumer parity commit:
+0dd10f85ff949416b1346c2f32f61eea80afa0ed
+
+AgentReality verification:
+npm run check -> 51/51 PASS
+```
+
+AgentReality keeps an exact SHA-pinned copy of the WorldState producer vectors and tests `StateAssertion`, `Unknown`, and `Conflict` through its own `adapter-worldstate`. No runtime SDK dependency is introduced in either direction.
+
+This closes the committed-head **Contract + Behavior Parity** evidence for the WorldState ↔ AgentReality transport seam. It does not promote AgentReality out of shadow mode and does not authorize a production cutover.
 
 ### Fidelity notes
 
@@ -150,16 +172,16 @@ No WorldState code is added to the currently modified Lowa workspace during this
 ### PASS now
 
 - Core remains free of AgentReality / GeoTask / Lowa imports.
-- WorldState result semantics can be projected into the currently observed AgentReality adapter shape.
-- `Unknown`, `Conflict`, validity and provenance references survive the compatibility fixture.
+- WorldState ↔ AgentReality committed-head producer/consumer vectors pass cross-repository parity.
+- `Unknown`, `Conflict`, validity and provenance references survive the compatibility boundary.
 - Provider unavailability remains explicit `Unknown`, never a positive state.
 - Consumer-owned adapter responsibility is preserved.
 
 ### Not yet promoted
 
-- AgentReality adapter shape is not frozen as a stable cross-repository API while its workspace changes are uncommitted.
 - GeoTask target `ContextProvider` / explicit sufficiency seam is not yet present in the observed checked-out runtime contract.
 - No Lowa-specific WorldState projection is implemented until the Lowa shadow slice is intentionally scheduled against a clean migration-safe checkpoint.
+- AgentReality remains shadow-by-default; committed-head parity is evidence for a gate, not promotion itself.
 
 ## Rule
 
