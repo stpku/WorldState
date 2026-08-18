@@ -1,6 +1,6 @@
 # Stack Compatibility Observation — 2026-08-18
 
-**Status:** WorldState ↔ AgentReality committed-head parity frozen; GeoTask/Lowa observations remain point-in-time
+**Status:** WorldState ↔ AgentReality and WorldState → GeoTask committed-head parity frozen; Lowa observation remains point-in-time
 **WorldState phase:** M4 Integration Compatibility Proofs
 
 ## Purpose
@@ -105,40 +105,64 @@ This is not automatically a defect because AgentReality grounding may not need t
 
 ## GeoTask compatibility
 
-The currently checked-out GeoTask runtime contract contains a legacy `TaskContext` with:
+The initial 2026-08-18 observation found only the legacy runtime `TaskContext`, so WorldState deliberately refused to bind M4 compatibility to that shape.
+
+### Committed target-contract update — 2026-08-19
+
+GeoTask subsequently froze additive v2.1 contracts for explicit task context, provider acquisition and deterministic construction:
 
 ```text
-local_objects
-available_operators
-available_data_sources
-domain_rules
-known_gaps
+TaskContext / SufficiencyAssessment baseline:
+a0388ac64222fc10f5b9012d1df06d1fb0cc1274
+
+ContextProvider / ContextCandidate baseline:
+a491d5885407bf9a738f2b689cd24e4304d85c5f
+
+WorldState ContextProvider consumer parity:
+a537b6e2940e1a184a0a6546bd69e9ae815e2da2
+
+Explicit deterministic construction checkpoint:
+e4867e4d5b5bfe342f03e04602e39fa1b3ca7ee7
 ```
 
-That shape does not express the target strategic semantics frozen for GeoTask:
+WorldState also published a consumer-neutral rich provider wire rather than reusing the narrower AgentReality grounding projection:
 
 ```text
-ContextRequirement
-ContextAssessment
-TaskContext
-ContextGap
-SufficiencyAssessment
-ContextConstructionTrace
+provider-wire baseline:
+fe9cc199d2e632122346d1bdffb9ad5ebe375c59
+
+producer-vector commit:
+8154e40035eae1dfcf7d3697c7537408be95276f
+
+fixture sha256:
+19a929ccbdf40c1c216084bc7fefa4f4d3ad7e092439159b174f8aab7788f681
 ```
 
-Therefore WorldState MUST NOT bind a new M4 adapter to the legacy `TaskContext` merely to claim integration completion.
+GeoTask keeps an exact SHA-pinned copy and consumes it through a read-only adapter outside Core. The adapter preserves WorldState assertion/unknown/conflict/provider-unavailable semantics as opaque `ContextCandidate.payload` and does not import the WorldState Python runtime.
 
-The correct future direction remains:
+The committed ownership chain is therefore:
 
 ```text
-WorldStateProvider
+WorldStateProvider / provider wire
       ↓
-GeoTask-owned ContextProvider / source adapter
+GeoTask-owned ContextProvider adapter
       ↓
-GeoTask relevance / applicability / resolution / sufficiency
+ContextCandidate
+      ↓
+GeoTask relevance / applicability / resolution assessment
+      ↓
+explicit assessed items + explicit selection
+      ↓
+TaskContext / SufficiencyAssessment
 ```
 
-WorldState supplies state; GeoTask owns task relevance and sufficiency.
+The GeoTask full regression covering this seam reported:
+
+```text
+2054 passed, 2 skipped
+```
+
+This closes committed-head Contract + Behavior Parity for the WorldState → GeoTask acquisition seam. It does not migrate legacy GeoTask world-state runtime assets and does not authorize production replacement.
 
 ## Lowa compatibility
 
@@ -173,15 +197,16 @@ No WorldState code is added to the currently modified Lowa workspace during this
 
 - Core remains free of AgentReality / GeoTask / Lowa imports.
 - WorldState ↔ AgentReality committed-head producer/consumer vectors pass cross-repository parity.
-- `Unknown`, `Conflict`, validity and provenance references survive the compatibility boundary.
+- WorldState → GeoTask committed-head provider-wire/ContextProvider vectors and behavior pass cross-repository parity.
+- `Unknown`, `Conflict`, validity, provenance, uncertainty and scope survive the appropriate compatibility boundaries.
 - Provider unavailability remains explicit `Unknown`, never a positive state.
 - Consumer-owned adapter responsibility is preserved.
 
 ### Not yet promoted
 
-- GeoTask target `ContextProvider` / explicit sufficiency seam is not yet present in the observed checked-out runtime contract.
 - No Lowa-specific WorldState projection is implemented until the Lowa shadow slice is intentionally scheduled against a clean migration-safe checkpoint.
 - AgentReality remains shadow-by-default; committed-head parity is evidence for a gate, not promotion itself.
+- Neither parity result authorizes production replacement.
 
 ## Rule
 
