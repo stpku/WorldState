@@ -1,5 +1,14 @@
 """WorldState public semantic contracts."""
 
+from .change import (
+    CHANGE_CONTRACT_VERSION,
+    ChangeKind,
+    StateChangeRef,
+    WorldStateDelta,
+    diff_snapshots,
+    state_change_payload,
+    world_state_delta_payload,
+)
 from .history import build_transition
 from .ids import canonical_json, semantic_id
 from .memory import InMemoryWorldState
@@ -47,6 +56,8 @@ from .wire import (
 )
 
 __all__ = [
+    "CHANGE_CONTRACT_VERSION",
+    "ChangeKind",
     "Claim",
     "Conflict",
     "EntityRef",
@@ -67,6 +78,7 @@ __all__ = [
     "Source",
     "SpatialScope",
     "StateAssertion",
+    "StateChangeRef",
     "StateQueryResult",
     "StateTransition",
     "TemporalScope",
@@ -76,17 +88,21 @@ __all__ = [
     "Validity",
     "WIRE_CONTRACT_VERSION",
     "WorldStateChangeProvider",
+    "WorldStateDelta",
     "WorldStateProvider",
     "WorldStateSnapshot",
     "build_snapshot",
     "build_transition",
+    "diff_snapshots",
     "canonical_json",
     "entity_ref_payload",
     "provenance_payload",
     "semantic_id",
     "snapshot_payload",
     "spatial_scope_payload",
+    "state_change_payload",
     "state_query_result_payload",
     "uncertainty_payload",
     "validity_payload",
+    "world_state_delta_payload",
 ]
