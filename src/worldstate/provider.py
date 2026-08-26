@@ -57,6 +57,11 @@ class WorldStateProvider(Protocol):
 
 
 class WorldStateChangeProvider(Protocol):
-    """Optional future seam for change streams; not required for Core conformance."""
+    """Optional push/change-stream seam; not required for Core conformance.
+
+    M7 v0.1 deliberately uses the pull-based ``ProviderChangeCursor`` SDK over
+    ``WorldStateProvider`` instead. This protocol remains a reserved optional seam
+    for future push transports and does not imply an event-bus dependency.
+    """
 
     def subscribe_changes(self, scope: SpatialScope | None) -> object: ...

@@ -641,17 +641,32 @@ class WorldStateProvider(Protocol):
     def get_history(self, entity, interval) -> tuple[StateTransition, ...]: ...
 ```
 
-## 6.2 Change stream seam
+## 6.2 Change-aware seam
 
-`subscribe_changes` is strategically important but NOT part of the mandatory M0 synchronous provider protocol.
+`subscribe_changes` remains outside the mandatory synchronous provider protocol.
 
-A separate optional protocol SHOULD later define:
+M7 v0.1 adds a pull-based SDK over any conforming `WorldStateProvider`:
+
+```text
+WorldStateProvider
++ last good immutable snapshot
+        ↓
+ProviderChangeCursor.poll(at)
+        ↓
+ProviderChangePoll
+        ↓
+worldstate.delta/v0.1 / provider diagnostics
+```
+
+This supplies deterministic change output without forcing async/event infrastructure, persistence ownership, or a scheduler into every provider.
+
+The separate optional:
 
 ```text
 WorldStateChangeProvider
 ```
 
-This avoids forcing async/event infrastructure into every conforming provider.
+remains reserved for future push/change-stream transports. Its existence does not make push subscriptions part of M7 v0.1 conformance.
 
 ---
 

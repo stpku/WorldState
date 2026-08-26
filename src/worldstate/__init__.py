@@ -9,6 +9,15 @@ from .change import (
     state_change_payload,
     world_state_delta_payload,
 )
+from .change_sdk import (
+    CHANGE_POLL_CONTRACT_ID,
+    CHANGE_POLL_CONTRACT_VERSION,
+    ChangePollStatus,
+    ProviderChangeCursor,
+    ProviderChangePoll,
+    open_change_cursor,
+    provider_change_poll_payload,
+)
 from .conflict_resolution import (
     CONFLICT_RESOLUTION_CONTRACT_VERSION,
     ConflictResolutionDecision,
@@ -65,8 +74,11 @@ from .wire import (
 
 __all__ = [
     "CHANGE_CONTRACT_VERSION",
+    "CHANGE_POLL_CONTRACT_ID",
+    "CHANGE_POLL_CONTRACT_VERSION",
     "CONFLICT_RESOLUTION_CONTRACT_VERSION",
     "ChangeKind",
+    "ChangePollStatus",
     "Claim",
     "Conflict",
     "ConflictResolutionDecision",
@@ -80,6 +92,8 @@ __all__ = [
     "JSONValue",
     "Observation",
     "Provenance",
+    "ProviderChangeCursor",
+    "ProviderChangePoll",
     "REFERENCE_RESOLVER_ID",
     "REFERENCE_RESOLVER_VERSION",
     "SNAPSHOT_CONTRACT_ID",
@@ -109,6 +123,8 @@ __all__ = [
     "diff_snapshots",
     "canonical_json",
     "conflict_resolution_decision_payload",
+    "open_change_cursor",
+    "provider_change_poll_payload",
     "entity_ref_payload",
     "provenance_payload",
     "semantic_id",

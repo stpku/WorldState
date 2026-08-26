@@ -1,0 +1,15 @@
+{
+  "benchmark": "worldstate-m7-change-provider-sdk-v0.1",
+  "entity_id": "asset-m7-benchmark",
+  "property_key": "status",
+  "unchanged_cases": [
+    {"case_id": "projection-unchanged", "provider_mode": "projection", "value": "open", "version": "v1", "expected_status": "unchanged"},
+    {"case_id": "direct-unchanged", "provider_mode": "direct-external", "value": "open", "version": "v1", "expected_status": "unchanged"}
+  ],
+  "changed_cases": [
+    {"case_id": "projection-update", "provider_mode": "projection", "before_value": "open", "after_value": "closed", "before_version": "v1", "after_version": "v2", "expected_status": "changed", "expected_change_kind": "state_changed"},
+    {"case_id": "direct-update", "provider_mode": "direct-external", "before_value": "open", "after_value": "closed", "before_version": "v1", "after_version": "v2", "expected_status": "changed", "expected_change_kind": "state_changed"}
+  ],
+  "outage_case": {"provider_mode": "direct-external", "expected_status": "provider_unavailable"},
+  "validity_case": {"provider_mode": "direct-external", "expected_change_kind": "validity_expired"}
+}
