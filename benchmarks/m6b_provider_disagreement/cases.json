@@ -1,0 +1,41 @@
+{
+  "benchmark": "worldstate-m6b-provider-disagreement-v0.1",
+  "entity_id": "asset-provider-fusion-1",
+  "property_key": "status",
+  "epochs": [
+    {
+      "epoch_id": "t0",
+      "at": "2026-08-26T00:00:00Z",
+      "native": {"value": "open", "version": "n1"},
+      "projection": {"value": "closed", "version": "p1"},
+      "direct_external": {"value": "open", "version": "d1"},
+      "expected_kind": "conflict"
+    },
+    {
+      "epoch_id": "t1",
+      "at": "2026-08-26T00:05:00Z",
+      "native": {"value": "open", "version": "n2"},
+      "projection": {"value": "closed", "version": "p2"},
+      "direct_external": {"value": "open", "version": "d2"},
+      "expected_kind": "conflict"
+    },
+    {
+      "epoch_id": "t2",
+      "at": "2026-08-26T00:10:00Z",
+      "native": {"value": "closed", "version": "n3"},
+      "projection": {"value": "closed", "version": "p3"},
+      "direct_external": {"value": "closed", "version": "d3"},
+      "expected_kind": "assertion",
+      "expected_value": "closed"
+    }
+  ],
+  "policy_resolution": {
+    "epoch_id": "t1",
+    "priority": [
+      "provider://projection",
+      "provider://direct-external",
+      "provider://native"
+    ],
+    "expected_value": "closed"
+  }
+}
