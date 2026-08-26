@@ -1,0 +1,65 @@
+{
+  "benchmark": "worldstate-m8-independent-consumer-v0.1",
+  "static_cases": [
+    {
+      "case_id": "healthy",
+      "registry_mode": "present",
+      "registry_status": "in_transit",
+      "temperature_mode": "single",
+      "temperature_c": 4.2,
+      "expected_registry_kind": "assertion",
+      "expected_registry_value": "in_transit",
+      "expected_temperature_kind": "assertion",
+      "expected_temperature_value": 4.2
+    },
+    {
+      "case_id": "registry-missing",
+      "registry_mode": "missing",
+      "temperature_mode": "single",
+      "temperature_c": 4.0,
+      "expected_registry_kind": "unknown",
+      "expected_registry_reason": "no_evidence",
+      "expected_temperature_kind": "assertion",
+      "expected_temperature_value": 4.0
+    },
+    {
+      "case_id": "sensor-conflict",
+      "registry_mode": "present",
+      "registry_status": "in_transit",
+      "temperature_mode": "conflict",
+      "expected_registry_kind": "assertion",
+      "expected_registry_value": "in_transit",
+      "expected_temperature_kind": "conflict"
+    },
+    {
+      "case_id": "sensor-outage",
+      "registry_mode": "present",
+      "registry_status": "in_transit",
+      "temperature_mode": "outage",
+      "temperature_c": 4.0,
+      "expected_registry_kind": "assertion",
+      "expected_registry_value": "in_transit",
+      "expected_temperature_kind": "unknown",
+      "expected_temperature_reason": "provider_unavailable"
+    }
+  ],
+  "temporal_case": {
+    "initial_registry_status": "in_transit",
+    "initial_temperature_c": 4.0,
+    "updated_registry_status": "arrived",
+    "updated_temperature_c": 7.5,
+    "apply_registry_update": true,
+    "apply_temperature_update": true,
+    "expected_changed_properties": ["shipment_status", "temperature_c"],
+    "expected_unavailable_properties": []
+  },
+  "outage_watch_case": {
+    "expected_changed_properties": [],
+    "expected_unavailable_properties": ["temperature_c"]
+  },
+  "decision_boundary_case": {
+    "temperature_c": 12.0,
+    "expected_temperature_kind": "assertion",
+    "expected_temperature_value": 12.0
+  }
+}
