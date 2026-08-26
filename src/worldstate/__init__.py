@@ -9,6 +9,14 @@ from .change import (
     state_change_payload,
     world_state_delta_payload,
 )
+from .conflict_resolution import (
+    CONFLICT_RESOLUTION_CONTRACT_VERSION,
+    ConflictResolutionDecision,
+    ConflictResolutionPolicy,
+    ConflictResolutionResult,
+    apply_conflict_resolution_policy,
+    conflict_resolution_decision_payload,
+)
 from .history import build_transition
 from .ids import canonical_json, semantic_id
 from .memory import InMemoryWorldState
@@ -57,9 +65,13 @@ from .wire import (
 
 __all__ = [
     "CHANGE_CONTRACT_VERSION",
+    "CONFLICT_RESOLUTION_CONTRACT_VERSION",
     "ChangeKind",
     "Claim",
     "Conflict",
+    "ConflictResolutionDecision",
+    "ConflictResolutionPolicy",
+    "ConflictResolutionResult",
     "EntityRef",
     "EpistemicMode",
     "Evidence",
@@ -91,10 +103,12 @@ __all__ = [
     "WorldStateDelta",
     "WorldStateProvider",
     "WorldStateSnapshot",
+    "apply_conflict_resolution_policy",
     "build_snapshot",
     "build_transition",
     "diff_snapshots",
     "canonical_json",
+    "conflict_resolution_decision_payload",
     "entity_ref_payload",
     "provenance_payload",
     "semantic_id",

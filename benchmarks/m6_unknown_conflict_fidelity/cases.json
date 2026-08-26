@@ -1,0 +1,99 @@
+{
+  "benchmark": "worldstate-m6-unknown-conflict-fidelity-v0.1",
+  "cases": [
+    {
+      "case_id": "supported-single-source",
+      "entity_id": "asset-1",
+      "property_key": "status",
+      "claims": [
+        {"claim_id": "c1", "value": "open", "source_ref": "source-a", "evidence_ref": "ev-a", "mode": "observed"}
+      ],
+      "available_evidence": ["ev-a"],
+      "available_sources": ["source-a"],
+      "policy_priority": [],
+      "expected_kind": "assertion",
+      "expected_value": "open"
+    },
+    {
+      "case_id": "missing-evidence-remains-unknown",
+      "entity_id": "asset-2",
+      "property_key": "status",
+      "claims": [
+        {"claim_id": "c2", "value": "open", "source_ref": "source-a", "evidence_ref": "ev-missing", "mode": "observed"}
+      ],
+      "available_evidence": [],
+      "available_sources": ["source-a"],
+      "policy_priority": [],
+      "expected_kind": "unknown",
+      "expected_value": null
+    },
+    {
+      "case_id": "agreeing-sources-resolve-without-policy",
+      "entity_id": "asset-3",
+      "property_key": "status",
+      "claims": [
+        {"claim_id": "c3a", "value": "open", "source_ref": "source-a", "evidence_ref": "ev-a", "mode": "observed"},
+        {"claim_id": "c3b", "value": "open", "source_ref": "source-b", "evidence_ref": "ev-b", "mode": "observed"}
+      ],
+      "available_evidence": ["ev-a", "ev-b"],
+      "available_sources": ["source-a", "source-b"],
+      "policy_priority": [],
+      "expected_kind": "assertion",
+      "expected_value": "open"
+    },
+    {
+      "case_id": "explicit-authority-resolves-conflict",
+      "entity_id": "asset-4",
+      "property_key": "status",
+      "claims": [
+        {"claim_id": "c4a", "value": "open", "source_ref": "source-secondary", "evidence_ref": "ev-secondary", "mode": "observed"},
+        {"claim_id": "c4b", "value": "closed", "source_ref": "source-authority", "evidence_ref": "ev-authority", "mode": "observed"}
+      ],
+      "available_evidence": ["ev-secondary", "ev-authority"],
+      "available_sources": ["source-secondary", "source-authority"],
+      "policy_priority": ["source-authority", "source-secondary"],
+      "expected_kind": "assertion",
+      "expected_value": "closed"
+    },
+    {
+      "case_id": "ambiguous-disagreement-remains-conflict",
+      "entity_id": "asset-5",
+      "property_key": "status",
+      "claims": [
+        {"claim_id": "c5a", "value": "open", "source_ref": "source-a", "evidence_ref": "ev-a", "mode": "observed"},
+        {"claim_id": "c5b", "value": "closed", "source_ref": "source-b", "evidence_ref": "ev-b", "mode": "observed"}
+      ],
+      "available_evidence": ["ev-a", "ev-b"],
+      "available_sources": ["source-a", "source-b"],
+      "policy_priority": [],
+      "expected_kind": "conflict",
+      "expected_value": null
+    },
+    {
+      "case_id": "epistemic-disagreement-remains-conflict",
+      "entity_id": "asset-6",
+      "property_key": "status",
+      "claims": [
+        {"claim_id": "c6a", "value": "open", "source_ref": "source-a", "evidence_ref": "ev-a", "mode": "observed"},
+        {"claim_id": "c6b", "value": "open", "source_ref": "source-b", "evidence_ref": "ev-b", "mode": "predicted"}
+      ],
+      "available_evidence": ["ev-a", "ev-b"],
+      "available_sources": ["source-a", "source-b"],
+      "policy_priority": [],
+      "expected_kind": "conflict",
+      "expected_value": null
+    }
+  ],
+  "unknown_transition": {
+    "case_id": "missing-support-becomes-available",
+    "entity_id": "asset-7",
+    "property_key": "status",
+    "claim": {"claim_id": "c7", "value": "ready", "source_ref": "source-a", "evidence_ref": "ev-a", "mode": "observed"},
+    "before_available_evidence": [],
+    "after_available_evidence": ["ev-a"],
+    "available_sources": ["source-a"],
+    "expected_before_kind": "unknown",
+    "expected_after_kind": "assertion",
+    "expected_after_value": "ready"
+  }
+}
