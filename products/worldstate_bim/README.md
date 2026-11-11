@@ -4,6 +4,12 @@
 
 [Download the synthetic four-wall IFC example](examples/synthetic_room.ifc) to inspect the native `IfcWall` objects. This is a teaching model made from explicit simulated coordinates, **not** a photo reconstruction. Its IFC file, four wall geometric representations and stable IFC object GUIDs were checked with IfcOpenShell 0.9.0post1 in an isolated Python 3.12 environment; native Bonsai authoring review remains pending.
 
+## North Star
+
+> **Evidence-to-Editable World：用最低的人工成本，将真实世界证据转化为可编辑、可迭代、可复用、可验证的数字模型。**
+
+Verification is a first-class deliverable alongside IFC: element-level source links, explicit inferred/simulated status, independent geometric and semantic tests, and an auditable revision trail. These are **target capabilities**; the current prototype tests typed input and synthetically generated IFC geometry, not real-photo reconstruction accuracy.
+
 Goal: user photographs, measurement references and optional plans → DSH
 multimodal modeling agent → structured parametric building proposal → editable
 IFC4 objects → review and revision. WorldState Core remains independent,

@@ -5,6 +5,21 @@
 Fidelity and Unknown/Conflict remain enabling reliability semantics, not the
 user-facing final product. First vertical application: **WorldState BIM**.
 
+## North Star — Evidence-to-Editable World
+
+> **Evidence-to-Editable World：用最低的人工成本，将真实世界证据转化为可编辑、可迭代、可复用、可验证的数字模型。**
+
+The four properties are joint acceptance requirements, not interchangeable labels:
+
+1. **Editable** — native semantic BIM elements (IFC walls, openings, floors and relations), rather than an unstructured visual mesh.
+2. **Iterable** — a reviewer or DSH can change an identified element, preserve its stable identity and regenerate only affected geometry where supported.
+3. **Reusable** — units, coordinates, object identifiers, element relationships, source references and IFC interoperability survive export and reimport.
+4. **Verifiable** — each element carries linked source evidence and an explicit epistemic status; geometry is checked against independent metric references, held-out views and semantic/topology constraints with reproducible results and known gaps.
+
+**Lowest human cost** must be measured as correction/review effort and total cost per *accepted* model, never just model generation time. A model is not considered verified simply because its IFC file parses, its geometry renders, or an LLM reports confidence. Verification must produce inspectable evidence and report uncertainty, unresolved errors and the validation scope.
+
+The intended future output is an **editable IFC model + element-level evidence/provenance + validation report + versioned corrections**, with explicit attribution of observed, inferred and simulated properties. These are product acceptance goals, not existing V0.1 capabilities.
+
 ## Outcome, not a slogan
 
 A user gives a small set of permitted photographs and one independent physical
