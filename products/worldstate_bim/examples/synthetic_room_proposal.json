@@ -1,0 +1,93 @@
+{
+  "contract": "worldstate-bim-proposal/0.1",
+  "project_id": "worldstate-bim-synthetic-room",
+  "project_name": "WorldState BIM Synthetic Room (NOT MEASURED)",
+  "images": [
+    {
+      "evidence_id": "synthetic-image-001",
+      "path": "placeholder.jpg",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "captured_at": null,
+      "provenance": "synthetic-example-placeholder-not-real-photo"
+    }
+  ],
+  "anchors": [],
+  "walls": [
+    {
+      "element_id": "W1",
+      "start_m": [
+        0,
+        0,
+        0
+      ],
+      "end_m": [
+        4,
+        0,
+        0
+      ],
+      "height_m": 3,
+      "thickness_m": 0.2,
+      "basis": "simulated",
+      "evidence_refs": [
+        "synthetic-image-001"
+      ]
+    },
+    {
+      "element_id": "W2",
+      "start_m": [
+        4,
+        0,
+        0
+      ],
+      "end_m": [
+        4,
+        3,
+        0
+      ],
+      "height_m": 3,
+      "thickness_m": 0.2,
+      "basis": "simulated",
+      "evidence_refs": [
+        "synthetic-image-001"
+      ]
+    },
+    {
+      "element_id": "W3",
+      "start_m": [
+        4,
+        3,
+        0
+      ],
+      "end_m": [
+        0,
+        3,
+        0
+      ],
+      "height_m": 3,
+      "thickness_m": 0.2,
+      "basis": "simulated",
+      "evidence_refs": [
+        "synthetic-image-001"
+      ]
+    },
+    {
+      "element_id": "W4",
+      "start_m": [
+        0,
+        3,
+        0
+      ],
+      "end_m": [
+        0,
+        0,
+        0
+      ],
+      "height_m": 3,
+      "thickness_m": 0.2,
+      "basis": "simulated",
+      "evidence_refs": [
+        "synthetic-image-001"
+      ]
+    }
+  ]
+}

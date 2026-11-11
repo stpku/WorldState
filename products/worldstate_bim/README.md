@@ -1,0 +1,101 @@
+# WorldState BIM — Evidence-to-Editable-BIM vertical slice
+
+**Status: development prototype; NOT automatic photos-to-BIM yet.**
+
+Goal: user photographs, measurement references and optional plans → DSH
+multimodal modeling agent → structured parametric building proposal → editable
+IFC4 objects → review and revision. WorldState Core remains independent,
+domain-neutral and unchanged.
+
+The first executable path now accepts a bounded **DSH output proposal** and
+converts supported `IfcWall` elements to an IFC4 BIM model (with IfcOpenShell
+installed). It does **not** yet accept photographs and independently infer
+geometry; the image-to-proposal stage is the next milestone.
+
+## Current functionality
+
+- Read a structured proposal with image evidence identifiers and SHA-256 hashes.
+- Verify local image bytes and block traversal outside the evidence directory.
+- Require evidence linkage for every inferred construction element.
+- Require a documented/measured metric anchor for normal export; allow
+  approximate IFC only with an **explicit** CLI flag.
+- Create native `IfcWall` objects inside project/site/building/storey hierarchy.
+- Attach `Pset_WorldStateEvidence` with evidence references and
+  `UNVERIFIED_DRAFT` status. This is a traceability marker, **not** certification.
+- Retain a JSON proposal for later human adjustment and Agent retries.
+
+**Important:** Declaring an anchor to be measured or documented is not itself
+independent verification. A production adapter must validate the actual
+scale source. Merely having multiple images does not recover absolute scale
+when camera geometry is inadequate.
+
+## Verify proposal contract (no extra dependencies)
+
+```bash
+python3 -m products.worldstate_bim.cli \
+  --proposal products/worldstate_bim/examples/synthetic_room_proposal.json
+```
+
+The above fixture uses an invented photo reference and is only suitable for
+testing the JSON proposal parser. It **cannot** pass source-image verification
+or produce a true reconstructed BIM model.
+
+## Export a draft IFC from real, authorized evidence and DSH geometry proposal
+
+1. Collect real source images into an isolated evidence directory.
+2. Create a proposal JSON using the contract shown in the synthetic fixture,
+   replacing paths and SHA-256 with the real images' values.
+3. Obtain dimension/scale information from an independent measurement or
+   reference drawing; record its source and declared `basis`.
+4. Review each DSH-proposed wall dimension, orientation and image reference.
+5. Install optional product-only packages into a dedicated environment:
+
+```bash
+pip install ifcopenshell numpy
+```
+
+6. Compile the draft (real IFC export still requires full integration testing
+   in the target environment):
+
+```bash
+python3 -m products.worldstate_bim.cli \
+  --proposal proposal.json \
+  --evidence-root ./evidence \
+  --output-ifc ./output/draft.ifc
+```
+
+For an intentionally approximate, unscaled *draft*, add
+`--allow-approximate-scale`; this does **not** make dimensions reliable.
+Open and inspect the IFC in Bonsai or an independent IFC viewer before use.
+
+## Product capability roadmap
+
+| Iteration | Working capability | Acceptance evidence |
+| --- | --- | --- |
+| V0.1 (this slice) | Proposal validation + wall-only IFC compiler | Source hash checks, editable IFC walls in external viewer, tests |
+| V0.2 | DSH multimodal image analysis → typed scene proposal | Real photos → wall candidates with image-region provenance; independent validation |
+| V0.3 | Doors, windows, slabs, floor levels, room spaces and opening semantics | Editable IFC4 elements and verified topology, not meshes alone |
+| V0.4 | Camera alignment, scale anchors, geometry optimization and revision | Unseen-view check, dimensional error, before/after diffs |
+| V0.5 | DSH interactive repair loop + BIM author review | Human selects issue → rerun local affected elements → versioned IFC output |
+| V1.0 | One public-room building case + one approved DCF room case | Measured comparison of cost, edit effort and geometric accuracy |
+
+## DSH responsibilities (integration contract, not installed in this branch)
+
+DSH orchestrates: image OCR/vision or segmentation → scale/camera hints →
+structured `worldstate-bim-proposal/0.1` → call IFC compiler →
+read errors → request narrow corrections → human approval.
+
+The multimodal model must **not** directly emit IFC source text. Its output is
+a constrained intermediate representation with explicit evidence references.
+The exporter is deterministic and does not invent missing components.
+
+Read [DSH integration interface](DSH_INTERFACE.md) and
+[product architecture roadmap](../../docs/product/worldstate-bim-roadmap.md).
+
+## Boundary and privacy
+
+- Public examples only use synthetic or explicitly public/authorized assets.
+- Customer drawings, IFC, contracts, detailed DC design and acceptance workflows
+  belong in a separate private engineering product, not this public repository.
+- WorldState Core owns state semantics; it is not responsible for inferring
+  building geometry or for professional construction sign-off.
