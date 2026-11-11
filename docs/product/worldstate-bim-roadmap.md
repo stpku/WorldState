@@ -81,10 +81,12 @@ geometry before claiming generalizable accuracy.
 
 ## Current reality
 
-The first committed vertical slice validates an evidence-linked **wall-only
-parametric proposal** and defines an optional IFC compiler. It does not yet
-perform automatic image recognition, camera calibration, DSH orchestration,
-verified IFC import/export, opening modeling, or actual engineering validation.
+The first vertical slice validates an evidence-linked **wall-only
+parametric proposal** and has generated a synthetic IFC4 room containing four
+semantic, geometrically parseable IfcWall objects with stable GUIDs using
+IfcOpenShell 0.9.0post1. It does not yet perform automatic image recognition,
+camera calibration, DSH orchestration, independent BIM-authoring-tool review,
+opening modeling, or actual engineering validation.
 The synthetic JSON fixture is not a photograph and must not be advertised as
 real-world reconstruction.
 

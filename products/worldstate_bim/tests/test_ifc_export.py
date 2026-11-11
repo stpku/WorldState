@@ -13,6 +13,7 @@ class IfcExporterTests(unittest.TestCase):
     def test_ifc_wall_is_semantic_editable_object_if_dependency_present(self):
         try:
             import ifcopenshell
+            import ifcopenshell.geom
         except ImportError:
             self.skipTest("ifcopenshell is not installed in this environment")
         proposal = load_proposal(fixture())
@@ -27,6 +28,16 @@ class IfcExporterTests(unittest.TestCase):
             self.assertTrue(model.by_type("IfcRelContainedInSpatialStructure"))
             self.assertTrue(model.by_type("IfcPropertySet"))
             self.assertTrue(walls[0].Representation)
+            geom = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), walls[0])
+            self.assertGreater(len(geom.geometry.verts), 0)
+            second = Path(td) / "draft-revision.ifc"
+            export_ifc(proposal, second, allow_approximate=True)
+            replay = ifcopenshell.open(str(second))
+            self.assertEqual(walls[0].GlobalId, replay.by_type("IfcWall")[0].GlobalId)
+            self.assertEqual(
+                model.by_type("IfcBuilding")[0].GlobalId,
+                replay.by_type("IfcBuilding")[0].GlobalId,
+            )
 
 
 if __name__ == "__main__":

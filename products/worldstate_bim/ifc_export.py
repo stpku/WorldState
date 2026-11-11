@@ -9,6 +9,7 @@ pixels, generate openings, validate construction compliance, or certify BIM.
 from __future__ import annotations
 
 from pathlib import Path
+from uuid import NAMESPACE_URL, uuid5
 
 from .contract import BuildingProposal, release_check
 
@@ -30,6 +31,7 @@ def export_ifc(
         import ifcopenshell.api.aggregate
         import ifcopenshell.api.context
         import ifcopenshell.api.geometry
+        import ifcopenshell.guid
         import ifcopenshell.api.project
         import ifcopenshell.api.pset
         import ifcopenshell.api.root
@@ -40,10 +42,16 @@ def export_ifc(
             "IFC export requires optional packages: pip install ifcopenshell numpy"
         ) from exc
 
+    def stable_guid(object_id: str) -> str:
+        """Preserve IFC object identity across model revisions of a project."""
+        identity = uuid5(NAMESPACE_URL, f"worldstate-bim:{proposal.project_id}:{object_id}")
+        return ifcopenshell.guid.compress(identity.hex)
+
     model = ifcopenshell.api.project.create_file(version="IFC4")
     project = ifcopenshell.api.root.create_entity(
         model, ifc_class="IfcProject", name=proposal.project_name
     )
+    project.GlobalId = stable_guid("project")
 
     length = ifcopenshell.api.unit.add_si_unit(model, unit_type="LENGTHUNIT")
     area = ifcopenshell.api.unit.add_si_unit(model, unit_type="AREAUNIT")
@@ -64,6 +72,8 @@ def export_ifc(
     storey = ifcopenshell.api.root.create_entity(
         model, ifc_class="IfcBuildingStorey", name="Ground level"
     )
+    for object_id, spatial_object in (("site", site), ("building", building), ("storey-ground", storey)):
+        spatial_object.GlobalId = stable_guid(object_id)
     for parent, child in ((project, site), (site, building), (building, storey)):
         ifcopenshell.api.aggregate.assign_object(
             model, products=[child], relating_object=parent
@@ -73,6 +83,7 @@ def export_ifc(
         wall = ifcopenshell.api.root.create_entity(
             model, ifc_class="IfcWall", name=element.element_id
         )
+        wall.GlobalId = stable_guid(f"wall:{element.element_id}")
         representation = ifcopenshell.api.geometry.create_2pt_wall(
             model,
             element=wall,
