@@ -1,0 +1,531 @@
+{
+  "schema": "worldstate-bim-room-ir/0.3",
+  "project_id": "synthetic-room-round3",
+  "mode": "assisted",
+  "revision": 2,
+  "coordinate_system": {
+    "name": "synthetic local coordinates",
+    "unit": "m"
+  },
+  "evidence": [
+    {
+      "id": "synthetic-design",
+      "kind": "synthetic_design",
+      "source": "Invented room; not a photograph or real measurement"
+    },
+    {
+      "id": "revision-2",
+      "kind": "manual_revision",
+      "operator": "user",
+      "reason": "Synthetic demonstration"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "x": 0,
+      "y": 0,
+      "status": "simulated",
+      "evidence_refs": [
+        "synthetic-design"
+      ]
+    },
+    {
+      "id": "n2",
+      "x": 5.0,
+      "y": 0.0,
+      "status": "human_confirmed",
+      "evidence_refs": [
+        "synthetic-design",
+        "revision-2"
+      ]
+    },
+    {
+      "id": "n3",
+      "x": 4.999993250045014,
+      "y": 3.000004874859827,
+      "status": "inferred",
+      "evidence_refs": [
+        "synthetic-design",
+        "revision-2"
+      ]
+    },
+    {
+      "id": "n4",
+      "x": -2.2499527454915617e-06,
+      "y": 2.9999973749837796,
+      "status": "inferred",
+      "evidence_refs": [
+        "synthetic-design",
+        "revision-2"
+      ]
+    }
+  ],
+  "storeys": [
+    {
+      "id": "storey-1",
+      "elevation": {
+        "value": 0.0,
+        "unit": "m",
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ],
+        "note": "Synthetic design; not a measurement"
+      }
+    }
+  ],
+  "elements": [
+    {
+      "id": "wall-1",
+      "ifc_type": "IfcWall",
+      "start": "n1",
+      "end": "n2",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 2.8,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "base_elevation": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "wall-2",
+      "ifc_type": "IfcWall",
+      "start": "n2",
+      "end": "n3",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 2.8,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "base_elevation": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "wall-3",
+      "ifc_type": "IfcWall",
+      "start": "n3",
+      "end": "n4",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 2.8,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "base_elevation": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "wall-4",
+      "ifc_type": "IfcWall",
+      "start": "n4",
+      "end": "n1",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 2.8,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "base_elevation": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "opening-door",
+      "ifc_type": "IfcOpeningElement",
+      "host": "wall-1",
+      "fill": "door-1",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 1.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "width": {
+          "value": 0.9,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "height": {
+          "value": 2.1,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "sill": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "opening-window",
+      "ifc_type": "IfcOpeningElement",
+      "host": "wall-3",
+      "fill": "window-1",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 1.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "width": {
+          "value": 1.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "height": {
+          "value": 1.2,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "sill": {
+          "value": 1.0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "door-1",
+      "ifc_type": "IfcDoor",
+      "opening": "opening-door",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "window-1",
+      "ifc_type": "IfcWindow",
+      "opening": "opening-window",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "slab-1",
+      "ifc_type": "IfcSlab",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "outline": [
+        "n1",
+        "n2",
+        "n3",
+        "n4"
+      ],
+      "outline_status": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "parameters": {
+        "elevation": {
+          "value": -0.15,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        },
+        "thickness": {
+          "value": 0.15,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "synthetic-design"
+          ],
+          "note": "Synthetic design; not a measurement"
+        }
+      }
+    },
+    {
+      "id": "room-1",
+      "ifc_type": "IfcSpace",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "synthetic-design"
+        ]
+      },
+      "boundary_walls": [
+        "wall-1",
+        "wall-2",
+        "wall-3",
+        "wall-4"
+      ],
+      "boundary_status": "closed_confirmed",
+      "parameters": {}
+    }
+  ],
+  "constraints": [
+    {
+      "id": "right-angle-1",
+      "kind": "perpendicular",
+      "a": "wall-1",
+      "b": "wall-2",
+      "status": "simulated",
+      "evidence_refs": [
+        "synthetic-design"
+      ]
+    },
+    {
+      "id": "right-angle-2",
+      "kind": "perpendicular",
+      "a": "wall-2",
+      "b": "wall-3",
+      "status": "simulated",
+      "evidence_refs": [
+        "synthetic-design"
+      ]
+    },
+    {
+      "id": "right-angle-3",
+      "kind": "perpendicular",
+      "a": "wall-3",
+      "b": "wall-4",
+      "status": "simulated",
+      "evidence_refs": [
+        "synthetic-design"
+      ]
+    },
+    {
+      "id": "right-angle-4",
+      "kind": "perpendicular",
+      "a": "wall-4",
+      "b": "wall-1",
+      "status": "simulated",
+      "evidence_refs": [
+        "synthetic-design"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "REQUIRES_REVALIDATION"
+  },
+  "history": [
+    {
+      "previous_revision": 1,
+      "revision": 2,
+      "element_id": "wall-1",
+      "attribute": "length",
+      "before": 4.0,
+      "after": 5.0,
+      "changed_nodes": [
+        "n2",
+        "n3",
+        "n4"
+      ],
+      "affected_elements": [
+        "door-1",
+        "opening-door",
+        "opening-window",
+        "room-1",
+        "slab-1",
+        "wall-1",
+        "wall-2",
+        "wall-3",
+        "wall-4",
+        "window-1"
+      ],
+      "reason_ref": "revision-2"
+    }
+  ]
+}

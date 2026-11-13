@@ -317,7 +317,9 @@ def revise_element(model: dict[str, Any], element_id: str, attribute: str, value
                         changed_nodes.add(key)
         for node_id in changed_nodes:
             nodes[node_id]["status"] = status if node_id == b["id"] else "inferred"
-            nodes[node_id]["evidence_refs"].append(ref)
+            # IR supplied by Python callers may share list objects. Replace the
+            # list so a local edit cannot contaminate unrelated provenance.
+            nodes[node_id]["evidence_refs"] = nodes[node_id]["evidence_refs"] + [ref]
         before, after = old, float(value)
     else:
         if attribute not in DIMENSIONS[kind]:

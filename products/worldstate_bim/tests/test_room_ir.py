@@ -40,6 +40,11 @@ def test_resize_wall_propagates_corner_constraints_and_dependencies():
     assert {"wall-1","wall-2","wall-3","opening-1","door-1","slab-1","room-1"} <= set(diff["affected_elements"])
     assert geometry_issues(updated)==[]
     assert updated["history"][-1]["reason_ref"]=="revision-2"
+    # The fixture intentionally shares lists between source fields; revision
+    # evidence must not leak to unrelated nodes or classifications.
+    assert updated["nodes"][0]["evidence_refs"] == ["manual-1"]
+    assert updated["elements"][0]["classification"]["evidence_refs"] == ["manual-1"]
+    assert updated["nodes"][1]["evidence_refs"] == ["manual-1", "revision-2"]
 
 
 def test_invalid_opening_is_rejected_without_mutating_previous_version():
