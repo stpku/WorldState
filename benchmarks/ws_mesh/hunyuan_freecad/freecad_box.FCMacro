@@ -1,0 +1,24 @@
+# NOT_TESTED in this environment: requires a locally installed FreeCAD GUI.
+# Creates an editable parameterized box from explicitly user-supplied lengths.
+# It does not convert a Hunyuan mesh to CAD or claim that dimensions are measured.
+import FreeCAD as App
+import json
+import os
+
+config_path = os.environ.get("WORLDSTATE_ASSET_CONFIG")
+if not config_path:
+    raise ValueError("WORLDSTATE_ASSET_CONFIG must point to a local parameter JSON")
+with open(config_path, "r", encoding="utf-8") as stream:
+    config = json.load(stream)
+values = [float(config[key]) for key in ("length_m", "width_m", "height_m")]
+if any(v <= 0 for v in values):
+    raise ValueError("box dimensions must be positive metres")
+document = App.newDocument("WorldStateAssetDraft")
+box = document.addObject("Part::Box", "UserSuppliedEnvelope")
+box.Label = "Draft envelope - verify dimensions"
+box.Length, box.Width, box.Height = [value * 1000 for value in values]
+document.recompute()
+output = config["output_fcstd"]
+if os.path.exists(output):
+    raise FileExistsError("choose a new output path")
+document.saveAs(output)

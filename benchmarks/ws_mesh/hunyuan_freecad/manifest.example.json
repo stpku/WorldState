@@ -1,0 +1,8 @@
+{
+  "status": "NOT_COLLECTED",
+  "local_inference_authorized": false,
+  "data_license": "UNKNOWN",
+  "model_revision": "3a761b539b29fe4ff64714813aa9560fd66f5de0",
+  "views": {},
+  "notes": "Add at least two authorized transparent RGBA crops and their SHA-256 values; keep held-out dimensions separate."
+}
