@@ -25,6 +25,7 @@ from .room_ifc import export_room
 from .room_ir import revise_element, validate_room
 from .room_sync import _verify_geometry
 from .photo_room import ANNOTATION_KINDS, build_photo_room
+from .photo_scale import bind_scale
 
 
 def _write_json(path: Path, value: dict) -> None:
@@ -223,6 +224,7 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/annotation":self.add_annotation(body);return
                 if path=="/api/annotation/delete":self.delete_annotation(body);return
                 if path=="/api/layout":self.save_layout(body);return
+                if path=="/api/scale/bind":self.bind_scale(body);return
                 if path=="/api/generate":self.generate(body);return
                 if path not in {"/api/revise","/api/command","/api/sync-ifc","/api/restore"}:self.send_data(404,b"not found","text/plain");return
                 if self.server.model is None:raise ValueError("请先生成或打开模型")
@@ -306,6 +308,14 @@ class Handler(BaseHTTPRequestHandler):
         project["layout"]=layout;project["reference"]=reference
         self.server.record("layout_saved",point_count=len(layout.get("points",[])) if isinstance(layout.get("points"),list) else 0)
         self.send_json(200,{"saved":True})
+
+    def bind_scale(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        binding=bind_scale(project,self.server.uploaded,confirmed=body.get("confirmed_endpoints"))
+        project["scale_binding"]=binding
+        self.server.record("scale_bound",sha256=binding["sha256"],operator=project.get("operator_kind","user"))
+        self.send_json(200,binding)
 
     def generate(self, body: dict) -> None:
         project=self.server.project

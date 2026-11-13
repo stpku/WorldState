@@ -12,6 +12,7 @@ import re
 from typing import Any
 
 from .room_ir import SCHEMA, geometry_issues, quantity, validate_room
+from .photo_scale import require_current_scale
 
 ANNOTATION_KINDS = {"corner", "wall_boundary", "floor_line", "ceiling_line", "door", "window", "scale"}
 
@@ -134,6 +135,7 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
     thickness = _number(reference.get("thickness_m"), "假设墙厚", high=5)
     aa, bb = edges[wall_index - 1]
     scale = anchor_m / math.dist(points[aa], points[bb])
+    scale_binding = require_current_scale(project, uploads)
 
     by_wall: dict[str, list[dict[str, Any]]] = {}
     opening_groups: dict[str, list[dict[str, Any]]] = {}
@@ -192,7 +194,7 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
         {"id": "scale-1", "kind": "user_scale_reference", "basis": basis, "description": source.strip(),
          "wall_id": f"wall-{wall_index}", "relative_endpoints": [list(points[aa]), list(points[bb])],
          "distance_m": anchor_m, "relative_distance":math.dist(points[aa],points[bb]),
-         "metres_per_relative_unit": scale, "verification": "NOT_INDEPENDENTLY_VERIFIED"},
+         "metres_per_relative_unit": scale, "binding": scale_binding, "verification": "NOT_INDEPENDENTLY_VERIFIED"},
         {"id": "height-1", "kind": "user_height", "basis": height_basis, "value_m": height,
          "verification": "NOT_INDEPENDENTLY_VERIFIED"},
         {"id": "thickness-1", "kind": "user_assumption", "value_m": thickness,

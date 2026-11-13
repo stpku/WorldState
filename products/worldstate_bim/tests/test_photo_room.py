@@ -3,6 +3,7 @@ import copy
 import math
 import pytest
 from products.worldstate_bim.photo_room import build_photo_room
+from products.worldstate_bim.photo_scale import bind_scale
 
 
 def fixture():
@@ -14,10 +15,12 @@ def fixture():
     annotations.append({"id":"ann-"+"4"*32,"photo_id":uploads[0]["id"],"kind":"window","wall_id":"wall-1",
                         "points":[[30,40],[80,90]],"object_id":"window-1","dimensions":{
                             "basis":"assumed","offset":1,"width":1,"height":1.2,"sill":1,"panel_thickness":0.04}})
+    annotations.append({"id":"ann-"+"a"*32,"photo_id":uploads[0]["id"],"kind":"scale","wall_id":"wall-1","points":[[20,100],[120,100]]})
     project={"id":"photo-room-"+"a"*32,"annotations":annotations,
              "layout":{"points":[[20,20],[220,20],[220,170],[60,170]],"closed":False,"confirmed_schematic":True},
              "reference":{"wall_index":1,"length_m":4,"basis":"independent_user_declared","description":"user ruler",
                           "height_m":2.8,"height_basis":"user_measurement","thickness_m":0.12}}
+    project["scale_binding"]=bind_scale(project,uploads,confirmed=True)
     return project,uploads
 
 
@@ -29,6 +32,8 @@ def test_schematic_scale_is_applied_and_never_treated_as_photo_geometry():
     assert len([e for e in model["elements"] if e["ifc_type"]=="IfcWall"])==3
     assert all(n["status"]=="inferred" for n in nodes)
     project["reference"]["length_m"]=8
+    with pytest.raises(ValueError,match="尺度参照已失效"):build_photo_room(project,uploads)
+    project["scale_binding"]=bind_scale(project,uploads,confirmed=True)
     changed=build_photo_room(project,uploads)
     assert changed["nodes"][1]["x"]==pytest.approx(nodes[1]["x"]*2)
     project["layout"]["points"][2][1]+=50
@@ -69,6 +74,7 @@ def test_camera_floor_backprojection_uses_photo_corners_and_metric_anchor():
         "confirmed_camera_assumptions":True,"camera":{"fx":fx,"fy":fy,"cx":cx,"cy":cy,
         "pitch_down_deg":pitch,"description":"synthetic known calibration"}}
     project["reference"]["length_m"]=2
+    project["scale_binding"]=bind_scale(project,uploads,confirmed=True)
     model=build_photo_room(project,uploads)
     for node,(x,y) in zip(model["nodes"],ground):
         assert node["x"]==pytest.approx(x-ground[0][0],abs=1e-10)
@@ -92,3 +98,38 @@ def test_photo_candidate_exports_native_ifc_and_retains_open_space(tmp_path):
     assert len(f.by_type("IfcOpeningElement"))==len(f.by_type("IfcRelVoidsElement"))==len(f.by_type("IfcRelFillsElement"))==1
     assert not f.by_type("IfcSpace") and all(ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(),w) for w in f.by_type("IfcWall"))
     logger=ifcopenshell.validate.json_logger();ifcopenshell.validate.validate(f,logger);assert not logger.statements
+
+
+def test_scale_binding_rejects_changed_endpoint_or_anchor_association():
+    project, uploads = fixture()
+    scale = next(a for a in project['annotations'] if a['kind'] == 'scale')
+    scale['points'][1][0] += 10
+    with pytest.raises(ValueError, match='尺度参照已失效'):
+        build_photo_room(project, uploads)
+    with pytest.raises(ValueError, match='物理端点'):
+        bind_scale(project, uploads, confirmed=False)
+    # An explicit attestation is required; it does not claim independent truth.
+    project['scale_binding'] = bind_scale(project, uploads, confirmed=True)
+    assert build_photo_room(project, uploads)['scale']['independence'] == 'independent_user_declared'
+    scale['photo_id'] = uploads[1]['id']
+    with pytest.raises(ValueError, match='尺度参照已失效'):
+        build_photo_room(project, uploads)
+
+
+def test_camera_scale_binding_is_invalidated_when_calibration_changes():
+    project, uploads = fixture()
+    project['layout'] = {'mode':'photo_floor', 'photo_id':uploads[0]['id'], 'closed':False,
+        'confirmed_camera_assumptions':True,
+        'camera':{'fx':525,'fy':525,'cx':319,'cy':239,'pitch_down_deg':20,'description':'test'}}
+    for i, point in enumerate(([250,330], [400,330], [400,400], [250,400]), 1):
+        project['annotations'].append({'id':'ann-'+f'{i+4:x}'*32,'photo_id':uploads[0]['id'],
+            'kind':'corner','wall_id':f'wall-{min(i,3)}','object_id':f'node-{i}','points':[list(point)]})
+    project['scale_binding'] = bind_scale(project,uploads,confirmed=True)
+    build_photo_room(project,uploads)
+    project['layout']['camera']['fx'] = 530
+    with pytest.raises(ValueError, match='尺度参照已失效'):
+        build_photo_room(project,uploads)
+    project['layout']['camera']['fx'] = 525
+    project['annotations'][-3]['points'][0][0] += 1
+    with pytest.raises(ValueError, match='尺度参照已失效'):
+        build_photo_room(project,uploads)

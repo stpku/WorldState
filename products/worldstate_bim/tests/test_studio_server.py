@@ -87,11 +87,14 @@ def test_photo_project_annotation_generation_revision_restore_and_restart(tmp_pa
             body={"photo_id":photo["id"],"kind":"wall_boundary","wall_id":f"wall-{i}",
                   "points":[[10,10+i],[100,60+i]],"elapsed_ms":100}
             assert api(instance,"/api/annotation",body)[0]==201
+        assert api(instance,"/api/annotation",{"photo_id":photo["id"],"kind":"scale","wall_id":"wall-1","points":[[10,100],[100,100]]})[0]==201
         body={"layout":{"points":[[20,20],[220,20],[220,170],[60,170]],"closed":False,"confirmed_schematic":True},
               "reference":{"wall_index":1,"length_m":4,"basis":"independent_user_declared","description":"test ruler",
                            "height_m":2.8,"height_basis":"assumed","thickness_m":0.12}}
         assert api(instance,"/api/layout",body)[0]==200
         assert api(instance,"/api/generate",{})[0]==400
+        assert api(instance,"/api/generate",{"confirmed_candidate":True})[0]==400
+        assert api(instance,"/api/scale/bind",{"confirmed_endpoints":True})[0]==200
         status,result=api(instance,"/api/generate",{"confirmed_candidate":True})
         assert status==201 and result["model"]["validation"]["scope"]=="PARTIAL_OPEN"
         assert len([e for e in result["model"]["elements"] if e["ifc_type"]=="IfcWall"])==3
