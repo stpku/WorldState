@@ -8,6 +8,14 @@
 | WS-RealRoom | 用户照片到可编辑 BIM 和人工成本 | [采集、隔离与冻结门槛](ws_realroom/PROTOCOL.md)；真实独立验收房间未采集。 |
 | WS-Campus | 授权建筑公开展示 | 规划；校园素材没有新上传或对外发布。 |
 
+WS-RealRoom 尚无满足冻结协议的独立验收场景。负责人可以在仓库外初始化隔离的采集目录，按其中清单采集并保管私有真值：
+
+```bash
+python3 benchmarks/ws_realroom/init_room.py /path/outside/repo/room-001 --room-id room-001
+```
+
+脚本不会填造照片或测量值，也不会覆盖已有目录；生成的私有目录默认整体被 Git 忽略，不能把冻结验收真值提供给待测算法。
+
 ## CPU 安装和复现
 
 Python 3.12、Linux x86_64，建议使用独立虚拟环境；Core 不依赖这些库。以下下载均为公开数据，实际耗时和镜像可用性因网络不同而异。
