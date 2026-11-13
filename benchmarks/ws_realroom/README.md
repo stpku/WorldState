@@ -34,7 +34,7 @@ PYTHONPATH=. /tmp/ws-bim-venv/bin/python benchmarks/ws_realroom/evaluate.py eval
 
 - `reference_ifc` 和 `holdout_photos` 每项提供相对于私有参考目录的 `path` 与实际 `sha256`；参考 IFC 的可见墙 GUID 列入 `visible_wall_guids`。
 - `matches` 每项包含 `reference_guid`、候选 `candidate_id` 和 `reviewer`。这些是一对一的独立人工对应，不是算法自动实例匹配。
-- `measurements` 每项包含唯一 `id`、`reference_guid`、`attribute`（`length` 或 `height`）、`value_m`、`uncertainty_m`、`method` 和 `operator`。至少涉及三面不同墙，建模标尺不可重复作为真值。
-- `runs/labor.json` 的 `pairs` 每项有唯一 `pair_id` 及 `manual`、`assisted`。每个运行记录 `quality_passed`、`reviewer`、`human_seconds`（`prepare`、`annotate`、`correct`、`review`）、`automatic_seconds`、`gpu_seconds`、`cost`、`failures`。失败运行也要保留，质量结论是审核人声明而不是脚本证明。
+- `measurements` 每项包含唯一 `id`、`reference_guid`、`attribute`（`length` 或 `height`）、`value_m`、`uncertainty_m`、`method` 和 `operator`。至少涉及三面不同墙，建模标尺不可重复作为真值；由独立评测人填写 `independent_measurements_declared` 和 `reference_reviewer`。完全相同字节的候选和参考 IFC 会被拒绝。
+- `runs/labor.json` 的 `pairs` 每项有唯一 `pair_id`、`input_manifest_sha256` 及 `manual`、`assisted`。两个运行各自记录相同的 `input_manifest_sha256`、`quality_passed`、`reviewer`、`human_seconds`（`prepare`、`annotate`、`correct`、`review`）、`automatic_seconds`、`gpu_seconds`、`cost`、`failures`。失败运行也要保留，质量结论和输入清单是审核人声明而不是脚本证明。
 
-脚本核对候选冻结哈希、参考文件哈希、留出照片是否出现在候选证据、一对一匹配、冻结的实例／尺寸门槛及人工成本中位数，并以 IfcOpenShell 做 schema 和墙几何诊断。它无法仅凭哈希证明建模者没有看到参考资料，也不自动检查留出照片内容；照片与标尺是否真正独立仍需访问控制和人工审核。IfcOpenShell 同时用于产品导出，不代替独立 IFC 引擎。独立 BIM 软件编辑、GUID 保持和 IR 回写在本工具中一律标为 `NOT_EVALUATED`；本报告单独不能将版本标为 release-ready。
+冻结时脚本默认检查候选目录上一级的 Studio `evidence-index.json` 和全部上传照片，包括没有关联构件的照片；如位于其他位置，可在两个命令中均传入 `--evidence-index /path/to/evidence-index.json`。没有清单时 `input_evidence_inventory` 未通过。脚本核对候选冻结哈希、参考文件哈希、留出照片是否出现在全部上传或候选证据、一对一匹配、冻结的实例／尺寸门槛及人工成本中位数，并以 IfcOpenShell 做 schema 和墙几何诊断。它无法仅凭哈希证明建模者没有看到参考资料，也不自动检查留出照片内容；照片与标尺是否真正独立仍需访问控制和人工审核。IfcOpenShell 同时用于产品导出，不代替独立 IFC 引擎。独立 BIM 软件编辑、GUID 保持和 IR 回写在本工具中一律标为 `NOT_EVALUATED`；本报告单独不能将版本标为 release-ready。

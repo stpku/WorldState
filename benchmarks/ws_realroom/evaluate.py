@@ -34,15 +34,34 @@ def write_new(path: Path, data: dict) -> None:
     with path.open("x") as stream:json.dump(data,stream,ensure_ascii=False,indent=2,allow_nan=False);stream.write("\n")
 
 
-def freeze(candidate_dir: Path) -> dict:
+def freeze(candidate_dir: Path, evidence_index: Path | None = None) -> dict:
     """Hash model and input evidence before any private references are opened."""
     from products.worldstate_bim.room_ir import validate_room
     ir=candidate_dir/"model.json";ifc=candidate_dir/"model.ifc"
     model=json.loads(ir.read_text());validate_room(model)
-    photos=sorted({e["sha256"] for e in model["evidence"] if e.get("kind")=="image" and e.get("sha256")})
+    model_photos={e["sha256"] for e in model["evidence"] if e.get("kind")=="image" and e.get("sha256")}
+    index=evidence_index or candidate_dir.parent/"evidence-index.json"
+    index_hash=None;inventory_status="NOT_PROVIDED";uploads=set()
+    if index.exists():
+        if index.is_symlink():raise ValueError("evidence index cannot be a symlink")
+        data=json.loads(index.read_text())
+        if data.get("schema")!="worldstate-studio-evidence/0.1" or not isinstance(data.get("uploads"),list):
+            raise ValueError("invalid Studio evidence inventory")
+        for item in data["uploads"]:
+            digest=item.get("sha256");extension=item.get("extension")
+            if not isinstance(digest,str) or len(digest)!=64 or any(c not in "0123456789abcdef" for c in digest) or extension not in {".png",".jpg"}:
+                raise ValueError("invalid Studio evidence inventory entry")
+            photo=index.parent/"evidence"/(digest+extension)
+            if photo.is_symlink() or not photo.is_file() or sha256(photo)!=digest:
+                raise ValueError("uploaded image is missing or its hash changed")
+            uploads.add(digest)
+        if not model_photos<=uploads:raise ValueError("model photo evidence is missing from Studio inventory")
+        index_hash=sha256(index);inventory_status="VERIFIED_STUDIO_INDEX"
+    photos=sorted(model_photos|uploads)
     return {"schema":"ws-realroom-frozen-candidate/0.1","created_at":datetime.now(timezone.utc).isoformat(),
             "project_id":model["project_id"],"revision":model["revision"],"model_json_sha256":sha256(ir),
-            "model_ifc_sha256":sha256(ifc),"input_photo_sha256":photos,
+            "model_ifc_sha256":sha256(ifc),"input_photo_sha256":photos,"model_photo_sha256":sorted(model_photos),
+            "evidence_index_sha256":index_hash,"evidence_inventory_status":inventory_status,
             "protocol":"benchmarks/ws_realroom/PROTOCOL.md",
             "warning":"Hashing is not proof of blind role separation; retain independent collection and access logs."}
 
@@ -74,10 +93,14 @@ def _labor(data: dict | None) -> dict:
         if not isinstance(pair,dict) or not pair.get("pair_id") or pair["pair_id"] in seen:
             raise ValueError("each paired run needs a unique ID")
         seen.add(pair["pair_id"])
+        inputs=pair.get("input_manifest_sha256")
+        if not isinstance(inputs,str) or len(inputs)!=64 or any(c not in "0123456789abcdef" for c in inputs):
+            raise ValueError("each pair requires the same frozen input-manifest SHA-256")
         for mode in ("manual","assisted"):
             run=pair.get(mode)
-            if not isinstance(run,dict) or not isinstance(run.get("quality_passed"),bool) or not run.get("reviewer"):
-                raise ValueError("each run requires a quality decision and reviewer")
+            if (not isinstance(run,dict) or not isinstance(run.get("quality_passed"),bool) or not run.get("reviewer") or
+                    run.get("input_manifest_sha256")!=inputs):
+                raise ValueError("each run requires a quality decision, reviewer and matching input hash")
             times=run.get("human_seconds")
             if not isinstance(times,dict):raise ValueError("each run needs separate human time stages")
             total=sum(_positive(times.get(k),f"{mode} {k}",zero=True) for k in fields)
@@ -98,7 +121,8 @@ def _labor(data: dict | None) -> dict:
             "reduction_fraction":reduction,"quality_status":"reviewer_attested_not_independently_rechecked"}
 
 
-def evaluate(candidate_dir: Path, frozen: dict, reference_dir: Path, reference: dict, labor: dict | None) -> dict:
+def evaluate(candidate_dir: Path, frozen: dict, reference_dir: Path, reference: dict, labor: dict | None,
+             evidence_index: Path | None = None) -> dict:
     """Evaluate frozen output; private reference is read only by this function."""
     import ifcopenshell
     import ifcopenshell.geom
@@ -114,11 +138,12 @@ def evaluate(candidate_dir: Path, frozen: dict, reference_dir: Path, reference: 
     model=json.loads(ir.read_text());validate_room(model)
     if model["project_id"]!=frozen.get("project_id") or model["revision"]!=frozen.get("revision"):
         raise ValueError("frozen model identity differs")
-    current_photo_hashes=sorted({e["sha256"] for e in model["evidence"] if e.get("kind")=="image" and e.get("sha256")})
-    if current_photo_hashes!=frozen.get("input_photo_sha256"):
-        raise ValueError("frozen input photo list differs from candidate")
+    current=freeze(c,evidence_index)
+    for field in ("input_photo_sha256","model_photo_sha256","evidence_index_sha256","evidence_inventory_status"):
+        if current[field]!=frozen.get(field):raise ValueError("frozen input inventory differs from candidate")
     if reference.get("schema")!="ws-realroom-reference/0.1":raise ValueError("invalid private reference schema")
     ref_ifc=_safe_ref_file(r,reference.get("reference_ifc",{}));ref=ifcopenshell.open(str(ref_ifc))
+    if sha256(ref_ifc)==sha256(ifc):raise ValueError("reference IFC is identical to candidate IFC")
     ref_walls=reference.get("visible_wall_guids")
     if not isinstance(ref_walls,list) or not ref_walls or len(set(ref_walls))!=len(ref_walls):
         raise ValueError("visible reference walls must be unique")
@@ -161,7 +186,7 @@ def evaluate(candidate_dir: Path, frozen: dict, reference_dir: Path, reference: 
     for item in holdouts:
         path=_safe_ref_file(r,item);holdout_hashes.append(sha256(path))
     if len(set(holdout_hashes))!=len(holdout_hashes):raise ValueError("holdout photos must be distinct")
-    all_evidence_hashes={e.get("sha256") for e in model["evidence"] if e.get("sha256")}
+    all_evidence_hashes={e.get("sha256") for e in model["evidence"] if e.get("sha256")}|set(frozen["input_photo_sha256"])
     if set(holdout_hashes)&all_evidence_hashes:raise ValueError("holdout photo hash appears in candidate evidence")
     candidate=ifcopenshell.open(str(ifc));logger=ifcopenshell.validate.json_logger();ifcopenshell.validate.validate(candidate,logger)
     geometry=0
@@ -172,10 +197,12 @@ def evaluate(candidate_dir: Path, frozen: dict, reference_dir: Path, reference: 
                 if ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(),entity):geometry+=1
             except RuntimeError:pass
     labor_result=_labor(labor)
-    gates={"input_photos":len(frozen.get("input_photo_sha256",[]))>=3,
+    gates={"input_photos":len(frozen.get("input_photo_sha256",[]))>=3 and len(frozen.get("model_photo_sha256",[]))>=3,
+           "input_evidence_inventory":frozen.get("evidence_inventory_status")=="VERIFIED_STUDIO_INDEX",
            "visible_wall_count":len(ref_walls)>=3 and len(pairs)>=3,
            "wall_precision":precision>=PRECISION_MIN,"wall_recall":recall>=RECALL_MIN,
-           "independent_dimensions":len(dimensions)>=3 and len({x["reference_guid"] for x in dimensions})>=3 and all(x["pass"] for x in dimensions),
+           "independent_dimensions":reference.get("independent_measurements_declared") is True and bool(reference.get("reference_reviewer")) and
+               len(dimensions)>=3 and len({x["reference_guid"] for x in dimensions})>=3 and all(x["pass"] for x in dimensions),
            "holdout_photos":len(holdouts)>=2,
            "ifcopenshell_schema_geometry_diagnostic":candidate.schema=="IFC4" and not logger.statements and geometry==len(walls) and len(candidate.by_type("IfcWall"))==len(walls) and len(walls)>0,
            "human_cost":labor_result["status"],"independent_ifc_engine":"NOT_EVALUATED",
@@ -195,16 +222,17 @@ def evaluate(candidate_dir: Path, frozen: dict, reference_dir: Path, reference: 
 def main() -> int:
     parser=argparse.ArgumentParser(description=__doc__);sub=parser.add_subparsers(dest="command",required=True)
     f=sub.add_parser("freeze");f.add_argument("--candidate-dir",type=Path,required=True);f.add_argument("--output",type=Path,required=True)
+    f.add_argument("--evidence-index",type=Path,help="Studio evidence index, if not in the candidate directory's parent")
     e=sub.add_parser("evaluate");e.add_argument("--candidate-dir",type=Path,required=True);e.add_argument("--frozen",type=Path,required=True)
     e.add_argument("--reference-dir",type=Path,required=True);e.add_argument("--reference",type=Path,required=True)
-    e.add_argument("--labor",type=Path);e.add_argument("--output",type=Path,required=True)
+    e.add_argument("--labor",type=Path);e.add_argument("--evidence-index",type=Path);e.add_argument("--output",type=Path,required=True)
     args=parser.parse_args()
-    if args.command=="freeze":result=freeze(args.candidate_dir)
+    if args.command=="freeze":result=freeze(args.candidate_dir,args.evidence_index)
     else:
         reference_path=args.reference.resolve(strict=True);root=args.reference_dir.resolve(strict=True)
         if not reference_path.is_relative_to(root):raise ValueError("reference JSON must be inside private reference directory")
         result=evaluate(args.candidate_dir,json.loads(args.frozen.read_text()),root,json.loads(reference_path.read_text()),
-                        json.loads(args.labor.read_text()) if args.labor else None)
+                        json.loads(args.labor.read_text()) if args.labor else None,args.evidence_index)
     write_new(args.output,result);print(json.dumps({"output":str(args.output),"status":result.get("release_status","FROZEN")},ensure_ascii=False))
     return 0
 

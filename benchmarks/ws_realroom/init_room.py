@@ -28,6 +28,7 @@ def initialize(destination: Path, room_id: str) -> None:
                        ("input/assumptions.json", {"status": "NOT_COLLECTED", "assumptions": []}),
                        ("private-reference/reference.template.json", {"schema": "ws-realroom-reference/0.1", "status": "NOT_COLLECTED",
                          "reference_ifc": {"path": "reference.ifc", "sha256": ""}, "visible_wall_guids": [],
+                         "independent_measurements_declared": None, "reference_reviewer": None,
                          "matches": [], "measurements": [], "holdout_photos": []}),
                        ("runs/labor.template.json", {"schema": "ws-realroom-labor/0.1", "status": "NOT_COLLECTED", "pairs": []})):
         (destination / path).write_text(json.dumps(data, indent=2) + "\n")
