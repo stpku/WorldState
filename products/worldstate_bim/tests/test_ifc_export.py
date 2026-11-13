@@ -57,8 +57,8 @@ class IfcExporterTests(unittest.TestCase):
             second = ifcopenshell.open(str(second_path)).by_type("IfcWall")[0]
             self.assertEqual(first.GlobalId, second.GlobalId)
             def extent(wall):
-                geometry = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), wall).geometry
-                z = geometry.verts[2::3]
+                shape = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), wall)
+                z = shape.geometry.verts[2::3]
                 return max(z) - min(z)
             self.assertAlmostEqual(extent(first), 3.0, places=6)
             self.assertAlmostEqual(extent(second), 3.5, places=6)

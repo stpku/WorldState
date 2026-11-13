@@ -1,0 +1,33 @@
+{
+  "wall_id": "wall-patch-1",
+  "attribute": "length",
+  "before": {
+    "value": 0.4280838655356659,
+    "unit": "m",
+    "status": "inferred",
+    "evidence_refs": [
+      "photo-1",
+      "depth-1",
+      "anchor-1",
+      "operator-1",
+      "vision-1"
+    ],
+    "note": "visible support only, not complete wall length"
+  },
+  "after": {
+    "value": 0.5,
+    "unit": "m",
+    "status": "inferred",
+    "evidence_refs": [
+      "photo-1",
+      "depth-1",
+      "anchor-1",
+      "operator-1",
+      "vision-1",
+      "revision-2"
+    ],
+    "note": "operator revision; not a new field measurement"
+  },
+  "previous_revision": 1,
+  "revision": 2
+}

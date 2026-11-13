@@ -2,6 +2,8 @@
 
 **Status: runnable proposal-to-IFC4 prototype; NOT automatic photos-to-BIM yet.**
 
+**Round 2:** an [assisted real-photo + RGB-D wall-patch IFC example](../../examples/bim_real_photo_tum/README.md) and local editing viewer are available. The example's scale is derived from the same sensor, its thickness is assumed, and it is not a complete room or V0.2 acceptance.
+
 The product boundary is recorded in [SCOPE.md](SCOPE.md). A separate
 [real-room benchmark](../../benchmarks/bim_real_room/README.md) now exercises
 photo-only sparse geometry, monocular relative depth and an operator-selected

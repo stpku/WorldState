@@ -1,0 +1,8 @@
+{
+  "engine": "web-ifc 0.0.77",
+  "wall_guid_before": "27dj0KkHfVKfCo5Vu6Zcj6",
+  "wall_guid_after": "27dj0KkHfVKfCo5Vu6Zcj6",
+  "height_before_m": 0.401175292255203,
+  "height_after_m": 0.45,
+  "warning": "External IFC edit is not reflected in WorldState IR; revalidation required."
+}
