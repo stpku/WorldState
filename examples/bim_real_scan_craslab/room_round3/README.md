@@ -14,7 +14,7 @@
 
 IfcOpenShell 0.8.4 对原始、Bonsai 修改和同步版本进行 IFC schema 检查，各 0 条；web-ifc 0.0.77 独立读取到 8 面墙，修改目标 GUID 保持 `270zBQX71J0wAulN$ejl1L`。没有引入源 IFC 的无效窗类型；这并不能证明构件识别正确或门窗位置准确。
 
-冻结 IFC 后，以 4 cm 点到墙面距离对同一开发点云的独立存放标签做对照：[点级 precision 0.5964、recall 0.1601](surface-evaluation.json)。这些值是同一开发场景的表面邻近指标，低于发布要求，不能当作跨场景实例精度或独立墙尺寸误差。
+冻结 IFC 后，以 4 cm 点到墙面距离对同一开发点云的独立存放标签做对照：[点级 precision 0.5964、recall 0.1601](surface-evaluation.json)。这些值是同一开发场景的表面邻近指标，不能与基于墙实例的发布门槛直接比较，也不能当作跨场景实例精度或独立墙尺寸误差。
 
 ```bash
 # 从仓库根目录，Python 3.12 环境按 benchmarks/README.md 安装
