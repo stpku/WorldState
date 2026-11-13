@@ -1,44 +1,25 @@
-# DSH → WorldState BIM contract (proposed)
+# DSH → WorldState BIM：受限工具接口和运行状态
 
-**Not implemented:** This describes a specific integration task for the
-existing DeepSeek Harness environment. No live DSH endpoint is called by the
-prototype today.
+2026-11-13 第三轮：本机部署的 `dsh-web.service`、`dsh-gateway.service` 和 `dsh-auth.service` 均为 active/running。只读探测显示本机 Web `127.0.0.1:3080` 和网关 `127.0.0.1:9092` 可达，但当前会话收到 HTTP 401；没有读取或输出任何凭据，也没有绕过认证。Web profile 文件出现 `deepseek-flash` 和 `dsh-vision-router` 名称，这只证明配置文本引用，并不证明当前服务成功加载、可调用或有视觉授权。第二轮独立 headless profile 的最小任务返回 `MISSING_CREDENTIAL`；**不能据此认定 Web 服务的模型配置或凭据也缺失**。当前会话无法验证部署服务中的模型调用、图像输入、结构化输出、MCP 调用与反馈修复，均为 NOT_TESTED。
 
-## Input
+`dsh web --help` 在本机触发插件启动日志，其中指出 rc.2 插件与 rc.1 runtime 版本不兼容；这是独立风险，不证明 401 的原因。没有修改服务、插件、凭据或发布设置。
 
-- Evidence manifest: photo IDs, paths, hashes, provenance, capture date if known
-- Additional context: floor plan when licensed, camera pose if known
-- Metric anchors: checked dimension + source (not model-generated assumptions)
-- Target IFC scope, e.g. simple room walls first
-- Human objective: model which building phase / room / date, and excluded regions
+## 已实现的产品工具
 
-## Required tools
+[modeling_tools.py](modeling_tools.py) 提供本地 Python 函数，可由外部 Harness 的授权适配器包装：
 
-```text
-inspect_images(manifest)                  -> image-level features and evidence refs
-propose_parametric_geometry(context)     -> worldstate-bim-proposal/0.1
-check_metric_scale(anchors, cameras)     -> anchored / unanchored with reasons
-validate_proposal(proposal, evidence)    -> typed errors, no vague success
-compile_ifc(proposal, mode=draft)         -> IFC file path, export warnings
-compare_projection(ifc, cameras, images) -> residuals per visible evidence
-request_human_review(changes, unknowns)  -> accept / correct / reject
-```
+- `inspect_evidence(model)`：只读来源和状态。
+- `propose_elements(model)`：列出 IR 中已有的未确认候选，明确标记不执行新推理。
+- `inspect_element(model, id)`：读取属性、节点、约束和冲突。
+- `apply_constraint(...)`：在现有几何满足时增加有来源的约束；冲突时报错。
+- `update_element(...)`：版本化修改参数，传播角点并检查开口。
+- `validate_geometry(model)`：列出显式冲突，不把通过检查称为实测准确。
+- `compile_ifc(model, output)`：仅生成新本地 IFC 文件，不覆盖。
+- `compare_revisions(before, after)`：按稳定 ID 比较构件和节点。
+- `sync_ifc(...)`：在全模型校验通过后回读一个受支持的外部 IFC 修改。
 
-## DSH output contract
+这些函数不是 DSH MCP 注册结果，也不是 Agent 会话、运行循环、权限或调度器。DSH 工具调用和自主反馈修复尚未实测；仓库内的直接 Python 测试和 Studio 的明确标注本地规则命令不能冒充 DSH 调用成功。
 
-The current compiler supports only `walls`, each as a line-based semantic
-`IfcWall` with `start_m`, `end_m`, `height_m`, `thickness_m`, `basis`
-and non-empty `evidence_refs`. Use `images[].sha256` to bind source files.
-Set all geometry that is inferred from photos to `inferred`, not `measured`.
+旧的 `worldstate-bim-proposal/0.1` 和 `parametric-ir/0.2` 单墙路径保持兼容；多构件产品路径使用 `worldstate-bim-room-ir/0.3`。视觉模型和几何 provider 输出必须带来源、坐标与不确定性；对不可见的墙、开口、材料和尺寸保留未知/假设。Agent 不得直接写任意 IFC 文本、覆盖权威模型或执行工程审批。
 
-Dangers to explicitly detect:
-- no independent metric anchor (no silent conversion to real metres);
-- missing or inaccessible photo evidence;
-- inconsistent building phase/camera date;
-- DSH claims of unseen walls or room layout without supporting evidence;
-- invented doors/windows/equipment dimensions;
-- IFC successfully written but wrong room topology / physically impossible wall;
-- model confidence labels treated as engineering acceptance.
-
-The loop must return actionable tool errors to DSH but MUST NOT automatically
-approve construction or overwrite authoritative design records.
+要开展真实 DSH 验证，需通过已批准的会话认证或管理员提供的受控接口，在不接触明文密钥的前提下验证已配置模型、图像支持和工具注册；若不具备授权，继续使用本地受控工具和人工参数操作。
