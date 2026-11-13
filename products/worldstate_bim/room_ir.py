@@ -319,6 +319,13 @@ def revise_element(model: dict[str, Any], element_id: str, attribute: str, value
     if issues:
         raise ValueError("revision creates geometric conflicts: " + ", ".join(f"{x['id']}:{x['code']}" for x in issues))
     affected = {element_id}
+    if kind == "IfcOpeningElement":
+        affected.add(element["host"])
+        if element.get("fill"):
+            affected.add(element["fill"])
+    elif kind in {"IfcDoor", "IfcWindow"}:
+        opening = elements[element["opening"]]
+        affected.update((opening["id"], opening["host"]))
     for e in elements.values():
         if e["ifc_type"] == "IfcWall" and ({e["start"], e["end"]} & changed_nodes):
             affected.add(e["id"])

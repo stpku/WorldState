@@ -1,0 +1,19 @@
+{
+  "application": "Blender 5.2.2 LTS + Bonsai 0.9.0.post1",
+  "operation": "native wall length edit",
+  "wall_guid_before": "270zBQX71J0wAulN$ejl1L",
+  "wall_guid_after": "270zBQX71J0wAulN$ejl1L",
+  "requested_length_m": 5.3,
+  "bounds_before_m": [
+    5.099998950958252,
+    0.49399974942207336,
+    3.3959999084472656
+  ],
+  "bounds_after_m": [
+    5.300000190734863,
+    0.49399974942207336,
+    3.3959999084472656
+  ],
+  "walls_after": 8,
+  "windows_after": 5
+}

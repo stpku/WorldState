@@ -1,0 +1,64 @@
+{
+  "source_sha256": "7e1ba673649b7bdabd8995705c5104b48ce3b00a4412560e7ea16d7fe74a2942",
+  "source_ifc_schema": "IFC4",
+  "source_counts": {
+    "IfcWall": 9,
+    "IfcSlab": 2,
+    "IfcOpeningElement": 6,
+    "IfcDoor": 0,
+    "IfcWindow": 6,
+    "IfcSpace": 0
+  },
+  "imported_counts": {
+    "IfcWall": 8,
+    "IfcSlab": 1,
+    "IfcOpeningElement": 5,
+    "IfcWindow": 5
+  },
+  "quarantined": [
+    {
+      "source_guid": "3ehcXbzGz8QBlq2a_be19A",
+      "ifc_type": "IfcWall",
+      "reason": "provider thickness below its configured 0.05 m minimum; requires confirmation",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "source_guid": "1dscoTx416GwBvGSkDkANf",
+      "ifc_type": "IfcSlab",
+      "reason": "provider slab boundary self-intersects or is degenerate",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "source_guid": "3SI2hSKzX1x9eebdFJafK_",
+      "ifc_type": "IfcOpeningElement",
+      "reason": "source opening extends outside host wall",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "source_guid": "1v_2yqcx587vKxMnGxuF5z",
+      "ifc_type": "IfcWindow",
+      "reason": "filling omitted because its source opening was quarantined",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    }
+  ],
+  "source_schema_errors": "six IfcWindowType.PartitioningType fields absent; unsupported type definitions are not imported",
+  "geographic_location": "UNKNOWN: discarded source 0/0 placeholder",
+  "material": "UNKNOWN: discarded source material assignments",
+  "warning": "candidate geometry and semantic classes are inferred, not independently verified"
+}

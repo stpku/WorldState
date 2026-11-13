@@ -1,0 +1,19 @@
+{
+  "previous_revision": 1,
+  "revision": 2,
+  "element_id": "wall-a29ee94ac6f2dc67",
+  "attribute": "height",
+  "before": 3.396,
+  "after": 3.5,
+  "changed_nodes": [],
+  "affected_elements": [
+    "ifcwindow-2ad5a81694a7ff78",
+    "ifcwindow-8378b86dbf57ca48",
+    "ifcwindow-cb9c8d1580e5606c",
+    "opening-34fcb929a4856871",
+    "opening-5e6907ac700a20f3",
+    "opening-66b1107a1a3f7c2e",
+    "wall-a29ee94ac6f2dc67"
+  ],
+  "reason_ref": "revision-2"
+}

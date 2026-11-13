@@ -1,0 +1,1705 @@
+{
+  "schema": "worldstate-bim-room-ir/0.3",
+  "project_id": "craslab-room-development",
+  "mode": "automatic",
+  "revision": 3,
+  "coordinate_system": {
+    "name": "CRASLAB source scan",
+    "unit": "m",
+    "georeferencing": "UNKNOWN"
+  },
+  "evidence": [
+    {
+      "id": "cloud2bim-ifc-1",
+      "kind": "provider_result",
+      "sha256": "7e1ba673649b7bdabd8995705c5104b48ce3b00a4412560e7ea16d7fe74a2942",
+      "provider": "Cloud2BIM",
+      "status": "unverified_candidate"
+    },
+    {
+      "id": "craslab-source-1",
+      "kind": "metric_point_cloud",
+      "unit": "m",
+      "source": "https://doi.org/10.5281/zenodo.7948116",
+      "license": "CC-BY-4.0",
+      "archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671"
+    },
+    {
+      "id": "revision-2",
+      "kind": "manual_revision",
+      "operator": "analyst",
+      "reason": "demonstration height revision; not measurement"
+    },
+    {
+      "id": "revision-3",
+      "kind": "manual_revision",
+      "operator": "analyst",
+      "reason": "demonstration window move; not measurement"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node-488771613396a2ca",
+      "x": 10.33,
+      "y": 12.081,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-4bfda8468fa36c1c",
+      "x": 10.33,
+      "y": 2.881,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-9e3aaa1e01789d01",
+      "x": 17.983,
+      "y": -4.2175,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-fc71639d74dc7fc7",
+      "x": 10.733,
+      "y": -4.2175,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-beef43ecada830d8",
+      "x": 10.733,
+      "y": 2.534,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-63921b19bf3979fc",
+      "x": 11.833,
+      "y": 11.134,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-b7863914b0560813",
+      "x": 11.833,
+      "y": 16.233999,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-061f5b14d1986952",
+      "x": 11.933,
+      "y": 12.881,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-822bdd897caad880",
+      "x": 11.933,
+      "y": 19.581,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-597bd06208d037f6",
+      "x": 13.08,
+      "y": 20.1325,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-fb147e2ee7b727b0",
+      "x": 17.983,
+      "y": 20.1325,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-7526ed9487bf0985",
+      "x": 18.133,
+      "y": 0.681,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-a5891471cddfafe9",
+      "x": 18.133,
+      "y": 6.881,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-d082eda6f3ab8dca",
+      "x": 17.983,
+      "y": 0.581,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-57cbf12467c9c8f9",
+      "x": 10.936,
+      "y": -4.066,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-ba4f09cd7b2bd49f",
+      "x": 10.936,
+      "y": 2.534,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-4e32238a5942368c",
+      "x": 11.036,
+      "y": 2.634,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-5a1f113660ae535b",
+      "x": 11.036,
+      "y": 3.034,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-8aed0716da3e19eb",
+      "x": 11.436,
+      "y": 3.034,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-b4857aaea6c2cce2",
+      "x": 11.536,
+      "y": 3.134,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-480d0e7e6a8c324b",
+      "x": 11.536,
+      "y": 3.834,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-492f99078b6898a9",
+      "x": 11.636,
+      "y": 3.934,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-4f0c46d079a30c45",
+      "x": 11.636,
+      "y": 11.034,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-2b7c3d8510f293a2",
+      "x": 11.936,
+      "y": 11.034,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-126b28971f1903bc",
+      "x": 12.036,
+      "y": 11.134,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-9b376ddc1f687b2b",
+      "x": 12.036,
+      "y": 16.233999,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-b7f6354f92d2d859",
+      "x": 12.136,
+      "y": 16.334,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-0ab49fa613c21135",
+      "x": 12.136,
+      "y": 19.534,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-fc94073bdeb66ccf",
+      "x": 12.236,
+      "y": 19.534,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-569fe4b503a763c7",
+      "x": 12.336,
+      "y": 19.634001,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-75b3e8477f8143fc",
+      "x": 13.236,
+      "y": 19.634001,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-129d1fba96ce8c0d",
+      "x": 13.336,
+      "y": 19.733999,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-4eeb484adb14a9cb",
+      "x": 13.336,
+      "y": 19.834,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-620d5b7ab7791405",
+      "x": 17.836,
+      "y": 19.834,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-6135f5f001536e7f",
+      "x": 17.836,
+      "y": 19.733999,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-5f3dbd59e941ee57",
+      "x": 17.936001,
+      "y": 19.634001,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-b840d5044ed318b7",
+      "x": 18.035999,
+      "y": 19.634001,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-563cb5ebd9c1aeff",
+      "x": 18.035999,
+      "y": 19.434,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-2c9ad42438ebb325",
+      "x": 18.136,
+      "y": 19.334,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-f997eb785e83d7c5",
+      "x": 18.136,
+      "y": 15.934,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-f4dc95d2b64ca90f",
+      "x": 18.035999,
+      "y": 15.834,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-2f0d630fab51611f",
+      "x": 18.035999,
+      "y": 14.434,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-f53d4cbcf2811a35",
+      "x": 18.136,
+      "y": 14.334,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-a262b94a821ebfcb",
+      "x": 18.035999,
+      "y": 14.234,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-4be0b3d0c350d898",
+      "x": 18.035999,
+      "y": 8.434,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-7f85bccee5451317",
+      "x": 17.936001,
+      "y": 8.334,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-57339061f1703bac",
+      "x": 17.936001,
+      "y": 5.534,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-59ff9f7287a4b0df",
+      "x": 18.035999,
+      "y": 5.434,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-4bbc6615f02fcbef",
+      "x": 17.936001,
+      "y": 5.334,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-483a0f3a134d8d9b",
+      "x": 17.936001,
+      "y": 0.934,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-e395f947e8864952",
+      "x": 17.736,
+      "y": 0.734,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-ec56f686efef2168",
+      "x": 17.736,
+      "y": -1.766,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-603e45bf32580126",
+      "x": 17.836,
+      "y": -1.866,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-40283fd9fb078641",
+      "x": 17.836,
+      "y": -3.566,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-c2bf9feb3db4c73c",
+      "x": 17.636,
+      "y": -3.766,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "id": "node-c84b71f8104fa091",
+      "x": 17.636,
+      "y": -4.066,
+      "status": "inferred",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    }
+  ],
+  "storeys": [
+    {
+      "id": "storey-84d088050b6fc3b2",
+      "source_guid": "0HXpsefCz7CB4QIo9fxc_Q",
+      "elevation": {
+        "value": -1.148,
+        "unit": "m",
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ],
+        "note": "provider storey elevation; not independent measurement"
+      }
+    },
+    {
+      "id": "storey-7c494da0f6e5c802",
+      "source_guid": "0P6IcTW$b5$Pd5wIvb$Kbi",
+      "elevation": {
+        "value": 1.948,
+        "unit": "m",
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ],
+        "note": "provider storey elevation; not independent measurement"
+      }
+    }
+  ],
+  "elements": [
+    {
+      "id": "wall-a29ee94ac6f2dc67",
+      "ifc_type": "IfcWall",
+      "source_guid": "0S$DHqzzv3lvo6VpDhr$Sz",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-488771613396a2ca",
+      "end": "node-4bfda8468fa36c1c",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.5,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1",
+            "revision-2"
+          ],
+          "note": "demonstration height revision; not measurement"
+        },
+        "thickness": {
+          "value": 0.0999999999999996,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "wall-f0672c39267d2103",
+      "ifc_type": "IfcWall",
+      "source_guid": "0yqolNVBv8jwMlWQaL8dFQ",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-9e3aaa1e01789d01",
+      "end": "node-fc71639d74dc7fc7",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.396,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "thickness": {
+          "value": 0.596999984741211,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "wall-a0b1f681af965b78",
+      "ifc_type": "IfcWall",
+      "source_guid": "1qejfeJfrArRdGKeM9Yjef",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-fc71639d74dc7fc7",
+      "end": "node-beef43ecada830d8",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.396,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "thickness": {
+          "value": 0.494000129699707,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "wall-cf1d15bbd93c2d52",
+      "ifc_type": "IfcWall",
+      "source_guid": "2o6voS_pT0kOB5ftFBK3gU",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-63921b19bf3979fc",
+      "end": "node-b7863914b0560813",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.396,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "thickness": {
+          "value": 0.49399974822998,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "wall-ccfebec694c72fb9",
+      "ifc_type": "IfcWall",
+      "source_guid": "1rpMb4Fk9D2QThTsV4aDCE",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-061f5b14d1986952",
+      "end": "node-822bdd897caad880",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.396,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "thickness": {
+          "value": 0.494000320434571,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "wall-7f4c79ab8b204ef6",
+      "ifc_type": "IfcWall",
+      "source_guid": "0db0EQ_Qj8p9SKxnM63UKl",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-597bd06208d037f6",
+      "end": "node-fb147e2ee7b727b0",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.396,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "thickness": {
+          "value": 0.30299963378906,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "wall-f9dfdfd5026ed9f8",
+      "ifc_type": "IfcWall",
+      "source_guid": "2o__rWgtjEpO7GytlHgyT1",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-7526ed9487bf0985",
+      "end": "node-a5891471cddfafe9",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.396,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "thickness": {
+          "value": 0.50600082397461,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "wall-3db15cb826c64f45",
+      "ifc_type": "IfcWall",
+      "source_guid": "1$NjfNn7j6QwAnHHRN2bn9",
+      "storey": "storey-84d088050b6fc3b2",
+      "start": "node-9e3aaa1e01789d01",
+      "end": "node-d082eda6f3ab8dca",
+      "axis_reference": "centerline",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3.396,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "thickness": {
+          "value": 0.406000061035158,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider-inferred thickness, not independently measured"
+        },
+        "base_elevation": {
+          "value": -1.448,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual wall class",
+        "actual thickness and extent",
+        "unobserved openings",
+        "material"
+      ]
+    },
+    {
+      "id": "slab-ce6cfbb8929954bd",
+      "ifc_type": "IfcSlab",
+      "source_guid": "2vRESbu7jDHvDc_9MiXOXU",
+      "storey": "storey-7c494da0f6e5c802",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "outline": [
+        "node-57cbf12467c9c8f9",
+        "node-ba4f09cd7b2bd49f",
+        "node-4e32238a5942368c",
+        "node-5a1f113660ae535b",
+        "node-8aed0716da3e19eb",
+        "node-b4857aaea6c2cce2",
+        "node-480d0e7e6a8c324b",
+        "node-492f99078b6898a9",
+        "node-4f0c46d079a30c45",
+        "node-2b7c3d8510f293a2",
+        "node-126b28971f1903bc",
+        "node-9b376ddc1f687b2b",
+        "node-b7f6354f92d2d859",
+        "node-0ab49fa613c21135",
+        "node-fc94073bdeb66ccf",
+        "node-569fe4b503a763c7",
+        "node-75b3e8477f8143fc",
+        "node-129d1fba96ce8c0d",
+        "node-4eeb484adb14a9cb",
+        "node-620d5b7ab7791405",
+        "node-6135f5f001536e7f",
+        "node-5f3dbd59e941ee57",
+        "node-b840d5044ed318b7",
+        "node-563cb5ebd9c1aeff",
+        "node-2c9ad42438ebb325",
+        "node-f997eb785e83d7c5",
+        "node-f4dc95d2b64ca90f",
+        "node-2f0d630fab51611f",
+        "node-f53d4cbcf2811a35",
+        "node-a262b94a821ebfcb",
+        "node-4be0b3d0c350d898",
+        "node-7f85bccee5451317",
+        "node-57339061f1703bac",
+        "node-59ff9f7287a4b0df",
+        "node-4bbc6615f02fcbef",
+        "node-483a0f3a134d8d9b",
+        "node-e395f947e8864952",
+        "node-ec56f686efef2168",
+        "node-603e45bf32580126",
+        "node-40283fd9fb078641",
+        "node-c2bf9feb3db4c73c",
+        "node-c84b71f8104fa091"
+      ],
+      "outline_status": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "thickness": {
+          "value": 0.4,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "provider slab thickness not measured"
+        },
+        "elevation": {
+          "value": 1.548,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "actual slab thickness",
+        "material",
+        "room membership"
+      ]
+    },
+    {
+      "id": "opening-34fcb929a4856871",
+      "ifc_type": "IfcOpeningElement",
+      "source_guid": "2iiCU5tdTCDuEBp3LIpGpK",
+      "host": "wall-a29ee94ac6f2dc67",
+      "fill": "ifcwindow-2ad5a81694a7ff78",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 1.25,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1",
+            "revision-3"
+          ],
+          "note": "demonstration window move; not measurement"
+        },
+        "width": {
+          "value": 1.3142093023255796,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "height": {
+          "value": 2.14368,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "sill": {
+          "value": 0.10207999999999995,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "opening physical extent",
+        "occluded surfaces"
+      ]
+    },
+    {
+      "id": "ifcwindow-2ad5a81694a7ff78",
+      "ifc_type": "IfcWindow",
+      "source_guid": "3zNxgXPL5FaxLX5pilqFD5",
+      "opening": "opening-34fcb929a4856871",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "placeholder panel thickness; source does not establish actual thickness"
+        }
+      },
+      "unknown": [
+        "true filling type",
+        "material",
+        "panel thickness"
+      ]
+    },
+    {
+      "id": "opening-5e6907ac700a20f3",
+      "ifc_type": "IfcOpeningElement",
+      "source_guid": "0xXGhGfz92ku15b5MsmO7J",
+      "host": "wall-a29ee94ac6f2dc67",
+      "fill": "ifcwindow-cb9c8d1580e5606c",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 4.89055813953489,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "width": {
+          "value": 1.1120232558139502,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "height": {
+          "value": 2.14368,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "sill": {
+          "value": 0.10207999999999995,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "opening physical extent",
+        "occluded surfaces"
+      ]
+    },
+    {
+      "id": "ifcwindow-cb9c8d1580e5606c",
+      "ifc_type": "IfcWindow",
+      "source_guid": "0aVWojogHBFxRBM8DKUOZA",
+      "opening": "opening-5e6907ac700a20f3",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "placeholder panel thickness; source does not establish actual thickness"
+        }
+      },
+      "unknown": [
+        "true filling type",
+        "material",
+        "panel thickness"
+      ]
+    },
+    {
+      "id": "opening-66b1107a1a3f7c2e",
+      "ifc_type": "IfcOpeningElement",
+      "source_guid": "08RqrrpfTB_w8BQq81Ulii",
+      "host": "wall-a29ee94ac6f2dc67",
+      "fill": "ifcwindow-8378b86dbf57ca48",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 6.10367441860465,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "width": {
+          "value": 1.1120232558139502,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "height": {
+          "value": 2.14368,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "sill": {
+          "value": 0.10207999999999995,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "opening physical extent",
+        "occluded surfaces"
+      ]
+    },
+    {
+      "id": "ifcwindow-8378b86dbf57ca48",
+      "ifc_type": "IfcWindow",
+      "source_guid": "2wfjiWGV935QQxC8rqRwn1",
+      "opening": "opening-66b1107a1a3f7c2e",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "placeholder panel thickness; source does not establish actual thickness"
+        }
+      },
+      "unknown": [
+        "true filling type",
+        "material",
+        "panel thickness"
+      ]
+    },
+    {
+      "id": "opening-81c050e22d12005c",
+      "ifc_type": "IfcOpeningElement",
+      "source_guid": "2BwOMIPKb0GPdFMjrJjYtN",
+      "host": "wall-ccfebec694c72fb9",
+      "fill": "ifcwindow-7238b946a7b0b943",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 5.627147058823532,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "width": {
+          "value": 0.4057647058823548,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "height": {
+          "value": 1.03692307692308,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "sill": {
+          "value": 1.24630769230769,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "opening physical extent",
+        "occluded surfaces"
+      ]
+    },
+    {
+      "id": "ifcwindow-7238b946a7b0b943",
+      "ifc_type": "IfcWindow",
+      "source_guid": "0W$WuVXzP9BxXPzXnQz6UW",
+      "opening": "opening-81c050e22d12005c",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "placeholder panel thickness; source does not establish actual thickness"
+        }
+      },
+      "unknown": [
+        "true filling type",
+        "material",
+        "panel thickness"
+      ]
+    },
+    {
+      "id": "opening-738cefcee5308871",
+      "ifc_type": "IfcOpeningElement",
+      "source_guid": "0PRUS3ke92if$NVzqG5P6D",
+      "host": "wall-f9dfdfd5026ed9f8",
+      "fill": "ifcwindow-1cafc69ad24d25ef",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 0.253,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "width": {
+          "value": 2.40154838709677,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "height": {
+          "value": 1.24153846153846,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        },
+        "sill": {
+          "value": 1.24353846153846,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "Cloud2BIM candidate, not verified"
+        }
+      },
+      "unknown": [
+        "opening physical extent",
+        "occluded surfaces"
+      ]
+    },
+    {
+      "id": "ifcwindow-1cafc69ad24d25ef",
+      "ifc_type": "IfcWindow",
+      "source_guid": "1K3i8WOnXBMuSVD26inMO$",
+      "opening": "opening-738cefcee5308871",
+      "storey": "storey-84d088050b6fc3b2",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "cloud2bim-ifc-1",
+          "craslab-source-1"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "cloud2bim-ifc-1",
+            "craslab-source-1"
+          ],
+          "note": "placeholder panel thickness; source does not establish actual thickness"
+        }
+      },
+      "unknown": [
+        "true filling type",
+        "material",
+        "panel thickness"
+      ]
+    }
+  ],
+  "constraints": [],
+  "quarantined": [
+    {
+      "source_guid": "3ehcXbzGz8QBlq2a_be19A",
+      "ifc_type": "IfcWall",
+      "reason": "provider thickness below its configured 0.05 m minimum; requires confirmation",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "source_guid": "1dscoTx416GwBvGSkDkANf",
+      "ifc_type": "IfcSlab",
+      "reason": "provider slab boundary self-intersects or is degenerate",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "source_guid": "3SI2hSKzX1x9eebdFJafK_",
+      "ifc_type": "IfcOpeningElement",
+      "reason": "source opening extends outside host wall",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    },
+    {
+      "source_guid": "1v_2yqcx587vKxMnGxuF5z",
+      "ifc_type": "IfcWindow",
+      "reason": "filling omitted because its source opening was quarantined",
+      "status": "conflict",
+      "evidence_refs": [
+        "cloud2bim-ifc-1",
+        "craslab-source-1"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "REQUIRES_REVALIDATION"
+  },
+  "history": [
+    {
+      "previous_revision": 1,
+      "revision": 2,
+      "element_id": "wall-a29ee94ac6f2dc67",
+      "attribute": "height",
+      "before": 3.396,
+      "after": 3.5,
+      "changed_nodes": [],
+      "affected_elements": [
+        "ifcwindow-2ad5a81694a7ff78",
+        "ifcwindow-8378b86dbf57ca48",
+        "ifcwindow-cb9c8d1580e5606c",
+        "opening-34fcb929a4856871",
+        "opening-5e6907ac700a20f3",
+        "opening-66b1107a1a3f7c2e",
+        "wall-a29ee94ac6f2dc67"
+      ],
+      "reason_ref": "revision-2"
+    },
+    {
+      "previous_revision": 2,
+      "revision": 3,
+      "element_id": "opening-34fcb929a4856871",
+      "attribute": "offset",
+      "before": 1.1501162790697705,
+      "after": 1.25,
+      "changed_nodes": [],
+      "affected_elements": [
+        "ifcwindow-2ad5a81694a7ff78",
+        "ifcwindow-8378b86dbf57ca48",
+        "ifcwindow-cb9c8d1580e5606c",
+        "opening-34fcb929a4856871",
+        "opening-5e6907ac700a20f3",
+        "opening-66b1107a1a3f7c2e",
+        "wall-a29ee94ac6f2dc67"
+      ],
+      "reason_ref": "revision-3"
+    }
+  ]
+}
