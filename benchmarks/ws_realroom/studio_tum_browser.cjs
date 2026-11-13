@@ -48,7 +48,7 @@ async function main() {
       'camera-pitch':'30','camera-description':'近似内参；俯角 30° 和零横滚均为未核实假设',
       'anchor-length':'0.6038487127014679','anchor-description':'同传感器深度帧 deprojection，非独立测量',
       'wall-height':'0.45','wall-thickness':'0.12'})) await page.fill('#'+id,value);
-  await page.check('#confirm-camera');await page.selectOption('#anchor-basis','same_sensor');await page.selectOption('#height-basis','assumed');
+  await page.check('#confirm-camera');await page.check('#confirm-candidate');await page.selectOption('#anchor-basis','same_sensor');await page.selectOption('#height-basis','assumed');
   await page.screenshot({path:path.join(output,'builder.png'),fullPage:true});
   await page.click('#generate');
   await page.waitForFunction(()=>document.querySelector('#summary')?.textContent.includes('版本 1'),null,{timeout:30000});
@@ -59,6 +59,7 @@ async function main() {
   await page.locator('#annotation-list .ann-row').nth(2).locator('button').click();
   await page.waitForFunction(()=>document.querySelectorAll('#annotation-list .ann-row').length===2);
   await mark('corner',[[400,155]],'node-2',3);
+  await page.check('#confirm-candidate');
   await page.click('#generate');
   await page.waitForFunction(()=>document.querySelector('#summary')?.textContent.includes('版本 2'),null,{timeout:30000});
   const corrected=await getModel();

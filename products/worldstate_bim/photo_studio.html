@@ -42,6 +42,7 @@
 <label>墙高（m）<input id="wall-height" type="number" min="0.01" step="0.01" placeholder="例如 2.70"></label><label>墙高来源<select id="height-basis"><option value="">请选择</option><option value="user_measurement">用户测量（待核验）</option><option value="assumed">假设</option></select></label>
 <label>未观测墙厚假设（m）<input id="wall-thickness" type="number" min="0.01" step="0.01" placeholder="例如 0.12"></label>
 </div>
+<label class="check"><input type="checkbox" id="confirm-candidate">我已检查照片标注、尺度与假设，确认生成未验证的候选 IFC</label>
 <div class="row" style="margin-top:14px"><button id="save-layout">保存草图和约束</button><button class="primary" id="generate">生成 IFC 候选 →</button></div>
 </section>
 </div>
@@ -74,7 +75,7 @@ $('save-annotation').onclick=async()=>{try{if(!project||!photo)throw Error('请�
 $('plan-canvas').onclick=e=>{let c=e.currentTarget,r=c.getBoundingClientRect();if(planPoints.length>=40){message('最多 40 个墙角');return}planPoints.push([Math.max(0,Math.min(800,Math.round((e.clientX-r.left)*800/r.width))),Math.max(0,Math.min(500,Math.round((e.clientY-r.top)*500/r.height)))]);drawPlan()};
 $('undo-plan').onclick=()=>{planPoints.pop();drawPlan()};$('clear-plan').onclick=()=>{planPoints=[];drawPlan()};$('plan-closed').onchange=drawPlan;
 $('save-layout').onclick=async()=>{try{await request('/api/layout',layoutBody());message('草图和约束已保存；生成时将检查是否充分。')}catch(e){message(e.message)}};
-$('generate').onclick=async()=>{let b=$('generate');try{b.disabled=true;message('正在校验标注、求解尺度并生成 IFC…');await request('/api/layout',layoutBody());let confirmRegeneration=false;if(hasModel){confirmRegeneration=confirm('重新生成将用当前标注和约束替换编辑后的几何，旧版本会保留。请确认标尺仍对应相同的真实端点；如有变化需重新测量。继续吗？');if(!confirmRegeneration)return}let result=await request('/api/generate',{confirm_regeneration:confirmRegeneration});message(`版本 ${result.revision} 已生成，正在打开模型…`);location.href='/'}catch(e){message(e.message)}finally{b.disabled=false}};
+$('generate').onclick=async()=>{let b=$('generate');try{b.disabled=true;if(!$('confirm-candidate').checked)throw Error('请先确认已检查照片标注、尺度和假设');message('正在校验标注、求解尺度并生成 IFC…');await request('/api/layout',layoutBody());let confirmRegeneration=false;if(hasModel){confirmRegeneration=confirm('重新生成将用当前标注和约束替换编辑后的几何，旧版本会保留。请确认标尺仍对应相同的真实端点；如有变化需重新测量。继续吗？');if(!confirmRegeneration)return}let result=await request('/api/generate',{confirmed_candidate:true,confirm_regeneration:confirmRegeneration});message(`版本 ${result.revision} 已生成，正在打开模型…`);location.href='/'}catch(e){message(e.message)}finally{b.disabled=false}};
 refresh().then(restoreFields).catch(e=>message(e.message));drawPlan();
 </script>
 </body></html>

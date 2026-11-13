@@ -30,7 +30,7 @@ async function main(){
   for(const [x,y] of [[.15,.25],[.70,.25],[.70,.70],[.20,.70]])await canvas.click({position:{x:rect.width*x,y:rect.height*y}});
   await page.check('#confirm-sketch');await page.fill('#anchor-length','4');await page.selectOption('#anchor-basis','assumed');
   await page.fill('#anchor-description','自动化测试的模拟尺度');await page.fill('#wall-height','2.8');
-  await page.selectOption('#height-basis','assumed');await page.fill('#wall-thickness','.12');await page.click('#generate');
+  await page.selectOption('#height-basis','assumed');await page.fill('#wall-thickness','.12');await page.check('#confirm-candidate');await page.click('#generate');
   await page.waitForFunction(()=>document.querySelector('#summary')?.textContent.includes('版本 1'),null,{timeout:30000});
   const original=await(await page.request.get(base+'/api/model')).json();
   if(original.elements.some(x=>x.classification.status!=='simulated'))throw Error('automated annotations must not be marked human confirmed');

@@ -17,6 +17,7 @@
 
 - [TUM 真照片局部墙](../../examples/bim_real_photo_tum/round4/README.md)：Playwright 自动创建项目、上传两张真实照片、标注一段墙面和地面端点、以近似相机参数和标尺生成一个墙段；修改图像点后模型方向改变。标尺由同场景深度帧计算，**不是独立参照**；俯角、水平地面、墙高和厚度未独立核实。项目将自动化标注明确标为 `simulated`。它只能作为局部、未验证开发样例。
 - 同一案例在 Studio 中通过本地规则将墙长增加 0.2 m；Blender/Bonsai 后台原生操作器将墙长再改至 0.9 m，浏览器上传 IFC 并同步 IR。后续另以 Bonsai 修改墙高并浏览器回写。五个产品版本的墙 GUID 保持，web-ifc 独立读回，IfcOpenShell schema 检查及墙几何生成通过。自动点击和修改数值均非人工成本测量或现场测量。
+- 增加生成前的标注、标尺及假设确认后，另在新工作区重跑[真实照片浏览器操作](photo-confirmed-browser.json)、[Bonsai 编辑](photo-confirmed-bonsai.json)和[浏览器回写](photo-confirmed-sync.json)。这与上一个持久样例是两次独立的自动化开发运行，均不是人工验收。
 - [多墙浏览器记录](multiwall-browser.json)使用真实照片，但墙体关联、四点草图、尺度、门窗参数均为**脚本构造的模拟输入**：生成 3 墙、1 窗和 1 开口；规则修改后影响相邻墙及开口；[Bonsai 墙高编辑](multiwall-bonsai.json)和[浏览器同步](multiwall-sync.json)成功。该测试不代表三面真实墙的识别或尺寸精度。脚本见 [studio_multiwall_browser.cjs](../../benchmarks/ws_realroom/studio_multiwall_browser.cjs) 与 [studio_sync_browser.cjs](../../benchmarks/ws_realroom/studio_sync_browser.cjs)。
 - [CRASLAB 独立应用编辑](../../examples/bim_real_scan_craslab/room_round4/README.md)：Bonsai 墙高 3.396→3.5 m、窗洞 offset 1.150116→1.250001 m 分别保存并同步。直接 `recalculate_fill` 曾丢失开口几何，失败文件和拒绝结果保留；另一种原生操作产生不同的墙面三角剖分，经顶点、平面、表面边界和孔洞拓扑检查后回写。8/8 墙几何生成成功，23 个产品 GUID 保持。这不证明扫描语义和尺度真实；白板误识别、漏检、空间边界和配准仍未解决。
 - [DSH 授权检查](../../products/worldstate_bim/DSH_INTERFACE.md)：匿名 `/login` 返回 200，受保护根路径返回 401。已找到 Tailscale 浏览器登录入口及最小权限说明，没有读取或传递密码。尚无授权会话接入 Studio，也未在实际 DSH 注册和调用建模工具；真实 DSH 修改和反馈为 **NOT_TESTED**。界面文字命令明确为 Rule-based Mode。

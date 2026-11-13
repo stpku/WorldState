@@ -310,6 +310,8 @@ class Handler(BaseHTTPRequestHandler):
     def generate(self, body: dict) -> None:
         project=self.server.project
         if project is None:raise ValueError("请先创建房间项目")
+        if body.get("confirmed_candidate") is not True:
+            raise ValueError("请先确认已检查照片标注、尺度和假设，再生成候选 IFC")
         if self.server.model is not None and body.get("confirm_regeneration") is not True:
             raise ValueError("重新生成会用当前标注和草图替换编辑后的几何，请先确认")
         for photo in self.server.uploaded:
@@ -331,7 +333,8 @@ class Handler(BaseHTTPRequestHandler):
         save_version(model,target)
         self.server.model,self.server.model_dir=model,target
         project["current_revision"]=model["revision"]
-        self.server.record("candidate_generated",revision=model["revision"],wall_count=sum(e["ifc_type"]=="IfcWall" for e in model["elements"]))
+        self.server.record("candidate_generated",revision=model["revision"],confirmed_by=project.get("operator_kind","user"),
+                           wall_count=sum(e["ifc_type"]=="IfcWall" for e in model["elements"]))
         self.send_json(201,{"revision":model["revision"],"validation":model["validation"],"model":model})
 
     def sync_ifc(self, body: dict) -> None:

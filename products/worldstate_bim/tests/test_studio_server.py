@@ -91,7 +91,8 @@ def test_photo_project_annotation_generation_revision_restore_and_restart(tmp_pa
               "reference":{"wall_index":1,"length_m":4,"basis":"independent_user_declared","description":"test ruler",
                            "height_m":2.8,"height_basis":"assumed","thickness_m":0.12}}
         assert api(instance,"/api/layout",body)[0]==200
-        status,result=api(instance,"/api/generate",{})
+        assert api(instance,"/api/generate",{})[0]==400
+        status,result=api(instance,"/api/generate",{"confirmed_candidate":True})
         assert status==201 and result["model"]["validation"]["scope"]=="PARTIAL_OPEN"
         assert len([e for e in result["model"]["elements"] if e["ifc_type"]=="IfcWall"])==3
         assert all(e["classification"]["status"]=="simulated" for e in result["model"]["elements"])
@@ -100,7 +101,7 @@ def test_photo_project_annotation_generation_revision_restore_and_restart(tmp_pa
             "command":"将选中的墙延长20厘米，检查相邻墙体和门窗是否仍然有效"})
         assert status==200 and result["diff"]["after"]==pytest.approx(4.2)
         assert next(n for n in result["model"]["nodes"] if n["id"]=="node-2")["status"]=="simulated"
-        assert api(instance,"/api/generate",{})[0]==400
+        assert api(instance,"/api/generate",{"confirmed_candidate":True})[0]==400
         assert api(instance,"/api/sync-ifc",{"revision":2,"element_id":"wall-1","attribute":"length",
             "reason":"invalid","data_base64":base64.b64encode(b"not IFC").decode()})[0]==400
         status,result=api(instance,"/api/restore",{"revision":2,"source_revision":1})
