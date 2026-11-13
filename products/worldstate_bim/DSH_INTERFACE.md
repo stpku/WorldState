@@ -1,5 +1,15 @@
 # DSH → WorldState BIM：受限工具接口和运行状态
 
+2026-11-14 补查：本机部署的 `/home/dev/dsh-gateway/README.md` 记录了正式浏览器入口：在已授权的 Tailscale 网络打开 `https://skyswind.tailf4fad8.ts.net:8443/login`，使用已有访问密码登录；网关随后建立 DSH 原生浏览器会话。匿名 GET `/login` 实测返回 200，匿名根路径返回 401。**不要把密码、一次性授权链接、Cookie 或 API 密钥提供给 WorldState、聊天记录或日志。** 本次只读服务文档和不带凭据的 HTTP 状态，没有读取密码文件或绕过认证。
+
+最小需要的是已获批准的该 DSH 浏览器会话，以及对指定 WorldState 项目工作区的读取、调用受控建模工具和写入新版本的权限；不需要访问其他项目或发布权限。部署文档将网关口令配置位置记为 `/home/dev/dsh-gateway/password.env`，只应由管理员按既有方式管理；本次没有读取该文件。模型凭据的实际注入位置未能确认，不应根据匿名 401 擅自改配模型。此会话目前尚未提供给 Studio；工具函数也尚未注册到实际 DSH 会话，因此浏览器登录本身不等于完成集成。以下命令只检查匿名状态，不包含或输出凭据；401 表示匿名访问被拒绝，不证明服务端缺少模型凭据：
+
+```bash
+curl -sS -o /dev/null -w 'DSH web HTTP %{http_code}\n' http://127.0.0.1:3080/
+curl -sS -o /dev/null -w 'DSH gateway HTTP %{http_code}\n' http://127.0.0.1:9092/
+curl -sS -o /dev/null -w 'DSH login page HTTP %{http_code}\n' http://127.0.0.1:9092/login
+```
+
 2026-11-13 第三轮：本机部署的 `dsh-web.service`、`dsh-gateway.service` 和 `dsh-auth.service` 均为 active/running。只读探测显示本机 Web `127.0.0.1:3080` 和网关 `127.0.0.1:9092` 可达，但当前会话收到 HTTP 401；没有读取或输出任何凭据，也没有绕过认证。Web profile 文件出现 `deepseek-flash` 和 `dsh-vision-router` 名称，这只证明配置文本引用，并不证明当前服务成功加载、可调用或有视觉授权。第二轮独立 headless profile 的最小任务返回 `MISSING_CREDENTIAL`；**不能据此认定 Web 服务的模型配置或凭据也缺失**。当前会话无法验证部署服务中的模型调用、图像输入、结构化输出、MCP 调用与反馈修复，均为 NOT_TESTED。
 
 `dsh web --help` 在本机触发插件启动日志，其中指出 rc.2 插件与 rc.1 runtime 版本不兼容；这是独立风险，不证明 401 的原因。没有修改服务、插件、凭据或发布设置。

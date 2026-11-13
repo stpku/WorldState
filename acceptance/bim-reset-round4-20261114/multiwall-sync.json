@@ -1,0 +1,23 @@
+{
+  "test_type": "SCRIPTED_SYNTHETIC_ANNOTATIONS_NOT_REAL_ACCEPTANCE",
+  "revision": 3,
+  "diff": {
+    "previous_revision": 2,
+    "revision": 3,
+    "element_id": "wall-3",
+    "attribute": "height",
+    "before": 2.8,
+    "after": 3,
+    "changed_nodes": [],
+    "affected_elements": [
+      "wall-3"
+    ],
+    "reason_ref": "revision-3",
+    "external_ifc_sha256": "988002d3e0a7a3ef758541a65255a1a97d6224f12e0372cd4a09a6531cd4e7ab",
+    "warnings": [
+      "Only the requested geometry attribute is synchronized; IFC metadata outside the checked fields is not imported. Review before using the regenerated IFC."
+    ]
+  },
+  "height_status": "simulated",
+  "errors": []
+}

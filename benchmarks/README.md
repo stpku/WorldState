@@ -4,8 +4,8 @@
 | --- | --- | --- |
 | WS-Geometry | 相同真实照片、相机位姿与重投影 | [TUM + CPU COLMAP 4/8/16/32](../acceptance/bim-reset-round2-20261113/STATUS.md)；不提供独立尺度或稠密完整性。 |
 | WS-Structure | 可见构件语义、实例与布局 | [CRASLAB 多构件开发集](../examples/bim_real_scan_craslab/room_round3/README.md)：8 面推断墙及窗洞；点级表面覆盖不足，实例与独立尺寸未测。 |
-| WS-BIM | 原生 IFC、可编辑性、拓扑和 GUID | 墙、板、门窗、开口及部分空间拓扑已有产品实现；真实扫描例已通过 Bonsai 墙长修改和受限同步，完整房间尚未验收。 |
-| WS-RealRoom | 用户照片到可编辑 BIM 和人工成本 | [采集、隔离与冻结门槛](ws_realroom/PROTOCOL.md)；真实独立验收房间未采集。 |
+| WS-BIM | 原生 IFC、可编辑性、拓扑和 GUID | 墙、板、门窗、开口及部分空间拓扑已有产品实现；真实扫描例已通过 Bonsai 墙长、墙高、窗位置修改和受限同步，完整房间尚未验收。 |
+| WS-RealRoom | 用户照片到可编辑 BIM 和人工成本 | [冻结协议](ws_realroom/PROTOCOL.md)与[采集和评测工具](ws_realroom/README.md)；真实独立验收房间未采集。 |
 | WS-Campus | 授权建筑公开展示 | 规划；校园素材没有新上传或对外发布。 |
 
 WS-RealRoom 尚无满足冻结协议的独立验收场景。负责人可以在仓库外初始化隔离的采集目录，按其中清单采集并保管私有真值：

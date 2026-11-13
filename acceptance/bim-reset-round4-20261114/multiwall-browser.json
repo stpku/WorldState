@@ -1,0 +1,18 @@
+{
+  "test_type": "SCRIPTED_BROWSER_WITH_SYNTHETIC_ANNOTATIONS_AND_ASSUMED_DIMENSIONS",
+  "real_photo_inputs": true,
+  "does_not_prove_real_semantic_or_geometric_accuracy": true,
+  "walls": 3,
+  "windows": 1,
+  "openings": 1,
+  "open_room": "PARTIAL_OPEN",
+  "ifc_status": 200,
+  "revision": 2,
+  "affected": [
+    "opening-window-1",
+    "wall-1",
+    "wall-2",
+    "window-1"
+  ],
+  "errors": []
+}

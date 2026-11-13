@@ -2,6 +2,8 @@
 
 **Status: experimental assisted Photo/Scan-to-BIM and local Studio; V0.2 is NOT release-ready.**
 
+**Round 4:** Studio can create a local photo project, record image annotations, and generate editable room candidates using either a user-drawn metric sketch or pinhole backprojection of manually marked ground points with explicitly supplied camera assumptions. A [real TUM photo partial-wall workflow](../../examples/bim_real_photo_tum/round4/README.md) and external Bonsai readback were run. It is not automatic visual recognition, multiview triangulation, or a validated three-wall room.
+
 **Round 3:** the [real CRASLAB multi-object example](../../examples/bim_real_scan_craslab/room_round3/README.md) has eight inferred walls, one slab and five windows/openings; four conflicting source objects are quarantined. The multi-wall IR, constraints, IFC export, Bonsai edit and restricted readback run locally. No independent real-room accuracy or labor-savings acceptance is claimed.
 
 A separate [synthetic room](../../examples/bim_synthetic_room_round3/README.md) demonstrates four connected walls, a slab, door, window, openings and a versioned wall edit; its inputs are invented and must not be treated as measured evidence.
@@ -11,7 +13,7 @@ A separate [synthetic room](../../examples/bim_synthetic_room_round3/README.md) 
 The product boundary is recorded in [SCOPE.md](SCOPE.md). A separate
 [real-room benchmark](../../benchmarks/bim_real_room/README.md) now exercises
 photo-only sparse geometry, monocular relative depth and an operator-selected
-RGB-D surface patch. The photo path is still a single visible patch; the
+RGB-D surface patch. The real-photo result is still a single visible patch; the
 multi-object example is scan-driven and not a complete verified room.
 
 [Download the synthetic four-wall IFC example](examples/synthetic_room.ifc) to inspect the native `IfcWall` objects. This is a teaching model made from explicit simulated coordinates, **not** a photo reconstruction. Its IFC file, four wall geometric representations and stable IFC object GUIDs were checked with IfcOpenShell 0.9.0post1 in an isolated Python 3.12 environment; native Bonsai authoring review remains pending.
@@ -29,12 +31,21 @@ domain-neutral and unchanged.
 
 The historical v0.1 path accepts a bounded **DSH output proposal** and
 converts supported `IfcWall` elements to an IFC4 BIM model (with IfcOpenShell
-installed). It does **not** yet accept photographs and independently infer
-geometry independently; the newer assisted RGB-D path requires an operator-selected region.
+installed). That historical path does **not** independently infer geometry
+from photographs; the assisted paths require operator selections and explicit assumptions.
 
 ## Run WorldState Studio locally
 
-Install the Python 3.12 product dependencies as described in [Benchmark setup](../../benchmarks/README.md), then run from the repository root:
+Install the Python 3.12 product dependencies as described in [Benchmark setup](../../benchmarks/README.md), then run from the repository root. Omit `--model-dir` to create a new local photo project in an unused workspace:
+
+```bash
+OPENBLAS_NUM_THREADS=1 PYTHONPATH=. /tmp/ws-bim-venv/bin/python -m products.worldstate_bim.studio_server \
+  --workspace /tmp/worldstate-photo-room-NEW --port 8766
+```
+
+Open `http://127.0.0.1:8766/`, create a project, upload photos, annotate a visible wall boundary for each candidate wall, and select a geometry path. The schematic path uses user-drawn proportions; the camera path requires ordered ground-corner annotations in one photo, explicit pinhole intrinsics and pitch, a level-floor/zero-roll assumption and a metric reference. It does not triangulate multiple photographs or compensate lens distortion. Both paths require a user-provided height and an explicit thickness assumption; the result remains an unverified draft. Door/window dimensions must be supplied separately. Sources, assumptions, unknowns and interaction timestamps are recorded; automated runs are marked simulated and do not measure human labor.
+
+To inspect the existing real scan instead, specify its model directory:
 
 ```bash
 OPENBLAS_NUM_THREADS=1 PYTHONPATH=. /tmp/ws-bim-venv/bin/python -m products.worldstate_bim.studio_server \
@@ -42,7 +53,7 @@ OPENBLAS_NUM_THREADS=1 PYTHONPATH=. /tmp/ws-bim-venv/bin/python -m products.worl
   --workspace /tmp/worldstate-studio --port 8766
 ```
 
-Open `http://127.0.0.1:8766/`. The workspace must be **outside** the source repository; the server binds only to loopback. It renders triangles extracted from the current IFC, lists evidence and quarantined objects, permits selection and supported parameter changes, and exports IFC, IR, evidence and validation reports. Uploaded PNG/JPEG photos remain local and explicitly unassociated; they do not automatically affect the model. The command field uses a small local rule parser and is explicitly **not DSH**.
+The workspace must be **outside** the source repository; the server binds only to loopback. It renders triangles extracted from the current IFC, lists evidence and quarantined objects, permits selection and supported parameter changes, and exports IFC, IR, evidence and validation reports. In a photo project, annotated images are linked to components; later uploads remain unassociated until annotated and regenerated. The command field uses a small local rule parser and is explicitly **not DSH**. Supported single-attribute external IFC edits can be selected and synchronized through the UI; unsupported changes are rejected or explicitly warned.
 
 Optionally append `--point-cloud /path/to/xyz.npy` for an explicitly selected local `N×3` metre-coordinate point cloud. At most 8,000 points are shown; its alignment with the IFC is not automatically verified. Multi-wall edit and IFC readback commands are in the [example](../../examples/bim_real_scan_craslab/room_round3/README.md).
 

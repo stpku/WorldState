@@ -1,5 +1,11 @@
 # WorldState BIM changelog
 
+## Unreleased — 2026-11-14
+
+- Add local photo-project creation, image annotation, explicit camera-floor backprojection or manually drawn floor-layout geometry, scale application, versioned IFC generation, and browser IFC readback. The real-photo result is a partial, unverified wall; scripted annotations are marked simulated.
+- Exercise Bonsai wall-height and window/opening edits on the real CRASLAB development model. Preserve a failed opening edit, and accept alternative triangulation only after strict vertex, plane, surface and topology checks.
+- Add frozen-candidate, reference-isolation and paired-cost evaluation tools. They do not independently establish authoring-tool acceptance or release readiness.
+
 ## Unreleased — 2026-11-13
 
 - Add experimental room IR 0.3 with multiple walls, corner propagation, angular/intersection checks, slabs, spaces, doors/windows and IFC opening/filling relationships; preserve earlier Core and product contracts.

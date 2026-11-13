@@ -163,7 +163,13 @@
       "at": "2026-11-13T21:53:13.823614+00:00",
       "element_id": "wall-1",
       "attribute": "length"
+    },
+    {
+      "action": "external_ifc_synced",
+      "at": "2026-11-13T21:55:54.765033+00:00",
+      "element_id": "wall-1",
+      "attribute": "height"
     }
   ],
-  "current_revision": 4
+  "current_revision": 5
 }

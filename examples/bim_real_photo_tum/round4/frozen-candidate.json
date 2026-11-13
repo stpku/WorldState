@@ -1,0 +1,19 @@
+{
+  "schema": "ws-realroom-frozen-candidate/0.1",
+  "created_at": "2026-11-13T21:58:10.050741+00:00",
+  "project_id": "photo-room-3cf6e2c732c747e4a3bcff7c61da3408",
+  "revision": 1,
+  "model_json_sha256": "f21991c681748648b2a43ea5f82d91c3f426999d3ea4b6e820aaaf6246574ba8",
+  "model_ifc_sha256": "b3c23adbc49af878a5dc22cc37833d0aee7b7ae5586bdae3a8c327fc60867577",
+  "input_photo_sha256": [
+    "16a398d2a61ed1eaec756f985b4cee59afe7086ce7661fe271d8facd10e75be9",
+    "38633b1d8d8ae9d356a08cd30944bed5f38d167cbf0bb86836af75233125d51f"
+  ],
+  "model_photo_sha256": [
+    "16a398d2a61ed1eaec756f985b4cee59afe7086ce7661fe271d8facd10e75be9"
+  ],
+  "evidence_index_sha256": "14917facb2a61f1626cad84a404aecb1304d15d8c1f066483a919840388ea8f1",
+  "evidence_inventory_status": "VERIFIED_STUDIO_INDEX",
+  "protocol": "benchmarks/ws_realroom/PROTOCOL.md",
+  "warning": "Hashing is not proof of blind role separation; retain independent collection and access logs."
+}
