@@ -14,6 +14,8 @@
 
 IfcOpenShell 0.8.4 对原始、Bonsai 修改和同步版本进行 IFC schema 检查，各 0 条；web-ifc 0.0.77 独立读取到 8 面墙，修改目标 GUID 保持 `270zBQX71J0wAulN$ejl1L`。没有引入源 IFC 的无效窗类型；这并不能证明构件识别正确或门窗位置准确。
 
+冻结 IFC 后，以 4 cm 点到墙面距离对同一开发点云的独立存放标签做对照：[点级 precision 0.5964、recall 0.1601](surface-evaluation.json)。这些值是同一开发场景的表面邻近指标，低于发布要求，不能当作跨场景实例精度或独立墙尺寸误差。
+
 ```bash
 # 从仓库根目录，Python 3.12 环境按 benchmarks/README.md 安装
 PYTHONPATH=. /tmp/ws-bim-venv/bin/python -m products.worldstate_bim.room_cli import-cloud2bim \
@@ -34,3 +36,5 @@ PYTHONPATH=. /tmp/ws-bim-venv/bin/python -m products.worldstate_bim.room_cli syn
 ```
 
 同步会对全模型对象身份、拓扑、材料、属性集及网格作受限核查，并校验请求属性对应的预期模型；不在已检查范围内的其他 IFC 元数据不会导入，操作会明确提示需人工核对。当前只支持单次墙长/墙高及开口 offset/width/height/sill 回写；不支持的几何和拓扑变更拒绝同步。
+
+只有该已固定 SHA-256 的公开样例自动关联 CRASLAB 来源。其他 Cloud2BIM 文件必须通过 `--evidence-manifest` 提供点云的 `id`、`kind: metric_point_cloud`、`unit: m`、`source`、`license`、`coordinate_frame` 和原始点云 `sha256`；这些来源由调用者声明，仍需独立核验。需要沿用身份映射时通过 `--identity-map` 指向先前生成的 `identities.json`；匹配依赖外部 GUID 或未改变的几何指纹，不能保证任意重建后的跨版本对象关联。

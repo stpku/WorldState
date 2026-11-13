@@ -5,6 +5,7 @@ import ifcopenshell.geom
 import ifcopenshell.guid
 import ifcopenshell.validate
 import numpy as np
+import pytest
 from products.worldstate_bim.cloud2bim_provider import import_cloud2bim
 from products.worldstate_bim.room_ifc import export_room
 
@@ -46,3 +47,27 @@ def test_provider_reuses_identity_if_external_guid_changes_but_geometry_matches(
     second,_,_=import_cloud2bim(changed,project_id="craslab-test",registry=mapping)
     assert next(w["id"] for w in first["elements"] if w.get("source_guid")==previous)==next(
         w["id"] for w in second["elements"] if w.get("source_guid")==wall.GlobalId)
+
+
+def test_unknown_source_cannot_be_mislabeled_as_craslab(tmp_path):
+    source=ifcopenshell.open(str(SOURCE));source.by_type("IfcWall")[0].GlobalId=ifcopenshell.guid.new()
+    changed=tmp_path/"other.ifc";source.write(str(changed))
+    with pytest.raises(ValueError,match="evidence manifest"):
+        import_cloud2bim(changed,project_id="other")
+
+
+def test_matching_xy_on_different_storeys_does_not_share_nodes(tmp_path):
+    import ifcopenshell.api.spatial
+    model,registry,_=import_cloud2bim(SOURCE,project_id="craslab-test")
+    walls=[x for x in model["elements"] if x["ifc_type"]=="IfcWall"]
+    pair=next((a,b) for i,a in enumerate(walls) for b in walls[i+1:]
+              if {a["start"],a["end"]} & {b["start"],b["end"]})
+    source=ifcopenshell.open(str(SOURCE));wall=source.by_guid(pair[0]["source_guid"])
+    other_storey=source.by_type("IfcBuildingStorey")[1]
+    ifcopenshell.api.spatial.assign_container(source,products=[wall],relating_structure=other_storey)
+    changed=tmp_path/"different-storey.ifc";source.write(str(changed))
+    revised,_,_=import_cloud2bim(changed,project_id="craslab-test",registry=registry)
+    a=next(e for e in revised["elements"] if e.get("source_guid")==pair[0]["source_guid"])
+    b=next(e for e in revised["elements"] if e.get("source_guid")==pair[1]["source_guid"])
+    assert a["storey"]!=b["storey"]
+    assert not ({a["start"],a["end"]} & {b["start"],b["end"]})

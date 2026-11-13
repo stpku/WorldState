@@ -6,13 +6,13 @@
   "before": 5.099999,
   "after": 5.300000190734863,
   "changed_nodes": [
-    "node-b7863914b0560813"
+    "node-0d2de0b1fd6773a5"
   ],
   "affected_elements": [
     "wall-cf1d15bbd93c2d52"
   ],
   "reason_ref": "revision-2",
-  "external_ifc_sha256": "d81f49702e36bda80dc6affb7ce8bcb53b53f1d03e2cf52772fb94e44579e686",
+  "external_ifc_sha256": "930fd1ba97395c750fa0bd4e03cdd426750dddeea5b5d5c357a3dc963a93592b",
   "warnings": [
     "Only the requested geometry attribute is synchronized; IFC metadata outside the checked fields is not imported. Review before using the regenerated IFC."
   ]

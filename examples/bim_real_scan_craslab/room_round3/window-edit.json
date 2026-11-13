@@ -22,7 +22,9 @@
       "unit": "m",
       "source": "https://doi.org/10.5281/zenodo.7948116",
       "license": "CC-BY-4.0",
-      "archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671"
+      "sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+      "archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671",
+      "coordinate_frame": "CRASLAB source scan"
     },
     {
       "id": "revision-2",
@@ -39,7 +41,7 @@
   ],
   "nodes": [
     {
-      "id": "node-488771613396a2ca",
+      "id": "node-f5f9b2760036fb34",
       "x": 10.33,
       "y": 12.081,
       "status": "inferred",
@@ -49,7 +51,7 @@
       ]
     },
     {
-      "id": "node-4bfda8468fa36c1c",
+      "id": "node-e95a33342323534e",
       "x": 10.33,
       "y": 2.881,
       "status": "inferred",
@@ -59,7 +61,7 @@
       ]
     },
     {
-      "id": "node-9e3aaa1e01789d01",
+      "id": "node-a004cfdfd3e95c01",
       "x": 17.983,
       "y": -4.2175,
       "status": "inferred",
@@ -69,7 +71,7 @@
       ]
     },
     {
-      "id": "node-fc71639d74dc7fc7",
+      "id": "node-a752fa38e72ae1a3",
       "x": 10.733,
       "y": -4.2175,
       "status": "inferred",
@@ -79,7 +81,7 @@
       ]
     },
     {
-      "id": "node-beef43ecada830d8",
+      "id": "node-4ea44660bfe119b2",
       "x": 10.733,
       "y": 2.534,
       "status": "inferred",
@@ -89,7 +91,7 @@
       ]
     },
     {
-      "id": "node-63921b19bf3979fc",
+      "id": "node-14c0de857706b39d",
       "x": 11.833,
       "y": 11.134,
       "status": "inferred",
@@ -99,7 +101,7 @@
       ]
     },
     {
-      "id": "node-b7863914b0560813",
+      "id": "node-0d2de0b1fd6773a5",
       "x": 11.833,
       "y": 16.233999,
       "status": "inferred",
@@ -109,7 +111,7 @@
       ]
     },
     {
-      "id": "node-061f5b14d1986952",
+      "id": "node-9a193a79d6b437c6",
       "x": 11.933,
       "y": 12.881,
       "status": "inferred",
@@ -119,7 +121,7 @@
       ]
     },
     {
-      "id": "node-822bdd897caad880",
+      "id": "node-e9fb2f288fc87ba1",
       "x": 11.933,
       "y": 19.581,
       "status": "inferred",
@@ -129,7 +131,7 @@
       ]
     },
     {
-      "id": "node-597bd06208d037f6",
+      "id": "node-a1d038747cfe54da",
       "x": 13.08,
       "y": 20.1325,
       "status": "inferred",
@@ -139,7 +141,7 @@
       ]
     },
     {
-      "id": "node-fb147e2ee7b727b0",
+      "id": "node-e4727b20b0283990",
       "x": 17.983,
       "y": 20.1325,
       "status": "inferred",
@@ -149,7 +151,7 @@
       ]
     },
     {
-      "id": "node-7526ed9487bf0985",
+      "id": "node-5eb54d5050a49680",
       "x": 18.133,
       "y": 0.681,
       "status": "inferred",
@@ -159,7 +161,7 @@
       ]
     },
     {
-      "id": "node-a5891471cddfafe9",
+      "id": "node-cafcdf377be71295",
       "x": 18.133,
       "y": 6.881,
       "status": "inferred",
@@ -169,7 +171,7 @@
       ]
     },
     {
-      "id": "node-d082eda6f3ab8dca",
+      "id": "node-58ff8d6a1dd89004",
       "x": 17.983,
       "y": 0.581,
       "status": "inferred",
@@ -179,7 +181,7 @@
       ]
     },
     {
-      "id": "node-57cbf12467c9c8f9",
+      "id": "node-aac8f97bd7276de5",
       "x": 10.936,
       "y": -4.066,
       "status": "inferred",
@@ -189,7 +191,7 @@
       ]
     },
     {
-      "id": "node-ba4f09cd7b2bd49f",
+      "id": "node-911b48475ba5a53d",
       "x": 10.936,
       "y": 2.534,
       "status": "inferred",
@@ -199,7 +201,7 @@
       ]
     },
     {
-      "id": "node-4e32238a5942368c",
+      "id": "node-b3d38a76c0d50ed4",
       "x": 11.036,
       "y": 2.634,
       "status": "inferred",
@@ -209,7 +211,7 @@
       ]
     },
     {
-      "id": "node-5a1f113660ae535b",
+      "id": "node-6e16b6be4b1b0b44",
       "x": 11.036,
       "y": 3.034,
       "status": "inferred",
@@ -219,7 +221,7 @@
       ]
     },
     {
-      "id": "node-8aed0716da3e19eb",
+      "id": "node-cc856033c9234fee",
       "x": 11.436,
       "y": 3.034,
       "status": "inferred",
@@ -229,7 +231,7 @@
       ]
     },
     {
-      "id": "node-b4857aaea6c2cce2",
+      "id": "node-90f78b0192a1a474",
       "x": 11.536,
       "y": 3.134,
       "status": "inferred",
@@ -239,7 +241,7 @@
       ]
     },
     {
-      "id": "node-480d0e7e6a8c324b",
+      "id": "node-f6c2edb95ad42676",
       "x": 11.536,
       "y": 3.834,
       "status": "inferred",
@@ -249,7 +251,7 @@
       ]
     },
     {
-      "id": "node-492f99078b6898a9",
+      "id": "node-594948f82ff93fdb",
       "x": 11.636,
       "y": 3.934,
       "status": "inferred",
@@ -259,7 +261,7 @@
       ]
     },
     {
-      "id": "node-4f0c46d079a30c45",
+      "id": "node-c15a3cf54e5e0be8",
       "x": 11.636,
       "y": 11.034,
       "status": "inferred",
@@ -269,7 +271,7 @@
       ]
     },
     {
-      "id": "node-2b7c3d8510f293a2",
+      "id": "node-cf24f27b0a2a7a95",
       "x": 11.936,
       "y": 11.034,
       "status": "inferred",
@@ -279,7 +281,7 @@
       ]
     },
     {
-      "id": "node-126b28971f1903bc",
+      "id": "node-308e22b3cbb76339",
       "x": 12.036,
       "y": 11.134,
       "status": "inferred",
@@ -289,7 +291,7 @@
       ]
     },
     {
-      "id": "node-9b376ddc1f687b2b",
+      "id": "node-667586beebe79e87",
       "x": 12.036,
       "y": 16.233999,
       "status": "inferred",
@@ -299,7 +301,7 @@
       ]
     },
     {
-      "id": "node-b7f6354f92d2d859",
+      "id": "node-01c42d7179a17b42",
       "x": 12.136,
       "y": 16.334,
       "status": "inferred",
@@ -309,7 +311,7 @@
       ]
     },
     {
-      "id": "node-0ab49fa613c21135",
+      "id": "node-c4c47f75cc0de373",
       "x": 12.136,
       "y": 19.534,
       "status": "inferred",
@@ -319,7 +321,7 @@
       ]
     },
     {
-      "id": "node-fc94073bdeb66ccf",
+      "id": "node-76fc1b2ddd24bfb8",
       "x": 12.236,
       "y": 19.534,
       "status": "inferred",
@@ -329,7 +331,7 @@
       ]
     },
     {
-      "id": "node-569fe4b503a763c7",
+      "id": "node-9164098ea3218e61",
       "x": 12.336,
       "y": 19.634001,
       "status": "inferred",
@@ -339,7 +341,7 @@
       ]
     },
     {
-      "id": "node-75b3e8477f8143fc",
+      "id": "node-8bc62b1ddc29574f",
       "x": 13.236,
       "y": 19.634001,
       "status": "inferred",
@@ -349,7 +351,7 @@
       ]
     },
     {
-      "id": "node-129d1fba96ce8c0d",
+      "id": "node-8f231d23a1230cf2",
       "x": 13.336,
       "y": 19.733999,
       "status": "inferred",
@@ -359,7 +361,7 @@
       ]
     },
     {
-      "id": "node-4eeb484adb14a9cb",
+      "id": "node-303cb1562ba149d2",
       "x": 13.336,
       "y": 19.834,
       "status": "inferred",
@@ -369,7 +371,7 @@
       ]
     },
     {
-      "id": "node-620d5b7ab7791405",
+      "id": "node-7c1390761ae2c02e",
       "x": 17.836,
       "y": 19.834,
       "status": "inferred",
@@ -379,7 +381,7 @@
       ]
     },
     {
-      "id": "node-6135f5f001536e7f",
+      "id": "node-759ca216bce5521c",
       "x": 17.836,
       "y": 19.733999,
       "status": "inferred",
@@ -389,7 +391,7 @@
       ]
     },
     {
-      "id": "node-5f3dbd59e941ee57",
+      "id": "node-1653395ad5d91f33",
       "x": 17.936001,
       "y": 19.634001,
       "status": "inferred",
@@ -399,7 +401,7 @@
       ]
     },
     {
-      "id": "node-b840d5044ed318b7",
+      "id": "node-ed6837a10d52dae0",
       "x": 18.035999,
       "y": 19.634001,
       "status": "inferred",
@@ -409,7 +411,7 @@
       ]
     },
     {
-      "id": "node-563cb5ebd9c1aeff",
+      "id": "node-aaf06519f6b0cbae",
       "x": 18.035999,
       "y": 19.434,
       "status": "inferred",
@@ -419,7 +421,7 @@
       ]
     },
     {
-      "id": "node-2c9ad42438ebb325",
+      "id": "node-ebfbbd0138567607",
       "x": 18.136,
       "y": 19.334,
       "status": "inferred",
@@ -429,7 +431,7 @@
       ]
     },
     {
-      "id": "node-f997eb785e83d7c5",
+      "id": "node-f38d23e705bdcfc6",
       "x": 18.136,
       "y": 15.934,
       "status": "inferred",
@@ -439,7 +441,7 @@
       ]
     },
     {
-      "id": "node-f4dc95d2b64ca90f",
+      "id": "node-9d7d2ec5c9f178fa",
       "x": 18.035999,
       "y": 15.834,
       "status": "inferred",
@@ -449,7 +451,7 @@
       ]
     },
     {
-      "id": "node-2f0d630fab51611f",
+      "id": "node-e7f61ca58d379d45",
       "x": 18.035999,
       "y": 14.434,
       "status": "inferred",
@@ -459,7 +461,7 @@
       ]
     },
     {
-      "id": "node-f53d4cbcf2811a35",
+      "id": "node-0fe2472219229624",
       "x": 18.136,
       "y": 14.334,
       "status": "inferred",
@@ -469,7 +471,7 @@
       ]
     },
     {
-      "id": "node-a262b94a821ebfcb",
+      "id": "node-fed4be5ffd19a6ab",
       "x": 18.035999,
       "y": 14.234,
       "status": "inferred",
@@ -479,7 +481,7 @@
       ]
     },
     {
-      "id": "node-4be0b3d0c350d898",
+      "id": "node-de3ce1ca0ac006d6",
       "x": 18.035999,
       "y": 8.434,
       "status": "inferred",
@@ -489,7 +491,7 @@
       ]
     },
     {
-      "id": "node-7f85bccee5451317",
+      "id": "node-10ade8045365a099",
       "x": 17.936001,
       "y": 8.334,
       "status": "inferred",
@@ -499,7 +501,7 @@
       ]
     },
     {
-      "id": "node-57339061f1703bac",
+      "id": "node-a4377cadb415bbcb",
       "x": 17.936001,
       "y": 5.534,
       "status": "inferred",
@@ -509,7 +511,7 @@
       ]
     },
     {
-      "id": "node-59ff9f7287a4b0df",
+      "id": "node-59a6da58405f9fab",
       "x": 18.035999,
       "y": 5.434,
       "status": "inferred",
@@ -519,7 +521,7 @@
       ]
     },
     {
-      "id": "node-4bbc6615f02fcbef",
+      "id": "node-d4fa6a540a396c2c",
       "x": 17.936001,
       "y": 5.334,
       "status": "inferred",
@@ -529,7 +531,7 @@
       ]
     },
     {
-      "id": "node-483a0f3a134d8d9b",
+      "id": "node-facddc6e74e1532a",
       "x": 17.936001,
       "y": 0.934,
       "status": "inferred",
@@ -539,7 +541,7 @@
       ]
     },
     {
-      "id": "node-e395f947e8864952",
+      "id": "node-d02d2e5f97d407e0",
       "x": 17.736,
       "y": 0.734,
       "status": "inferred",
@@ -549,7 +551,7 @@
       ]
     },
     {
-      "id": "node-ec56f686efef2168",
+      "id": "node-3afa4ae828648ed3",
       "x": 17.736,
       "y": -1.766,
       "status": "inferred",
@@ -559,7 +561,7 @@
       ]
     },
     {
-      "id": "node-603e45bf32580126",
+      "id": "node-146f5363f3696767",
       "x": 17.836,
       "y": -1.866,
       "status": "inferred",
@@ -569,7 +571,7 @@
       ]
     },
     {
-      "id": "node-40283fd9fb078641",
+      "id": "node-4997fc9fe6d84117",
       "x": 17.836,
       "y": -3.566,
       "status": "inferred",
@@ -579,7 +581,7 @@
       ]
     },
     {
-      "id": "node-c2bf9feb3db4c73c",
+      "id": "node-8013ede1ce5d1fa3",
       "x": 17.636,
       "y": -3.766,
       "status": "inferred",
@@ -589,7 +591,7 @@
       ]
     },
     {
-      "id": "node-c84b71f8104fa091",
+      "id": "node-35cfcbcb61668bee",
       "x": 17.636,
       "y": -4.066,
       "status": "inferred",
@@ -635,8 +637,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "0S$DHqzzv3lvo6VpDhr$Sz",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-488771613396a2ca",
-      "end": "node-4bfda8468fa36c1c",
+      "start": "node-f5f9b2760036fb34",
+      "end": "node-e95a33342323534e",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -690,8 +692,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "0yqolNVBv8jwMlWQaL8dFQ",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-9e3aaa1e01789d01",
-      "end": "node-fc71639d74dc7fc7",
+      "start": "node-a004cfdfd3e95c01",
+      "end": "node-a752fa38e72ae1a3",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -744,8 +746,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "1qejfeJfrArRdGKeM9Yjef",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-fc71639d74dc7fc7",
-      "end": "node-beef43ecada830d8",
+      "start": "node-a752fa38e72ae1a3",
+      "end": "node-4ea44660bfe119b2",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -798,8 +800,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "2o6voS_pT0kOB5ftFBK3gU",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-63921b19bf3979fc",
-      "end": "node-b7863914b0560813",
+      "start": "node-14c0de857706b39d",
+      "end": "node-0d2de0b1fd6773a5",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -852,8 +854,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "1rpMb4Fk9D2QThTsV4aDCE",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-061f5b14d1986952",
-      "end": "node-822bdd897caad880",
+      "start": "node-9a193a79d6b437c6",
+      "end": "node-e9fb2f288fc87ba1",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -906,8 +908,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "0db0EQ_Qj8p9SKxnM63UKl",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-597bd06208d037f6",
-      "end": "node-fb147e2ee7b727b0",
+      "start": "node-a1d038747cfe54da",
+      "end": "node-e4727b20b0283990",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -960,8 +962,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "2o__rWgtjEpO7GytlHgyT1",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-7526ed9487bf0985",
-      "end": "node-a5891471cddfafe9",
+      "start": "node-5eb54d5050a49680",
+      "end": "node-cafcdf377be71295",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -1014,8 +1016,8 @@
       "ifc_type": "IfcWall",
       "source_guid": "1$NjfNn7j6QwAnHHRN2bn9",
       "storey": "storey-84d088050b6fc3b2",
-      "start": "node-9e3aaa1e01789d01",
-      "end": "node-d082eda6f3ab8dca",
+      "start": "node-a004cfdfd3e95c01",
+      "end": "node-58ff8d6a1dd89004",
       "axis_reference": "centerline",
       "classification": {
         "status": "inferred",
@@ -1076,48 +1078,48 @@
         ]
       },
       "outline": [
-        "node-57cbf12467c9c8f9",
-        "node-ba4f09cd7b2bd49f",
-        "node-4e32238a5942368c",
-        "node-5a1f113660ae535b",
-        "node-8aed0716da3e19eb",
-        "node-b4857aaea6c2cce2",
-        "node-480d0e7e6a8c324b",
-        "node-492f99078b6898a9",
-        "node-4f0c46d079a30c45",
-        "node-2b7c3d8510f293a2",
-        "node-126b28971f1903bc",
-        "node-9b376ddc1f687b2b",
-        "node-b7f6354f92d2d859",
-        "node-0ab49fa613c21135",
-        "node-fc94073bdeb66ccf",
-        "node-569fe4b503a763c7",
-        "node-75b3e8477f8143fc",
-        "node-129d1fba96ce8c0d",
-        "node-4eeb484adb14a9cb",
-        "node-620d5b7ab7791405",
-        "node-6135f5f001536e7f",
-        "node-5f3dbd59e941ee57",
-        "node-b840d5044ed318b7",
-        "node-563cb5ebd9c1aeff",
-        "node-2c9ad42438ebb325",
-        "node-f997eb785e83d7c5",
-        "node-f4dc95d2b64ca90f",
-        "node-2f0d630fab51611f",
-        "node-f53d4cbcf2811a35",
-        "node-a262b94a821ebfcb",
-        "node-4be0b3d0c350d898",
-        "node-7f85bccee5451317",
-        "node-57339061f1703bac",
-        "node-59ff9f7287a4b0df",
-        "node-4bbc6615f02fcbef",
-        "node-483a0f3a134d8d9b",
-        "node-e395f947e8864952",
-        "node-ec56f686efef2168",
-        "node-603e45bf32580126",
-        "node-40283fd9fb078641",
-        "node-c2bf9feb3db4c73c",
-        "node-c84b71f8104fa091"
+        "node-aac8f97bd7276de5",
+        "node-911b48475ba5a53d",
+        "node-b3d38a76c0d50ed4",
+        "node-6e16b6be4b1b0b44",
+        "node-cc856033c9234fee",
+        "node-90f78b0192a1a474",
+        "node-f6c2edb95ad42676",
+        "node-594948f82ff93fdb",
+        "node-c15a3cf54e5e0be8",
+        "node-cf24f27b0a2a7a95",
+        "node-308e22b3cbb76339",
+        "node-667586beebe79e87",
+        "node-01c42d7179a17b42",
+        "node-c4c47f75cc0de373",
+        "node-76fc1b2ddd24bfb8",
+        "node-9164098ea3218e61",
+        "node-8bc62b1ddc29574f",
+        "node-8f231d23a1230cf2",
+        "node-303cb1562ba149d2",
+        "node-7c1390761ae2c02e",
+        "node-759ca216bce5521c",
+        "node-1653395ad5d91f33",
+        "node-ed6837a10d52dae0",
+        "node-aaf06519f6b0cbae",
+        "node-ebfbbd0138567607",
+        "node-f38d23e705bdcfc6",
+        "node-9d7d2ec5c9f178fa",
+        "node-e7f61ca58d379d45",
+        "node-0fe2472219229624",
+        "node-fed4be5ffd19a6ab",
+        "node-de3ce1ca0ac006d6",
+        "node-10ade8045365a099",
+        "node-a4377cadb415bbcb",
+        "node-59a6da58405f9fab",
+        "node-d4fa6a540a396c2c",
+        "node-facddc6e74e1532a",
+        "node-d02d2e5f97d407e0",
+        "node-3afa4ae828648ed3",
+        "node-146f5363f3696767",
+        "node-4997fc9fe6d84117",
+        "node-8013ede1ce5d1fa3",
+        "node-35cfcbcb61668bee"
       ],
       "outline_status": {
         "status": "inferred",
@@ -1621,7 +1623,7 @@
     {
       "source_guid": "3ehcXbzGz8QBlq2a_be19A",
       "ifc_type": "IfcWall",
-      "reason": "provider thickness below its configured 0.05 m minimum; requires confirmation",
+      "reason": "provider thickness below the 0.05 m review threshold; requires confirmation",
       "status": "conflict",
       "evidence_refs": [
         "cloud2bim-ifc-1",

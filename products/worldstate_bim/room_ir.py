@@ -201,6 +201,20 @@ def geometry_issues(model: dict[str, Any], *, tolerance: float = 1e-5) -> list[d
                         pending.extend(adjacency[node] - seen)
                 if len(seen) != len(adjacency):
                     issues.append({"id": e["id"], "code": "ROOM_BOUNDARY_DISCONNECTED"})
+                else:
+                    from shapely.geometry import Polygon
+                    start = next(iter(adjacency)); current = start; previous = None; ring = []
+                    while True:
+                        ring.append(point(current))
+                        following = next(n for n in adjacency[current] if n != previous)
+                        previous, current = current, following
+                        if current == start:
+                            break
+                        if len(ring) > len(adjacency):
+                            break
+                    if (any(None in vertex for vertex in ring) or len(ring) != len(adjacency) or
+                            not Polygon(ring).is_valid or Polygon(ring).area <= tolerance*tolerance):
+                        issues.append({"id": e["id"], "code": "ROOM_BOUNDARY_INVALID"})
     openings = [e for e in elements.values() if e["ifc_type"] == "IfcOpeningElement"]
     for i, a in enumerate(openings):
         for b in openings[i+1:]:

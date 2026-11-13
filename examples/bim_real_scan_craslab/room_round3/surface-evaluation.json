@@ -1,0 +1,50 @@
+{
+  "dataset": "CRASLAB development sample, CC-BY-4.0",
+  "ifc_sha256": "f14473d4a3c7da710c3e2b26b4efd875b64fa8a7fc8939870c8b2e0e9197ccdc",
+  "points_sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+  "labels_sha256": "2fd6087f7516338c7751b6ac66f04b16513cfa64090ccde01cc5d32fd7ed64e5",
+  "evaluation": "point distance to nearest world-space IfcWall triangle; reference class 3 = wall",
+  "threshold_m": 0.04,
+  "predicted_points": 12053,
+  "tp": 7189,
+  "fp": 4864,
+  "fn": 37701,
+  "precision": 0.5964490168422799,
+  "recall": 0.16014702606371128,
+  "f1": 0.2524981121472349,
+  "predicted_points_by_reference_class": {
+    "0": 762,
+    "1": 1597,
+    "2": 486,
+    "3": 7189,
+    "4": 805,
+    "5": 619,
+    "6": 39,
+    "8": 288,
+    "10": 10,
+    "14": 36,
+    "15": 182,
+    "18": 36,
+    "24": 4
+  },
+  "ifc_schema": "IFC4",
+  "entity_counts": {
+    "IfcWall": 8,
+    "IfcSlab": 1,
+    "IfcOpeningElement": 5,
+    "IfcWindow": 5,
+    "IfcDoor": 0,
+    "IfcSpace": 0,
+    "IfcRelVoidsElement": 5,
+    "IfcRelFillsElement": 5
+  },
+  "wall_geometry_success": 8,
+  "wall_geometry_failure": 0,
+  "schema_validation_issues": {},
+  "evaluation_seconds": 0.13177192397415638,
+  "limitations": [
+    "same development scene; not an independent scene test",
+    "point proximity is not object instance matching or independent dimensional error",
+    "output uses modelled material, thickness and site metadata assumptions"
+  ]
+}

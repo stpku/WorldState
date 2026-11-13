@@ -19,7 +19,7 @@
     {
       "source_guid": "3ehcXbzGz8QBlq2a_be19A",
       "ifc_type": "IfcWall",
-      "reason": "provider thickness below its configured 0.05 m minimum; requires confirmation",
+      "reason": "provider thickness below the 0.05 m review threshold; requires confirmation",
       "status": "conflict",
       "evidence_refs": [
         "cloud2bim-ifc-1",
@@ -57,8 +57,11 @@
       ]
     }
   ],
-  "source_schema_errors": "six IfcWindowType.PartitioningType fields absent; unsupported type definitions are not imported",
-  "geographic_location": "UNKNOWN: discarded source 0/0 placeholder",
+  "source_schema_errors": {
+    "IfcWindowType.PartitioningType": 6
+  },
+  "type_definitions": "unsupported source type definitions are not imported",
+  "geographic_location": "UNKNOWN: source geographic location is not imported",
   "material": "UNKNOWN: discarded source material assignments",
   "warning": "candidate geometry and semantic classes are inferred, not independently verified"
 }

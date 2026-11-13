@@ -23,21 +23,47 @@ def _fingerprint(kind: str, values: Any) -> str:
     return hashlib.sha256(data).hexdigest()[:16]
 
 
-def import_cloud2bim(source: Path, *, project_id: str, registry: dict | None = None) -> tuple[dict, dict, dict]:
+def import_cloud2bim(source: Path, *, project_id: str, registry: dict | None = None,
+                     point_cloud_evidence: dict | None = None) -> tuple[dict, dict, dict]:
     """Import supported source objects and report every omission and assumption."""
     import ifcopenshell
     import ifcopenshell.geom
     import ifcopenshell.util.element
     import ifcopenshell.util.placement
+    import ifcopenshell.util.unit
+    import ifcopenshell.validate
     from shapely.geometry import Polygon
 
     f = ifcopenshell.open(str(source))
     if f.schema != "IFC4":
         raise ValueError("Cloud2BIM IFC4 source required")
+    if ifcopenshell.util.unit.calculate_unit_scale(f) != 1.0:
+        raise ValueError("provider currently requires IFC length units in metres")
     mapping = json.loads(json.dumps(registry or {"schema": "cloud2bim-identities/0.1", "external": {}, "fingerprint": {}}))
     if mapping.get("schema") != "cloud2bim-identities/0.1":
         raise ValueError("unsupported identity registry")
     external, fingerprints = mapping["external"], mapping["fingerprint"]
+    source_sha = digest(source)
+    known_cloud = {"id": "craslab-source-1", "kind": "metric_point_cloud", "unit": "m",
+        "source": "https://doi.org/10.5281/zenodo.7948116", "license": "CC-BY-4.0",
+        "sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+        "archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671",
+        "coordinate_frame": "CRASLAB source scan"}
+    if point_cloud_evidence is None:
+        point_cloud_evidence = mapping.get("point_cloud_evidence")
+    if point_cloud_evidence is None and source_sha == "7e1ba673649b7bdabd8995705c5104b48ce3b00a4412560e7ea16d7fe74a2942":
+        point_cloud_evidence = known_cloud
+    if not isinstance(point_cloud_evidence,dict):
+        raise ValueError("unrecognized provider IFC requires an explicit point-cloud evidence manifest")
+    point_cloud_evidence=json.loads(json.dumps(point_cloud_evidence))
+    if (point_cloud_evidence.get("kind") != "metric_point_cloud" or point_cloud_evidence.get("unit") != "m" or
+            not isinstance(point_cloud_evidence.get("id"),str) or not point_cloud_evidence["id"] or
+            point_cloud_evidence["id"] == "cloud2bim-ifc-1" or not point_cloud_evidence.get("source") or
+            not point_cloud_evidence.get("license") or not point_cloud_evidence.get("coordinate_frame") or
+            not isinstance(point_cloud_evidence.get("sha256"),str) or
+            len(point_cloud_evidence["sha256"]) != 64 or any(c not in "0123456789abcdef" for c in point_cloud_evidence["sha256"])):
+        raise ValueError("point-cloud evidence requires ID, metre unit, source, license, coordinate frame and SHA-256")
+    mapping["point_cloud_evidence"]=point_cloud_evidence
     used: set[str] = set()
     def identity(kind: str, guid: str, geometry: Any) -> str:
         fp = kind + ":" + _fingerprint(kind, geometry)
@@ -48,26 +74,25 @@ def import_cloud2bim(source: Path, *, project_id: str, registry: dict | None = N
         used.add(ident)
         external[key], fingerprints[fp] = ident, ident
         return ident
-    refs = ["cloud2bim-ifc-1", "craslab-source-1"]
+    refs = ["cloud2bim-ifc-1", point_cloud_evidence["id"]]
     prov = lambda status="inferred": {"status": status, "evidence_refs": refs.copy()}
     val = lambda x, status="inferred", note="Cloud2BIM candidate, not verified": quantity(float(x), status, refs.copy(), note)
     model: dict[str, Any] = {"schema": SCHEMA, "project_id": project_id, "mode": "automatic", "revision": 1,
-        "coordinate_system": {"name": "CRASLAB source scan", "unit": "m", "georeferencing": "UNKNOWN"},
-        "evidence": [{"id": "cloud2bim-ifc-1", "kind": "provider_result", "sha256": digest(source),
+        "coordinate_system": {"name": point_cloud_evidence["coordinate_frame"], "unit": "m", "georeferencing": "UNKNOWN"},
+        "evidence": [{"id": "cloud2bim-ifc-1", "kind": "provider_result", "sha256": source_sha,
                       "provider": "Cloud2BIM", "status": "unverified_candidate"},
-                     {"id": "craslab-source-1", "kind": "metric_point_cloud", "unit": "m",
-                      "source": "https://doi.org/10.5281/zenodo.7948116", "license": "CC-BY-4.0",
-                      "archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671"}],
+                     point_cloud_evidence],
         "nodes": [], "storeys": [], "elements": [], "constraints": [], "quarantined": [],
         "validation": {"status": "UNVERIFIED_DRAFT", "note": "source classifications and geometry require human and independent verification"}}
-    node_index: dict[tuple[float,float], str] = {}
-    def node(x: float, y: float) -> str:
-        # Merge only coordinates equal at 1 micron; this does not close gaps.
-        key = (round(float(x),6),round(float(y),6))
+    node_index: dict[tuple[str,float,float], str] = {}
+    def node(x: float, y: float, scope: str) -> str:
+        # Merge exact endpoints only within the same source wall/storey plane.
+        # Slab boundaries get their own scope until a user confirms dependency.
+        key = (scope,round(float(x),6),round(float(y),6))
         if key not in node_index:
             ident = "node-" + _fingerprint("node", key)
             node_index[key] = ident
-            model["nodes"].append({"id": ident, "x": key[0], "y": key[1], **prov()})
+            model["nodes"].append({"id": ident, "x": key[1], "y": key[2], **prov()})
         return node_index[key]
     def quarantine(source_entity, reason: str) -> None:
         model["quarantined"].append({"source_guid": source_entity.GlobalId, "ifc_type": source_entity.is_a(),
@@ -107,15 +132,17 @@ def import_cloud2bim(source: Path, *, project_id: str, registry: dict | None = N
             thick,height=float(ex.SweptArea.YDim),float(ex.Depth)
             length=float(np.linalg.norm(p2-p1))
             if thick < .05:
-                raise ValueError("provider thickness below its configured 0.05 m minimum; requires confirmation")
+                raise ValueError("provider thickness below the 0.05 m review threshold; requires confirmation")
             if length<=0 or height<=0:
                 raise ValueError("invalid wall dimensions")
             # Geometry fingerprint is fallback for provider reruns that generate new GUIDs;
             # supplied registry preserves IDs if the same external object later changes.
             normalized=sorted([[round(float(x),5) for x in p] for p in (p1,p2)])
             ident=identity("wall",w.GlobalId,[normalized,round(float(matrix[2,3]),5)])
-            item={"id":ident,"ifc_type":"IfcWall","source_guid":w.GlobalId,"storey":storey(w),
-                  "start":node(*p1),"end":node(*p2),"axis_reference":"centerline","classification":prov(),
+            storey_id=storey(w)
+            scope=f"walls:{storey_id}:{float(matrix[2,3]):.6f}"
+            item={"id":ident,"ifc_type":"IfcWall","source_guid":w.GlobalId,"storey":storey_id,
+                  "start":node(*p1,scope),"end":node(*p2,scope),"axis_reference":"centerline","classification":prov(),
                   "parameters":{"height":val(height),"thickness":val(thick,"assumed","provider-inferred thickness, not independently measured"),
                                 "base_elevation":val(matrix[2,3])},
                   "unknown":["actual wall class", "actual thickness and extent", "unobserved openings", "material"]}
@@ -145,7 +172,7 @@ def import_cloud2bim(source: Path, *, project_id: str, registry: dict | None = N
                 raise ValueError("provider slab boundary self-intersects or is degenerate")
             ident=identity("slab",s.GlobalId,[[(round(x,5),round(y,5)) for x,y in coordinates],round(float(matrix[2,3]),5)])
             model["elements"].append({"id":ident,"ifc_type":"IfcSlab","source_guid":s.GlobalId,"storey":storey(s),
-                "classification":prov(),"outline":[node(x,y) for x,y in coordinates],"outline_status":prov(),
+                "classification":prov(),"outline":[node(x,y,f"slab:{ident}") for x,y in coordinates],"outline_status":prov(),
                 "parameters":{"thickness":val(ex.Depth,"assumed","provider slab thickness not measured"),
                               "elevation":val(matrix[2,3])},"unknown":["actual slab thickness", "material", "room membership"]})
         except (ValueError,StopIteration,TypeError,AttributeError) as exc:
@@ -199,11 +226,17 @@ def import_cloud2bim(source: Path, *, project_id: str, registry: dict | None = N
         raise ValueError(f"provider adapter produced invalid candidate: {issues}")
     from collections import Counter
     counts=dict(Counter(e["ifc_type"] for e in model["elements"]))
-    report={"source_sha256":digest(source),"source_ifc_schema":f.schema,
+    logger=ifcopenshell.validate.json_logger();ifcopenshell.validate.validate(f,logger)
+    schema_issues={}
+    for issue in logger.statements:
+        key=str(issue.get("attribute",issue.get("message","unknown")))
+        schema_issues[key]=schema_issues.get(key,0)+1
+    report={"source_sha256":source_sha,"source_ifc_schema":f.schema,
         "source_counts":{x:len(f.by_type(x)) for x in ("IfcWall","IfcSlab","IfcOpeningElement","IfcDoor","IfcWindow","IfcSpace")},
         "imported_counts":counts,"quarantined":model["quarantined"],
-        "source_schema_errors":"six IfcWindowType.PartitioningType fields absent; unsupported type definitions are not imported",
-        "geographic_location":"UNKNOWN: discarded source 0/0 placeholder",
+        "source_schema_errors":schema_issues,
+        "type_definitions":"unsupported source type definitions are not imported",
+        "geographic_location":"UNKNOWN: source geographic location is not imported",
         "material":"UNKNOWN: discarded source material assignments",
         "warning":"candidate geometry and semantic classes are inferred, not independently verified"}
     return model,mapping,report

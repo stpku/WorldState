@@ -45,5 +45,15 @@
     "IfcWindow:7238b946a7b0b943": "ifcwindow-7238b946a7b0b943",
     "opening:738cefcee5308871": "opening-738cefcee5308871",
     "IfcWindow:1cafc69ad24d25ef": "ifcwindow-1cafc69ad24d25ef"
+  },
+  "point_cloud_evidence": {
+    "id": "craslab-source-1",
+    "kind": "metric_point_cloud",
+    "unit": "m",
+    "source": "https://doi.org/10.5281/zenodo.7948116",
+    "license": "CC-BY-4.0",
+    "sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+    "archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671",
+    "coordinate_frame": "CRASLAB source scan"
   }
 }

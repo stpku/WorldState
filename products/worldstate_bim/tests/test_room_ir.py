@@ -100,3 +100,10 @@ def test_unknown_geometry_never_exports_or_becomes_known(tmp_path):
     assert any(i["code"]=="UNKNOWN_WALL_COORDINATE" for i in geometry_issues(model))
     with pytest.raises(ValueError,match="conflicting geometry"):
         export_room(model,tmp_path/"invalid.ifc")
+
+
+def test_closed_room_cannot_have_self_intersecting_boundary():
+    model=fixture()
+    model["nodes"][2].update(x=0,y=3)
+    model["nodes"][3].update(x=4,y=3)
+    assert any(i["code"]=="ROOM_BOUNDARY_INVALID" for i in geometry_issues(model))

@@ -27,6 +27,7 @@ def main() -> int:
     ingest.add_argument("--ifc", type=Path, required=True)
     ingest.add_argument("--project-id", required=True)
     ingest.add_argument("--identity-map", type=Path)
+    ingest.add_argument("--evidence-manifest", type=Path, help="Required for unrecognized sources; metadata for the input metric point cloud")
     ingest.add_argument("--output-dir", type=Path, required=True)
     revise = sub.add_parser("revise")
     revise.add_argument("--model", type=Path, required=True)
@@ -50,7 +51,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.command == "import-cloud2bim":
         mapping = json.loads(args.identity_map.read_text()) if args.identity_map else None
-        model, mapping, report = import_cloud2bim(args.ifc, project_id=args.project_id, registry=mapping)
+        evidence = json.loads(args.evidence_manifest.read_text()) if args.evidence_manifest else None
+        model, mapping, report = import_cloud2bim(args.ifc, project_id=args.project_id, registry=mapping, point_cloud_evidence=evidence)
         save_version(model, args.output_dir, report=report, registry=mapping)
         print(json.dumps({"status": "UNVERIFIED_DRAFT", "ifc": str(args.output_dir / "model.ifc"),
                           "counts": report["imported_counts"], "quarantined": len(report["quarantined"])}, indent=2))
