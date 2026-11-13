@@ -4,6 +4,8 @@
 
 **Round 3:** the [real CRASLAB multi-object example](../../examples/bim_real_scan_craslab/room_round3/README.md) has eight inferred walls, one slab and five windows/openings; four conflicting source objects are quarantined. The multi-wall IR, constraints, IFC export, Bonsai edit and restricted readback run locally. No independent real-room accuracy or labor-savings acceptance is claimed.
 
+A separate [synthetic room](../../examples/bim_synthetic_room_round3/README.md) demonstrates four connected walls, a slab, door, window, openings and a versioned wall edit; its inputs are invented and must not be treated as measured evidence.
+
 **Round 2:** an [assisted real-photo + RGB-D wall-patch IFC example](../../examples/bim_real_photo_tum/README.md) and local editing viewer are available. The example's scale is derived from the same sensor, its thickness is assumed, and it is not a complete room or V0.2 acceptance.
 
 The product boundary is recorded in [SCOPE.md](SCOPE.md). A separate
@@ -18,7 +20,7 @@ multi-object example is scan-driven and not a complete verified room.
 
 > **Evidence-to-Editable World：用最低的人工成本，将真实世界证据转化为可编辑、可迭代、可复用、可验证的数字模型。**
 
-Verification is a first-class deliverable alongside IFC: element-level source links, explicit inferred/simulated status, independent geometric and semantic tests, and an auditable revision trail. These are **target capabilities**; the current prototype tests typed input and synthetically generated IFC geometry, not real-photo reconstruction accuracy.
+Verification is a first-class deliverable alongside IFC: element-level source links, explicit inferred/simulated status, independent geometric and semantic tests, and an auditable revision trail. These are **target capabilities**; the existing real-photo wall patch and scan-driven objects are not evidence of independently measured, photo-only room reconstruction accuracy.
 
 Goal: user photographs, measurement references and optional plans → DSH
 multimodal modeling agent → structured parametric building proposal → editable
@@ -113,7 +115,7 @@ The current release gates and product sequence are in the [reset roadmap](../../
 | V0.5 | DSH interactive repair loop + BIM author review | Human selects issue → rerun local affected elements → versioned IFC output |
 | V1.0 | One public-room building case + one approved DCF room case | Measured comparison of cost, edit effort and geometric accuracy |
 
-## DSH responsibilities (integration contract, not installed in this branch)
+## DSH responsibilities (integration contract; deployed service not connected)
 
 DSH orchestrates: image OCR/vision or segmentation → scale/camera hints →
 structured `worldstate-bim-proposal/0.1` → call IFC compiler →

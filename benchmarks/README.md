@@ -3,8 +3,8 @@
 | 套件 | 目的 | 本轮真实状态 |
 | --- | --- | --- |
 | WS-Geometry | 相同真实照片、相机位姿与重投影 | [TUM + CPU COLMAP 4/8/16/32](../acceptance/bim-reset-round2-20261113/STATUS.md)；不提供独立尺度或稠密完整性。 |
-| WS-Structure | 可见构件语义、实例与布局 | [CRASLAB 标签点云开发集](../examples/bim_real_scan_craslab/README.md)：仅一块未确认墙体。 |
-| WS-BIM | 原生 IFC、可编辑性、拓扑和 GUID | 一个墙的 IfcOpenShell、Bonsai 和 web-ifc 局部回读；门窗、开口和完整拓扑未实现。 |
+| WS-Structure | 可见构件语义、实例与布局 | [CRASLAB 多构件开发集](../examples/bim_real_scan_craslab/room_round3/README.md)：8 面推断墙及窗洞；点级表面覆盖不足，实例与独立尺寸未测。 |
+| WS-BIM | 原生 IFC、可编辑性、拓扑和 GUID | 墙、板、门窗、开口及部分空间拓扑已有产品实现；真实扫描例已通过 Bonsai 墙长修改和受限同步，完整房间尚未验收。 |
 | WS-RealRoom | 用户照片到可编辑 BIM 和人工成本 | [采集、隔离与冻结门槛](ws_realroom/PROTOCOL.md)；真实独立验收房间未采集。 |
 | WS-Campus | 授权建筑公开展示 | 规划；校园素材没有新上传或对外发布。 |
 
