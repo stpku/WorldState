@@ -25,7 +25,11 @@ def initialize(destination: Path, room_id: str) -> None:
     for path, data in (("capture-manifest.json", manifest),
                        ("input/anchor.json", {"status": "UNKNOWN", "value_m": None, "source": None, "uncertainty_m": None}),
                        ("input/annotations.json", {"status": "NOT_COLLECTED", "annotations": []}),
-                       ("input/assumptions.json", {"status": "NOT_COLLECTED", "assumptions": []})):
+                       ("input/assumptions.json", {"status": "NOT_COLLECTED", "assumptions": []}),
+                       ("private-reference/reference.template.json", {"schema": "ws-realroom-reference/0.1", "status": "NOT_COLLECTED",
+                         "reference_ifc": {"path": "reference.ifc", "sha256": ""}, "visible_wall_guids": [],
+                         "matches": [], "measurements": [], "holdout_photos": []}),
+                       ("runs/labor.template.json", {"schema": "ws-realroom-labor/0.1", "status": "NOT_COLLECTED", "pairs": []})):
         (destination / path).write_text(json.dumps(data, indent=2) + "\n")
     (destination / "LICENSE-and-consent.txt").write_text("NOT COLLECTED: record permission, rights, scope and publication restrictions.\n")
     (destination / "private-reference/dimensions.csv").write_text("measurement_id,object_id,start,end,value_m,uncertainty_m,measurement_method,operator,time\n")
