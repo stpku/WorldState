@@ -10,9 +10,10 @@ import numpy as np
 import pytest
 
 from products.worldstate_bim.room_ifc import stable_guid
-from products.worldstate_bim.room_sync import sync_external_ifc
+from products.worldstate_bim.room_sync import sync_external_ifc, _same_retriangulated_surface
 
 ROOT=Path(__file__).resolve().parents[3]/"examples/bim_real_scan_craslab/room_round3"
+ROUND4=ROOT.parent/"room_round4"
 
 
 def real_model():
@@ -68,3 +69,27 @@ def test_opening_offset_readback_updates_filling(tmp_path):
                                     attribute="offset",reason="move window",operator="analyst")
     assert diff["after"]==pytest.approx(opening["parameters"]["offset"]["value"]+.1,abs=1e-5)
     assert opening["fill"] in diff["affected_elements"]
+
+
+def test_retriangulation_must_preserve_vertices_and_full_surface():
+    vertices=np.array([[0.,0.,0.],[1.,0.,0.],[1.,1.,0.],[0.,1.,0.]])
+    first=np.array([[0,1,2],[0,2,3]]);alternate=np.array([[0,1,3],[1,2,3]])
+    assert _same_retriangulated_surface(vertices,first,vertices,alternate)
+    assert not _same_retriangulated_surface(vertices,first,vertices,alternate[:1])
+    assert not _same_retriangulated_surface(vertices,first,vertices,np.array([[0,1,2],[0,1,3]]))
+    moved=vertices.copy();moved[2,0]+=.001
+    assert not _same_retriangulated_surface(vertices,first,moved,alternate)
+
+
+def test_real_bonsai_wall_height_and_window_position_readback():
+    model=real_model()
+    height,diff=sync_external_ifc(model,ROOT/"model.ifc",ROUND4/"height-bonsai.ifc",
+        element_id="wall-cf1d15bbd93c2d52",attribute="height",reason="Bonsai height",operator="analyst")
+    assert diff["after"]==pytest.approx(3.5) and height["revision"]==2
+    window,diff=sync_external_ifc(model,ROOT/"model.ifc",ROUND4/"window-bonsai.ifc",
+        element_id="opening-34fcb929a4856871",attribute="offset",reason="Bonsai window move",operator="analyst")
+    assert diff["after"]==pytest.approx(1.25,abs=1e-5)
+    assert "ifcwindow-2ad5a81694a7ff78" in diff["affected_elements"] and window["revision"]==2
+    with pytest.raises(ValueError,match="opening has no readable geometry"):
+        sync_external_ifc(model,ROOT/"model.ifc",ROUND4/"window-recalculate-failed.ifc",
+            element_id="opening-34fcb929a4856871",attribute="offset",reason="bad Bonsai edit",operator="analyst")

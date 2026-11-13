@@ -1,0 +1,9 @@
+{
+  "application": "Blender 5.2.2 LTS + Bonsai 0.9.0.post1",
+  "operation": "move window and native recalculate_fill",
+  "guid_before": "0qj_0dhFbNhfKaJWeRiKN4",
+  "guid_after": "0qj_0dhFbNhfKaJWeRiKN4",
+  "before": 1.1501162790697705,
+  "requested_value_m": 1.25,
+  "warning": "Independent model geometry and supported readback must still be checked."
+}

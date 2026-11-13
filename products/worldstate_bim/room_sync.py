@@ -37,6 +37,75 @@ def _mesh(entity, settings) -> tuple:
     return tuple(sorted(tuple(sorted(coords[int(i)] for i in face)) for face in faces))
 
 
+def _same_retriangulated_surface(a: np.ndarray, af: np.ndarray, b: np.ndarray, bf: np.ndarray,
+                                 *, tolerance: float = 1e-5) -> bool:
+    """Compare unchanged planar surfaces despite different triangle diagonals.
+
+    Require a one-to-one vertex match within 0.01 mm, matching planes, and
+    equal projected polygon topology and boundaries. This deliberately rejects
+    arbitrary remeshing or very large meshes instead of guessing equivalence.
+    """
+    from scipy.spatial import cKDTree
+    from shapely.geometry import Polygon
+    from shapely.ops import unary_union
+    if len(a)!=len(b) or len(af)!=len(bf) or not len(a) or len(af)>20000 or len(bf)>20000:
+        return False
+    distance,index=cKDTree(a).query(b)
+    if np.max(distance)>tolerance or len(set(map(int,index)))!=len(a):
+        return False
+    groups=[]
+    def plane(tri):
+        n=np.cross(tri[1]-tri[0],tri[2]-tri[0]);length=float(np.linalg.norm(n))
+        if length<1e-12:return None
+        n=n/length
+        if n[int(np.argmax(np.abs(n)))]<0:n=-n
+        return n,float(np.dot(n,tri[0]))
+    def locate(normal,offset):
+        return next((group for group in groups if np.linalg.norm(group["normal"]-normal)<1e-6 and
+                     abs(group["offset"]-offset)<tolerance),None)
+    for face in af:
+        triangle=a[face];p=plane(triangle)
+        if p is None:return False
+        group=locate(*p)
+        if group is None:
+            group={"normal":p[0],"offset":p[1],"left":[],"right":[]};groups.append(group)
+        group["left"].append(triangle)
+    for face in bf:
+        triangle=b[face];p=plane(triangle)
+        if p is None:return False
+        group=locate(*p)
+        if group is None:return False
+        group["right"].append(triangle)
+    def signature(polygon):
+        if polygon.geom_type=="Polygon":return (1,(len(polygon.interiors),))
+        if polygon.geom_type=="MultiPolygon":return (len(polygon.geoms),tuple(sorted(len(p.interiors) for p in polygon.geoms)))
+        return None
+    for group in groups:
+        if not group["right"]:return False
+        drop=int(np.argmax(np.abs(group["normal"])));axes=[i for i in range(3) if i!=drop]
+        left=unary_union([Polygon(tri[:,axes]) for tri in group["left"]])
+        right=unary_union([Polygon(tri[:,axes]) for tri in group["right"]])
+        topology=signature(left)
+        if not left.is_valid or not right.is_valid or topology is None or topology!=signature(right):return False
+        if left.boundary.hausdorff_distance(right.boundary)>tolerance:return False
+        if left.symmetric_difference(right).area>tolerance*(left.length+right.length)+tolerance*tolerance:return False
+    return True
+
+
+def _equivalent_retriangulation(left, right, settings) -> bool:
+    import ifcopenshell.geom
+    from shapely.errors import GEOSException
+    if not getattr(left,"Representation",None) or not getattr(right,"Representation",None):return False
+    arrays=[]
+    for entity in (left,right):
+        shape=ifcopenshell.geom.create_shape(settings,entity)
+        arrays.append((np.asarray(shape.geometry.verts).reshape(-1,3),np.asarray(shape.geometry.faces,dtype=int).reshape(-1,3)))
+    try:
+        return _same_retriangulated_surface(arrays[0][0],arrays[0][1],arrays[1][0],arrays[1][1])
+    except GEOSException:
+        return False
+
+
 def _verify_geometry(reference, candidate) -> None:
     import ifcopenshell.geom
     a, b = _products(reference), _products(candidate)
@@ -52,8 +121,11 @@ def _verify_geometry(reference, candidate) -> None:
         for attr in ("Description", "ObjectType", "Tag", "PredefinedType", "OverallWidth", "OverallHeight"):
             if getattr(left,attr,None) != getattr(right,attr,None):
                 raise ValueError(f"external IFC changed unsupported attribute: {left.Name}.{attr}")
-        if _mesh(left, settings) != _mesh(right, settings):
-            raise ValueError(f"external IFC geometry differs outside supported edit: {left.Name}")
+        try:
+            if _mesh(left, settings) != _mesh(right, settings) and not _equivalent_retriangulation(left,right,settings):
+                raise ValueError(f"external IFC geometry differs outside supported edit: {left.Name}")
+        except RuntimeError as exc:
+            raise ValueError(f"external IFC geometry cannot be read: {left.Name}") from exc
 
 
 def _verify_unmodified_metadata(before, after) -> None:
@@ -118,6 +190,8 @@ def _read_value(f, model: dict, element_id: str, attribute: str) -> float:
             raise ValueError("wall is not a supported single extrusion")
         return float(solids[0].Depth)
     if item["ifc_type"]=="IfcOpeningElement" and attribute in {"offset","width","height","sill"}:
+        if not entity.Representation:
+            raise ValueError("external IFC opening has no readable geometry; synchronization refused")
         host=elements[item["host"]]
         wall=f.by_guid(stable_guid(model["project_id"],"IfcWall",host["id"]))
         settings=ifcopenshell.geom.settings();settings.set("use-world-coords",True)
@@ -134,8 +208,9 @@ def sync_external_ifc(model: dict, baseline_ifc: Path, edited_ifc: Path, *, elem
                       attribute: str, reason: str, operator: str) -> tuple[dict,dict]:
     """Synchronize one supported edit only after whole-model verification.
 
-    Geometric matching is at 0.1 mm precision and deliberately rejects
-    representations that change triangulation or unsupported properties.
+    Exact triangles use 0.1 mm rounded coordinates. Alternative triangulation
+    must pass a stricter 0.01 mm vertex, plane, surface and topology check.
+    Unsupported geometry, relationships and checked metadata are rejected.
     """
     import ifcopenshell
     validate_room(model)
