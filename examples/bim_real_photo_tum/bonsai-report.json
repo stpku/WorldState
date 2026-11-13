@@ -1,0 +1,18 @@
+{
+  "application": "Blender 5.2.2 LTS + Bonsai 0.9.0.post1",
+  "operation": "Bonsai change_layer_length to 0.5 m; save as IFC4",
+  "wall_guid_before": "27dj0KkHfVKfCo5Vu6Zcj6",
+  "wall_guid_after": "27dj0KkHfVKfCo5Vu6Zcj6",
+  "blender_bounds_before_m": [
+    0.4280838668346405,
+    0.11999999731779099,
+    0.40117529034614563
+  ],
+  "blender_bounds_after_m": [
+    0.5,
+    0.11999999731779099,
+    0.40117529034614563
+  ],
+  "extruded_solids_after": 1,
+  "warning": "The external edit has not yet been synchronized into the WorldState IR."
+}

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .assisted import create_candidate, revise_length, write_model
+from .assisted import create_candidate, import_external_wall_length, revise_length, write_model
 
 
 def write_cloud(path: Path, points: np.ndarray) -> None:
@@ -42,6 +42,13 @@ def main() -> int:
     revise.add_argument("--reason", required=True)
     revise.add_argument("--operator", choices=("analyst", "user"), required=True)
     revise.add_argument("--output-dir", type=Path, required=True)
+    sync = sub.add_parser("sync-ifc", help="Import a checked external wall-length edit; reject other geometry changes")
+    sync.add_argument("--model", type=Path, required=True)
+    sync.add_argument("--ifc", type=Path, required=True)
+    sync.add_argument("--evidence-root", type=Path, required=True)
+    sync.add_argument("--reason", required=True)
+    sync.add_argument("--operator", choices=("analyst", "user"), required=True)
+    sync.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "create":
         prediction, metadata = None, None
@@ -60,7 +67,10 @@ def main() -> int:
                           "warning": "not a complete room; thickness assumed; scale independence as recorded"}, indent=2))
         return 0
     model = json.loads(args.model.read_text())
-    revised, diff = revise_length(model, args.wall_id, args.length_m, args.reason, operator=args.operator)
+    if args.command == "sync-ifc":
+        revised, diff = import_external_wall_length(model, args.ifc, reason=args.reason, operator=args.operator)
+    else:
+        revised, diff = revise_length(model, args.wall_id, args.length_m, args.reason, operator=args.operator)
     ifc, ir = write_model(revised, args.evidence_root, args.output_dir)
     (args.output_dir / "diff.json").write_text(json.dumps(diff, indent=2, ensure_ascii=False) + "\n")
     print(json.dumps({"status": "REQUIRES_REVALIDATION", "ifc": str(ifc), "ir": str(ir),

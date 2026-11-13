@@ -1,0 +1,328 @@
+{
+  "schema": "worldstate-bim-geometry-candidate/0.1",
+  "provider": "COLMAP/pycolmap",
+  "provider_version": "4.2.1",
+  "status": "UNVERIFIED_RESEARCH_CANDIDATE",
+  "input_images": [
+    {
+      "file": "1305031910.765238.png",
+      "sha256": "94afe78f6c0efac7e2f268392a8014c7f5da3b763524eb098cd44265dded94c2"
+    },
+    {
+      "file": "1305031911.265104.png",
+      "sha256": "3edc8b9e930061114c8d493b92eba1c8026ec6d0cb5a441e178218f582931425"
+    },
+    {
+      "file": "1305031911.765284.png",
+      "sha256": "5f8bd927241f4be588b8a98dd46ad37d285ea5a2f52dd77f6d23107e3fac9ca6"
+    },
+    {
+      "file": "1305031912.265090.png",
+      "sha256": "6fd0e7a5f7a8dfd2f900948a80d6a52bc8e823dc299ddfe345c54328ecb67eb6"
+    },
+    {
+      "file": "1305031912.765193.png",
+      "sha256": "40e0da722ea70bbbc58094e67215407ff0ef7b0825e2022d4aeea4fc7bdc60de"
+    },
+    {
+      "file": "1305031913.265022.png",
+      "sha256": "a859f445092a4f0f35a21f91821da17c656d3a254c631b37062d9475a572b7a2"
+    },
+    {
+      "file": "1305031913.765028.png",
+      "sha256": "ac991440fd8e213ab6dcb3915fd2ce8d7a4d23e60ed8a8c8956dade0733dc425"
+    },
+    {
+      "file": "1305031914.265074.png",
+      "sha256": "626b0f470084e3c56346745fd3a1261c271a434bd2d4ea81d895eff39d675d52"
+    },
+    {
+      "file": "1305031914.764901.png",
+      "sha256": "442587d0cb135d8a5c676a5f6f385ac56cd2bf94aa0e297a68ce518e6ad6d5ff"
+    },
+    {
+      "file": "1305031915.264979.png",
+      "sha256": "f97b67620c93058ece461749a0310c22feb698bcb88a3355d5e89f1b3b6d52b9"
+    },
+    {
+      "file": "1305031915.765010.png",
+      "sha256": "2ddcda262615514b200a69ac4296e946ec234ea51ddd9aaf1985a7a7e95745ca"
+    },
+    {
+      "file": "1305031916.265060.png",
+      "sha256": "888a0b61eb5f302cd4bf7944cf146e6fd9ec0bd3069572ba0aab6d1212282e8d"
+    },
+    {
+      "file": "1305031916.765076.png",
+      "sha256": "b3af0e9064af535e75b98361b4f317c5fefee89b717e30b28d9dd98cb4650f85"
+    },
+    {
+      "file": "1305031917.265163.png",
+      "sha256": "8fb73d7406d1f66dfa17e6ed32ca04377c667b17c75c1e2c2c2cca4daca88781"
+    },
+    {
+      "file": "1305031917.765114.png",
+      "sha256": "0641402e77a0fce89079a72353a39b1cc3af9633a7e655458042dfe90edf96a0"
+    },
+    {
+      "file": "1305031918.265256.png",
+      "sha256": "271e8a50984c24e8a58ac198acdb9e8a7312796a694e2e5911ee22935b4d8083"
+    }
+  ],
+  "coordinate_frame": "COLMAP reconstruction frame",
+  "scale": {
+    "status": "unknown",
+    "unit": "arbitrary"
+  },
+  "uncertainty": {
+    "status": "not_quantified",
+    "reason": "no per-point covariance estimated"
+  },
+  "camera_calibration": {
+    "model": "PINHOLE",
+    "parameters": [
+      525,
+      525,
+      319.5,
+      239.5
+    ],
+    "provenance": "TUM recommended ROS default, not per-frame calibration"
+  },
+  "timing_seconds": {
+    "feature_extraction": 0.5556033320026472,
+    "matching": 0.15225805202499032,
+    "mapping": 0.11653732298873365,
+    "total": 0.8243987070163712
+  },
+  "registered_cameras": [
+    {
+      "name": "1305031910.765238.png",
+      "center": [
+        1.7675259882570191,
+        0.6200584066356292,
+        -3.221424156752498
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9999447184153233,
+          -0.006455201732891846,
+          -0.008300029149795175
+        ],
+        [
+          0.006362315679760622,
+          0.9999173818523944,
+          -0.01116917224524573
+        ],
+        [
+          0.008371442676794223,
+          0.011115747390102274,
+          0.9999031748661811
+        ]
+      ]
+    },
+    {
+      "name": "1305031911.265104.png",
+      "center": [
+        -0.8073552259694529,
+        0.150060034302185,
+        -1.5031454434438738
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.920959232422176,
+          -0.24321287113487844,
+          0.3044365147788374
+        ],
+        [
+          0.2285569749109717,
+          0.9699455260288121,
+          0.08347086770985704
+        ],
+        [
+          -0.3155880248613716,
+          -0.007292177385392548,
+          0.9488682852288184
+        ]
+      ]
+    },
+    {
+      "name": "1305031911.765284.png",
+      "center": [
+        -2.4512460268505873,
+        0.32401062284260446,
+        0.4572389552524051
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.7469014648971619,
+          -0.38411904083226084,
+          0.5427621617288529
+        ],
+        [
+          0.3062844814825744,
+          0.9232571894671882,
+          0.2319180426359689
+        ],
+        [
+          -0.5901932040759399,
+          -0.006980298507404753,
+          0.8072318485387724
+        ]
+      ]
+    },
+    {
+      "name": "1305031912.265090.png",
+      "center": [
+        -2.727935237607268,
+        -0.09806518778151319,
+        1.4394917339175497
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.45372887446329657,
+          -0.5088369938774175,
+          0.731583913259486
+        ],
+        [
+          0.48109848633366,
+          0.8309042909377937,
+          0.27953945293754756
+        ],
+        [
+          -0.7501162276112493,
+          0.2251287919457551,
+          0.621805976258924
+        ]
+      ]
+    },
+    {
+      "name": "1305031912.765193.png",
+      "center": [
+        -1.866903827178682,
+        -0.6509935737928575,
+        1.3129157993351916
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.23596481824194582,
+          -0.5642180540621677,
+          0.7911880889032304
+        ],
+        [
+          0.5185749972320468,
+          0.761670337931718,
+          0.38850774581823344
+        ],
+        [
+          -0.8218275833761167,
+          0.3186162013854337,
+          0.4723167786738989
+        ]
+      ]
+    },
+    {
+      "name": "1305031913.265022.png",
+      "center": [
+        -0.9836849472201195,
+        -1.7255194848204174,
+        1.4846504862821792
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.4637327926061484,
+          -0.5028226244794918,
+          0.729466452534494
+        ],
+        [
+          0.44025851962702367,
+          0.8452809313155814,
+          0.3027748058377466
+        ],
+        [
+          -0.7688461048594348,
+          0.1807472142684901,
+          0.6133564311040163
+        ]
+      ]
+    },
+    {
+      "name": "1305031913.765028.png",
+      "center": [
+        1.5856521396503944,
+        -0.12170066524720739,
+        1.467082251759785
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9559913575280682,
+          -0.13068093773179884,
+          0.2626842531351643
+        ],
+        [
+          0.10491045315375816,
+          0.9883899770056954,
+          0.10990473226278286
+        ],
+        [
+          -0.273996936389286,
+          -0.07750965016189007,
+          0.958602072280812
+        ]
+      ]
+    },
+    {
+      "name": "1305031914.265074.png",
+      "center": [
+        5.483947136918697,
+        1.5021498478615767,
+        -1.4368096263507395
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9599460080760402,
+          0.23274460476221012,
+          -0.15599234126378597
+        ],
+        [
+          -0.22208770983683349,
+          0.971502632877715,
+          0.08282320599384087
+        ],
+        [
+          0.17082362459070272,
+          -0.04486182414648711,
+          0.9842797905148436
+        ]
+      ]
+    }
+  ],
+  "sparse_points": 232,
+  "limitations": [
+    "CPU sparse SfM only",
+    "scale unknown without independent anchor",
+    "not a building model"
+  ],
+  "point_cloud_file": "points.ply",
+  "mean_reprojection_error_px": 0.923240855924664,
+  "evaluation": {
+    "requested_images": 16,
+    "registered_images": 8,
+    "registered_fraction": 0.5,
+    "scale_status": "ORACLE_TWO_CAMERA_BASELINE_NOT_PRODUCT_SCALE",
+    "heldout_pose_status": "MEASURED",
+    "surface_completeness": "NOT_MEASURED: no independent dense surface visibility protocol",
+    "strict_anchor_status": "FAILED: preselected first/last anchor not registered",
+    "anchor_selection": "first/last registered frames, diagnostic fallback",
+    "anchor_images": [
+      "1305031910.765238.png",
+      "1305031914.265074.png"
+    ],
+    "oracle_baseline_m": 0.1350994448545219,
+    "oracle_scale_m_per_unit": 0.03204440222547872,
+    "heldout_pose_count": 6,
+    "position_median_error_m": 0.07606886406656069,
+    "rotation_median_error_deg": 3.3778385463665996,
+    "heldout_baseline_relative_error_median": 0.2291140891627959,
+    "trajectory_sha256": "66b6770d887a5a3b69c94c3b186c3f76fe092ca25399772177f41aed984bd1b0"
+  }
+}

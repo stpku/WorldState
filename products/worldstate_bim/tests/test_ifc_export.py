@@ -15,6 +15,8 @@ class IfcExporterTests(unittest.TestCase):
         try:
             import ifcopenshell
             import ifcopenshell.geom
+            import ifcopenshell.util.element
+            import ifcopenshell.util.representation
         except ImportError:
             self.skipTest("ifcopenshell is not installed in this environment")
         proposal = load_proposal(fixture())
@@ -29,6 +31,12 @@ class IfcExporterTests(unittest.TestCase):
             self.assertTrue(model.by_type("IfcRelContainedInSpatialStructure"))
             self.assertTrue(model.by_type("IfcPropertySet"))
             self.assertTrue(walls[0].Representation)
+            axis = ifcopenshell.util.representation.get_context(model, "Plan", "Axis", "GRAPH_VIEW")
+            self.assertIsNotNone(axis)
+            self.assertIsNotNone(ifcopenshell.util.representation.get_representation(walls[0], axis))
+            material = ifcopenshell.util.element.get_material(walls[0])
+            self.assertTrue(material.is_a("IfcMaterialLayerSetUsage"))
+            self.assertAlmostEqual(material.ForLayerSet.MaterialLayers[0].LayerThickness, proposal.walls[0].thickness_m)
             geom = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), walls[0])
             self.assertGreater(len(geom.geometry.verts), 0)
             second = Path(td) / "draft-revision.ifc"

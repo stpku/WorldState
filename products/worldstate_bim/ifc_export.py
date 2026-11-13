@@ -8,10 +8,35 @@ pixels, generate openings, validate construction compliance, or certify BIM.
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 from uuid import NAMESPACE_URL, uuid5
 
 from .contract import BuildingProposal, release_check
+
+
+def _add_editable_wall_axis(model, wall, axis_context, length_m: float, thickness_m: float) -> None:
+    """Give a wall an axis and an unspecified material layer for BIM editing.
+
+    The geometric thickness comes from the proposal; the material is explicitly
+    unspecified and must not be interpreted as an observed construction type.
+    """
+    import ifcopenshell.api.geometry
+    import ifcopenshell.api.material
+
+    axis = ifcopenshell.api.geometry.add_axis_representation(
+        model, context=axis_context, axis=((0., 0.), (float(length_m), 0.))
+    )
+    ifcopenshell.api.geometry.assign_representation(model, product=wall, representation=axis)
+    material = ifcopenshell.api.material.add_material(model, name="Unspecified material")
+    layer_set = ifcopenshell.api.material.add_material_set(
+        model, name="Geometric thickness; material unspecified", set_type="IfcMaterialLayerSet"
+    )
+    layer = ifcopenshell.api.material.add_layer(model, layer_set=layer_set, material=material)
+    ifcopenshell.api.material.edit_layer(model, layer=layer, attributes={"LayerThickness": float(thickness_m)})
+    ifcopenshell.api.material.assign_material(
+        model, products=[wall], type="IfcMaterialLayerSetUsage", material=layer_set
+    )
 
 
 def export_ifc(
@@ -65,6 +90,10 @@ def export_ifc(
         target_view="MODEL_VIEW",
         parent=context,
     )
+    plan = ifcopenshell.api.context.add_context(model, context_type="Plan")
+    axis = ifcopenshell.api.context.add_context(
+        model, context_type="Plan", context_identifier="Axis", target_view="GRAPH_VIEW", parent=plan
+    )
     site = ifcopenshell.api.root.create_entity(model, ifc_class="IfcSite", name="Site")
     building = ifcopenshell.api.root.create_entity(
         model, ifc_class="IfcBuilding", name=proposal.project_name
@@ -98,6 +127,7 @@ def export_ifc(
         ifcopenshell.api.geometry.assign_representation(
             model, product=wall, representation=representation
         )
+        _add_editable_wall_axis(model, wall, axis, math.dist(element.start_m[:2], element.end_m[:2]), element.thickness_m)
         ifcopenshell.api.spatial.assign_container(
             model, products=[wall], relating_structure=storey
         )

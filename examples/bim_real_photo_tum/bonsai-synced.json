@@ -1,0 +1,217 @@
+{
+  "schema": "worldstate-bim-parametric-ir/0.2",
+  "project_id": "tum-fr1-room-assisted-patch",
+  "mode": "assisted",
+  "revision": 2,
+  "evidence": [
+    {
+      "id": "photo-1",
+      "kind": "image",
+      "name": "1305031916.701048.png",
+      "sha256": "38633b1d8d8ae9d356a08cd30944bed5f38d167cbf0bb86836af75233125d51f",
+      "width_px": 640,
+      "height_px": 480
+    },
+    {
+      "id": "depth-1",
+      "kind": "registered_depth",
+      "name": "1305031916.711186.png",
+      "sha256": "c9449a82873029ffdf0e03b0e92efd4c46ce6080c55ea5c88ef22bc874caab82"
+    },
+    {
+      "id": "anchor-1",
+      "kind": "scale_reference",
+      "description": "TUM Kinect calibration from this same depth frame; not an independent wall measurement",
+      "independence": "same_sensor",
+      "pixels": [
+        30,
+        250,
+        70,
+        250
+      ],
+      "raw_points": [
+        [
+          -8672.317142857142,
+          314.54,
+          15727.0
+        ],
+        [
+          -7407.53619047619,
+          311.74,
+          15587.0
+        ]
+      ],
+      "source_refs": [
+        "depth-1"
+      ]
+    },
+    {
+      "id": "operator-1",
+      "kind": "manual_selection",
+      "operator": "analyst",
+      "roi_xyxy": [
+        10,
+        228,
+        90,
+        295
+      ]
+    },
+    {
+      "id": "assumption-1",
+      "kind": "assumption",
+      "description": "wall thickness supplied for a draft solid"
+    },
+    {
+      "id": "vision-1",
+      "kind": "local_vision_model",
+      "model": "Depth Anything V2 Small ONNX",
+      "sha256": "afb6a5c28f3b6bf1618c6e43f02073ef9dfdc70e937502d51603e57b0a1df10c",
+      "provider": "onnxruntime CPU",
+      "runtime_version": "1.20.1",
+      "inference_seconds": 1.850466398987919,
+      "output": "relative inverse depth; not metric or semantic"
+    },
+    {
+      "id": "revision-2",
+      "kind": "manual_revision",
+      "reason": "Bonsai external wall length edit; not a field measurement",
+      "operator": "analyst"
+    },
+    {
+      "id": "external-ifc-2",
+      "kind": "external_ifc_edit",
+      "sha256": "aaf14cfa21fdc673b630a5475c1e8917cbc03f0822fa4f8289c90a451c3f8699",
+      "note": "only axis length imported; other attributes require separate review"
+    }
+  ],
+  "scale": {
+    "status": "applied",
+    "anchor_ref": "anchor-1",
+    "raw_distance": 1272.5088202074153,
+    "distance_m": 0.25450176404148306,
+    "metres_per_unit": 0.0002,
+    "independence": "same_sensor"
+  },
+  "coordinate_system": {
+    "name": "visible_patch_local",
+    "unit": "m",
+    "local_to_color_camera": [
+      [
+        0.998517791270501,
+        0.053809180778705015,
+        -0.008172672769971146,
+        -1.8114915255652586
+      ],
+      [
+        -1.734723475976807e-18,
+        -0.15016040036531744,
+        -0.9886616479676592,
+        0.32883469855641106
+      ],
+      [
+        -0.05442628515965778,
+        0.9871962450425207,
+        -0.14993783130907087,
+        3.185804942282979
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "intrinsics_fx_fy_cx_cy": [
+      525.0,
+      525.0,
+      319.5,
+      239.5
+    ],
+    "vertical_basis": "assumed camera image-up projected onto plane"
+  },
+  "elements": [
+    {
+      "id": "wall-patch-1",
+      "ifc_type": "IfcWall",
+      "scope": "visible_patch_only",
+      "classification": {
+        "status": "inferred",
+        "note": "possible wall region manually selected by analyst",
+        "evidence_refs": [
+          "photo-1",
+          "operator-1"
+        ]
+      },
+      "parameters": {
+        "length": {
+          "value": 0.5,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "photo-1",
+            "depth-1",
+            "anchor-1",
+            "operator-1",
+            "vision-1",
+            "revision-2",
+            "external-ifc-2"
+          ],
+          "note": "operator revision; not a new field measurement"
+        },
+        "visible_height": {
+          "value": 0.40117529225520326,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "photo-1",
+            "depth-1",
+            "anchor-1",
+            "operator-1",
+            "vision-1"
+          ],
+          "note": "visible support only, not storey height"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "assumption-1"
+          ],
+          "note": "explicit modelling assumption, not observed"
+        }
+      },
+      "unknown": [
+        "full wall boundary",
+        "actual wall thickness",
+        "full wall height",
+        "building coordinates",
+        "unseen openings"
+      ],
+      "relations": {
+        "storey": "storey-ground-assumed"
+      },
+      "depends_on": [
+        "anchor-1",
+        "depth-1",
+        "operator-1",
+        "external-ifc-2"
+      ]
+    }
+  ],
+  "planned_unimplemented_types": [
+    "IfcSlab",
+    "IfcDoor",
+    "IfcWindow",
+    "IfcOpeningElement",
+    "IfcSpace",
+    "IfcBuildingStorey topology"
+  ],
+  "validation": {
+    "status": "REQUIRES_REVALIDATION",
+    "depth_samples": 1224,
+    "plane_inliers": 1140,
+    "fit_residual_m": 0.008241202896511939,
+    "warning": "fit residual is not independent accuracy; selected patch is not a complete wall"
+  }
+}

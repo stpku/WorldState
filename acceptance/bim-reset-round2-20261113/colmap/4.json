@@ -1,0 +1,66 @@
+{
+  "schema": "worldstate-bim-geometry-candidate/0.1",
+  "provider": "COLMAP/pycolmap",
+  "provider_version": "4.2.1",
+  "status": "RECONSTRUCTION_FAILED",
+  "input_images": [
+    {
+      "file": "1305031910.765238.png",
+      "sha256": "94afe78f6c0efac7e2f268392a8014c7f5da3b763524eb098cd44265dded94c2"
+    },
+    {
+      "file": "1305031912.765193.png",
+      "sha256": "40e0da722ea70bbbc58094e67215407ff0ef7b0825e2022d4aeea4fc7bdc60de"
+    },
+    {
+      "file": "1305031914.764901.png",
+      "sha256": "442587d0cb135d8a5c676a5f6f385ac56cd2bf94aa0e297a68ce518e6ad6d5ff"
+    },
+    {
+      "file": "1305031916.765076.png",
+      "sha256": "b3af0e9064af535e75b98361b4f317c5fefee89b717e30b28d9dd98cb4650f85"
+    }
+  ],
+  "coordinate_frame": "COLMAP reconstruction frame",
+  "scale": {
+    "status": "unknown",
+    "unit": "arbitrary"
+  },
+  "uncertainty": {
+    "status": "not_quantified",
+    "reason": "no per-point covariance estimated"
+  },
+  "camera_calibration": {
+    "model": "PINHOLE",
+    "parameters": [
+      525,
+      525,
+      319.5,
+      239.5
+    ],
+    "provenance": "TUM recommended ROS default, not per-frame calibration"
+  },
+  "timing_seconds": {
+    "feature_extraction": 0.26902060001157224,
+    "matching": 0.05291864601895213,
+    "mapping": 0.013881706981919706,
+    "total": 0.3358209530124441
+  },
+  "registered_cameras": [],
+  "sparse_points": 0,
+  "limitations": [
+    "CPU sparse SfM only",
+    "scale unknown without independent anchor",
+    "not a building model"
+  ],
+  "evaluation": {
+    "requested_images": 4,
+    "registered_images": 0,
+    "registered_fraction": 0.0,
+    "scale_status": "NOT_MEASURED",
+    "heldout_pose_status": "NOT_MEASURED",
+    "surface_completeness": "NOT_MEASURED: no independent dense surface visibility protocol",
+    "strict_anchor_status": "FAILED: preselected first/last anchor not registered",
+    "trajectory_sha256": "66b6770d887a5a3b69c94c3b186c3f76fe092ca25399772177f41aed984bd1b0"
+  }
+}

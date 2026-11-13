@@ -1,0 +1,2 @@
+-r ../bim_real_room/requirements-cpu-py312.txt
+pycolmap==4.2.1

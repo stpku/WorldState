@@ -1,0 +1,119 @@
+{
+  "schema": "worldstate-bim-parametric-ir/0.2",
+  "project_id": "craslab-development-sample",
+  "mode": "automatic",
+  "revision": 1,
+  "evidence": [
+    {
+      "id": "scan-1",
+      "kind": "metric_point_cloud",
+      "unit": "m",
+      "sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+      "source_url": "https://doi.org/10.5281/zenodo.7948116",
+      "source_archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671",
+      "note": "native sensor coordinates; dataset documentation states metres"
+    },
+    {
+      "id": "algorithm-1",
+      "kind": "geometric_inference",
+      "description": "vertical plane and dense patch; no semantic labels used"
+    },
+    {
+      "id": "thickness-assumption",
+      "kind": "assumption",
+      "description": "solid thickness not measured"
+    }
+  ],
+  "scale": {
+    "status": "native_metric",
+    "source_ref": "scan-1",
+    "metres_per_unit": 1.0
+  },
+  "coordinate_system": {
+    "name": "source_scan",
+    "unit": "m",
+    "z_axis": "assumed vertical",
+    "registration_to_reference_ifc": "UNKNOWN"
+  },
+  "elements": [
+    {
+      "id": "scan-wall-patch-1",
+      "ifc_type": "IfcWall",
+      "scope": "visible_patch_only",
+      "classification": {
+        "status": "inferred",
+        "evidence_refs": [
+          "scan-1",
+          "algorithm-1"
+        ],
+        "note": "vertical-plane heuristic; not human-confirmed; may be furniture or a door"
+      },
+      "start_m": [
+        11.077684361865616,
+        0.17281921790840596,
+        -0.9173
+      ],
+      "end_m": [
+        11.050894927921743,
+        -2.010725721086242,
+        -0.9173
+      ],
+      "parameters": {
+        "length": {
+          "value": 2.1837092696556875,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "scan-1",
+            "algorithm-1"
+          ],
+          "note": "visible support only"
+        },
+        "visible_height": {
+          "value": 2.4678,
+          "unit": "m",
+          "status": "inferred",
+          "evidence_refs": [
+            "scan-1",
+            "algorithm-1"
+          ],
+          "note": "visible support only"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "thickness-assumption"
+          ],
+          "note": "not measured"
+        }
+      },
+      "unknown": [
+        "full wall extent",
+        "actual thickness",
+        "openings",
+        "reference IFC registration"
+      ],
+      "relations": {
+        "storey": "storey-assumed"
+      },
+      "depends_on": [
+        "scan-1",
+        "algorithm-1"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "UNVERIFIED_DRAFT",
+    "method": "vertical geometric prior",
+    "warning": "no claim of complete room or independently measured geometric error"
+  },
+  "planned_unimplemented_types": [
+    "IfcSlab",
+    "IfcDoor",
+    "IfcWindow",
+    "IfcOpeningElement",
+    "IfcSpace"
+  ]
+}

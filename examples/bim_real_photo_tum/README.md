@@ -10,6 +10,8 @@
 | [wall-revised.ifc](wall-revised.ifc) / [IR](wall-revised.json) / [差异](wall-diff.json) | 将片段长度从约 0.428 m 改为 0.500 m 的人工修订示例，GUID 不变；修改不是实测值。 |
 | [observed-surface.ply](observed-surface.ply) | 同一帧深度传感器生成的局部点云；不代表独立尺寸真值。 |
 | [web-ifc-edited.ifc](web-ifc-edited.ifc) / [报告](web-ifc-report.json) | 独立 web-ifc 引擎把片段高度改为 0.45 m 并保存回读；该外部修改没有同步 IR，必须重新验证。 |
+| [bonsai-edited.ifc](bonsai-edited.ifc) / [报告](bonsai-report.json) | Blender + Bonsai 使用墙长参数将片段长度改为 0.500 m 并保存，保留原生挤出实体与 GUID。 |
+| [bonsai-synced.ifc](bonsai-synced.ifc) / [IR](bonsai-synced.json) / [差异](bonsai-synced-diff.json) | 校验 Bonsai 外部 IFC 后仅导入墙长变化，记录外部文件哈希，重新生成 IFC；其他修改类型未实现，状态为待复验。 |
 
 相机图像上方方向被假设为近似竖直；真实厚度、完整墙界、完整墙高和不可见开口未知。**尺度锚从同一深度传感器数据计算，已实际应用但不是独立尺度参考。** 因此没有独立墙尺寸误差、自动化率或人工成本验收结果。
 
@@ -40,3 +42,14 @@ python3 benchmarks/bim_real_room/fetch.py --data-dir /tmp/worldstate-bim-data --
 ```
 
 浏览器访问 `http://127.0.0.1:8765/`，可检查照片选区、旋转示意墙体、修改长度、保存新版本并下载 IFC。界面仅监听本机；其 3D 视图按 IR 参数绘制盒体，不是通用 IFC 查看器。人工修改后状态为需要重新验证。
+
+使用 Blender + Bonsai 修改 `wall-original.ifc` 的墙长后，可将结果受控读回：
+
+```bash
+/tmp/worldstate-bim-venv/bin/python -m products.worldstate_bim.assisted_cli sync-ifc \
+  --model /tmp/worldstate-bim-output/v1/model.json --ifc /path/to/bonsai-edited.ifc \
+  --evidence-root /tmp/worldstate-bim-data --operator analyst \
+  --reason 'BIM editor revision; not a field measurement' --output-dir /tmp/worldstate-bim-output/from-bonsai
+```
+
+当前只接受单墙、同 GUID、同坐标/高度/厚度/未带开口的矩形挤出体长度变化；拒绝未知范围的编辑，不是通用 IFC 双向同步。图示和证据须重新核查。

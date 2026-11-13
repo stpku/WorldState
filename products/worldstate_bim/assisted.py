@@ -135,6 +135,8 @@ def create_candidate(image_path: Path, depth_path: Path, *, roi: tuple[int, int,
 def write_model(model: dict[str, Any], image_root: Path, output_dir: Path) -> tuple[Path, Path]:
     """Validate IR and write a v0.1-compatible semantic wall IFC plus metadata."""
     validate_ir(model)
+    if len(model["elements"]) != 1:
+        raise ValueError("only one visible wall patch can be exported in IR 0.2")
     ifc_path, ir_path = output_dir / "model.ifc", output_dir / "model.json"
     output_dir.mkdir(parents=True, exist_ok=True)
     if ifc_path.exists() or ir_path.exists():
@@ -203,3 +205,72 @@ def revise_length(model: dict[str, Any], wall_id: str, length_m: float, reason: 
     validate_ir(result)
     return result, {"wall_id": wall_id, "attribute": "length", "before": old, "after": new,
                     "previous_revision": model["revision"], "revision": result["revision"]}
+
+
+def import_external_wall_length(model: dict[str, Any], external_ifc: Path, *, reason: str,
+                                operator: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Import only a validated wall-length change from a single-wall IFC.
+
+    Reject other geometry, placement, height, thickness, opening, or identity
+    changes: a general IFC-to-IR synchronization is not implemented.
+    """
+    import ifcopenshell
+    import ifcopenshell.geom
+    import ifcopenshell.guid
+    import ifcopenshell.util.element
+    import ifcopenshell.util.placement
+    import ifcopenshell.util.representation
+    from uuid import NAMESPACE_URL, uuid5
+
+    validate_ir(model)
+    if model.get("mode") != "assisted" or len(model["elements"]) != 1:
+        raise ValueError("only one assisted wall patch can be synchronized")
+    item = model["elements"][0]
+    p = item["parameters"]
+    if any(p[k]["status"] in {"unknown", "conflict"} for k in ("length", "visible_height", "thickness")):
+        raise ValueError("current model has unresolved dimensions")
+    file_hash = digest(external_ifc)
+    f = ifcopenshell.open(str(external_ifc))
+    walls = f.by_type("IfcWall")
+    if (f.schema != "IFC4" or len(walls) != 1 or len(f.by_type("IfcExtrudedAreaSolid")) != 1 or
+            f.by_type("IfcOpeningElement") or f.by_type("IfcDoor") or f.by_type("IfcWindow")):
+        raise ValueError("only one extruded IFC4 wall without openings is supported")
+    wall = walls[0]
+    expected_guid = ifcopenshell.guid.compress(uuid5(NAMESPACE_URL, f"worldstate-bim:{model['project_id']}:wall:{item['id']}").hex)
+    if wall.GlobalId != expected_guid or wall.Name != item["id"]:
+        raise ValueError("external wall identity does not match the IR")
+    if not np.allclose(ifcopenshell.util.placement.get_local_placement(wall.ObjectPlacement), np.eye(4), atol=1e-6):
+        raise ValueError("external wall placement changed; unsupported edit")
+    context = ifcopenshell.util.representation.get_context(f, "Plan", "Axis", "GRAPH_VIEW")
+    if not context or not ifcopenshell.util.representation.get_representation(wall, context):
+        raise ValueError("external wall axis is missing")
+    axis = np.asarray(ifcopenshell.util.representation.get_reference_line(wall), dtype=float)
+    if axis.shape != (2, 2) or not np.allclose(axis[0], [0., 0.], atol=1e-6) or abs(axis[1, 1]) > 1e-6 or axis[1, 0] <= 0:
+        raise ValueError("external wall axis changed beyond length")
+    length = float(axis[1, 0])
+    material = ifcopenshell.util.element.get_material(wall)
+    if (not material or not material.is_a("IfcMaterialLayerSetUsage") or
+            len(material.ForLayerSet.MaterialLayers) != 1 or
+            not np.isclose(material.ForLayerSet.MaterialLayers[0].LayerThickness, p["thickness"]["value"], atol=1e-6)):
+        raise ValueError("external wall thickness or layer structure changed")
+    shape = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), wall)
+    vertices = np.asarray(shape.geometry.verts).reshape(-1, 3)
+    expected_max = np.array([length, p["thickness"]["value"], p["visible_height"]["value"]])
+    if (len(vertices) != 8 or not np.allclose(vertices.min(axis=0), 0., atol=1e-5) or
+            not np.allclose(vertices.max(axis=0), expected_max, atol=1e-5)):
+        raise ValueError("external wall geometry changed beyond supported length")
+    corners = {(int(abs(x[0]-expected_max[0]) < 1e-5), int(abs(x[1]-expected_max[1]) < 1e-5),
+                int(abs(x[2]-expected_max[2]) < 1e-5)) for x in vertices}
+    if len(corners) != 8 or any(not all(abs(v[i]) < 1e-5 or abs(v[i]-expected_max[i]) < 1e-5
+                                        for i in range(3)) for v in vertices):
+        raise ValueError("external wall is not the expected rectangular extrusion")
+    if digest(external_ifc) != file_hash:
+        raise ValueError("external IFC changed during readback")
+    revised, diff = revise_length(model, item["id"], length, reason, operator=operator)
+    ref = f"external-ifc-{revised['revision']}"
+    revised["evidence"].append({"id": ref, "kind": "external_ifc_edit", "sha256": file_hash,
+                                "note": "only axis length imported; other attributes require separate review"})
+    revised["elements"][0]["parameters"]["length"]["evidence_refs"].append(ref)
+    revised["elements"][0]["depends_on"].append(ref)
+    validate_ir(revised)
+    return revised, diff

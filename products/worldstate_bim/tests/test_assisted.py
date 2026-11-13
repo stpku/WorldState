@@ -72,3 +72,22 @@ class AssistedTests(unittest.TestCase):
         validate_ir(model)
         with self.assertRaisesRegex(ValueError, "unknown or conflicting"):
             write_model(model, self.root, self.root / "unknown")
+
+    def test_external_ifc_readback_imports_only_length_and_rejects_other_geometry(self):
+        import ifcopenshell
+        from products.worldstate_bim.assisted import import_external_wall_length, revise_length, write_model
+        first = self.candidate(0.5)
+        target = first["elements"][0]["parameters"]["length"]["value"] + 0.1
+        changed, _ = revise_length(first, "wall-patch-1", target, "external edit", operator="analyst")
+        edited, _ = write_model(changed, self.root, self.root / "external")
+        synced, diff = import_external_wall_length(first, edited, reason="checked edit", operator="analyst")
+        self.assertAlmostEqual(synced["elements"][0]["parameters"]["length"]["value"], target)
+        self.assertEqual(diff["after"]["evidence_refs"][-1], "external-ifc-2")
+        self.assertEqual(synced["evidence"][-1]["kind"], "external_ifc_edit")
+        self.assertEqual(synced["validation"]["status"], "REQUIRES_REVALIDATION")
+        modified = ifcopenshell.open(str(edited))
+        modified.by_type("IfcExtrudedAreaSolid")[0].Depth += .2
+        bad = self.root / "unsupported-height.ifc"
+        modified.write(str(bad))
+        with self.assertRaisesRegex(ValueError, "geometry changed"):
+            import_external_wall_length(first, bad, reason="bad edit", operator="analyst")

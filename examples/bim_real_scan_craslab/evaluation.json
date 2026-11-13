@@ -1,0 +1,63 @@
+{
+  "dataset": "CRASLAB",
+  "dataset_license": "CC-BY-4.0",
+  "source": "https://doi.org/10.5281/zenodo.7948116",
+  "archive_sha256": "933732e81910116cec5e74c9205074b82d1f571f3d9816386b68a0a909112671",
+  "sample_xyz_sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+  "labels_sha256": "2fd6087f7516338c7751b6ac66f04b16513cfa64090ccde01cc5d32fd7ed64e5",
+  "mode": "automatic geometric inference; no semantic model and no human confirmation",
+  "split": "development sample; no independent scene",
+  "label_class": 3,
+  "sample_points": 292351,
+  "predicted_points": 3042,
+  "semantic": {
+    "tp": 1997,
+    "fp": 1045,
+    "fn": 42893,
+    "precision": 0.6564760026298487,
+    "recall": 0.044486522610826466,
+    "f1": 0.08332637903696904,
+    "predicted_points_by_reference_class": {
+      "0": 33,
+      "1": 4,
+      "3": 1997,
+      "4": 14,
+      "15": 975,
+      "20": 9,
+      "22": 10
+    },
+    "scope": "point labels against entire sampled multi-room scene; candidate is one patch"
+  },
+  "ifc": {
+    "schema": "IFC4",
+    "native_ifc_walls": 1,
+    "wall_guid": "3GH0h4u7XQCRyf_8mGlGBt",
+    "generated_mesh_vertices": 8
+  },
+  "candidate_wall_geometry_m": {
+    "start_m": [
+      11.077684361865616,
+      0.17281921790840596,
+      -0.9173
+    ],
+    "end_m": [
+      11.050894927921743,
+      -2.010725721086242,
+      -0.9173
+    ],
+    "length_m": 2.1837092696556875,
+    "visible_height_m": 2.4678
+  },
+  "wall_thickness_m": {
+    "value": 0.12,
+    "status": "ASSUMED"
+  },
+  "elapsed_seconds_including_ifc_export": 0.6265290429582819,
+  "independent_ifc_reference_geometric_error": "NOT_MEASURED: reference and scan frames require registration",
+  "limitations": [
+    "partial surface patch only",
+    "wall classification is inferred, not confirmed",
+    "semantic labels from the same development scene; not a generalization test",
+    "wall thickness, full boundary and openings are unknown"
+  ]
+}

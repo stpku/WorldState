@@ -58,7 +58,7 @@ def parameter(value: float | None, status: str, refs: list[str], *, note: str,
 
 def validate_ir(model: dict[str, Any]) -> None:
     """Reject unsupported components, untraceable dimensions, and unscaled drafts."""
-    if model.get("schema") != SCHEMA or model.get("mode") != "assisted":
+    if model.get("schema") != SCHEMA or model.get("mode") not in {"assisted", "automatic"}:
         raise ValueError("unsupported model schema or mode")
     if not isinstance(model.get("project_id"), str) or not model["project_id"].strip():
         raise ValueError("project_id is required")
@@ -69,22 +69,29 @@ def validate_ir(model: dict[str, Any]) -> None:
     if None in refs or len(refs) != len(evidence):
         raise ValueError("evidence IDs must be unique")
     scale = model.get("scale", {})
-    if scale.get("status") != "applied" or scale.get("anchor_ref") not in refs:
-        raise ValueError("a sourced and applied scale anchor is required")
-    factor = solve_scale(scale.get("raw_distance"), scale.get("distance_m"))
-    if not math.isclose(factor, scale.get("metres_per_unit", -1), rel_tol=1e-9):
-        raise ValueError("recorded scale does not match the anchor constraint")
-    anchor = next(e for e in evidence if e["id"] == scale["anchor_ref"])
-    points = anchor.get("raw_points")
-    if (not isinstance(points, list) or len(points) != 2 or
-            any(not isinstance(p, list) or len(p) != 3 or
-                any(isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) for x in p)
-                for p in points)):
-        raise ValueError("anchor must record two finite source-space coordinates")
-    if not math.isclose(math.dist(*points), scale["raw_distance"], rel_tol=1e-9):
-        raise ValueError("anchor coordinates do not match recorded distance")
-    if scale.get("independence") != anchor.get("independence"):
-        raise ValueError("anchor independence status is inconsistent")
+    if scale.get("status") == "native_metric":
+        source = next((e for e in evidence if e["id"] == scale.get("source_ref")), None)
+        if (not source or source.get("kind") != "metric_point_cloud" or
+                source.get("unit") != "m" or not source.get("source_url") or not source.get("sha256") or
+                isinstance(scale.get("metres_per_unit"), bool) or scale.get("metres_per_unit") != 1.0):
+            raise ValueError("native metric scale requires sourced metre point-cloud metadata")
+    else:
+        if scale.get("status") != "applied" or scale.get("anchor_ref") not in refs:
+            raise ValueError("a sourced and applied scale anchor is required")
+        factor = solve_scale(scale.get("raw_distance"), scale.get("distance_m"))
+        if not math.isclose(factor, scale.get("metres_per_unit", -1), rel_tol=1e-9):
+            raise ValueError("recorded scale does not match the anchor constraint")
+        anchor = next(e for e in evidence if e["id"] == scale["anchor_ref"])
+        points = anchor.get("raw_points")
+        if (not isinstance(points, list) or len(points) != 2 or
+                any(not isinstance(p, list) or len(p) != 3 or
+                    any(isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) for x in p)
+                    for p in points)):
+            raise ValueError("anchor must record two finite source-space coordinates")
+        if not math.isclose(math.dist(*points), scale["raw_distance"], rel_tol=1e-9):
+            raise ValueError("anchor coordinates do not match recorded distance")
+        if scale.get("independence") != anchor.get("independence"):
+            raise ValueError("anchor independence status is inconsistent")
     walls = model.get("elements")
     if not isinstance(walls, list) or not walls:
         raise ValueError("at least one wall candidate is required")

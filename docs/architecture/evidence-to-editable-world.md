@@ -6,10 +6,10 @@
 
 ```mermaid
 flowchart LR
-  E["证据接入 / 标定 / 许可<br/>规划"] --> R["重建 Provider<br/>双视图与相对深度实验中"]
-  R --> S["可见范围与语义 / 参数模型<br/>规划"]
-  S --> A["受限构件校验 → IFC<br/>合成墙编译已实现"]
-  A --> V["独立验证 / 编辑 / 版本<br/>规划"]
+  E["证据接入 / 标定 / 许可<br/>局部 RGB-D 已实现"] --> R["重建 Provider<br/>COLMAP / 点云实验中"]
+  R --> S["语义 / 参数模型<br/>局部墙体 IR 已实现"]
+  S --> A["受限构件校验 → IFC<br/>真实局部墙已实现"]
+  A --> V["验证 / 编辑 / 版本<br/>局部修改和回读已实现"]
   V -- "误差与修订" --> S
   E -. "来源、时效、未知与冲突" .-> C["WorldState Core<br/>状态契约已实现"]
   S -. "证据投影（规划）" .-> C
@@ -63,13 +63,13 @@ sequenceDiagram
   H-->>U: 模型、未知、需补测项和人工确认
 ```
 
-## 建议契约（均未冻结、除现有 proposal 外未实现）
+## 契约状态（尚未冻结）
 
 | 契约 | 最小字段/行为 | 不变量 |
 | --- | --- | --- |
 | `EvidenceAsset` | 内容 hash、来源与许可、捕获时间、媒体、坐标/内参、获取方式 | 保留时间/许可未知；外部路径须受权限约束。 |
-| `GeometryCandidate` | provider/version、输入哈希、坐标系、单位与尺度依据、点/面、相机、可见性和不确定性 | 不把未知尺度写成米；候选可重放，算法不得被当作真值。 |
-| `ElementCandidate` | 稳定 ID、类别、参数与每个属性的证据/观测模式、拓扑依赖、待确认 | 墙面可见不推断已知厚度；保留冲突值。 |
+| `GeometryCandidate` | COLMAP 相机/点云、输入哈希、坐标系和未知尺度已实现，其他 provider 与标定不确定性未统一 | 不把未知尺度写成米；算法不得被当作真值。 |
+| `ElementCandidate` | `parametric-ir/0.2` 单一局部墙的 ID、参数、属性证据、未知/冲突已实现；其他构件规划中 | 墙面可见不推断已知厚度；保留冲突值。 |
 | `ModelRevision` | 输入版本、构件映射、修改操作、影响闭包、评测、不可变父版本 | 局部修改后重跑依赖检查、几何/拓扑与来源校验；回滚为新版本。 |
 | Provider / Harness seam | typed input → candidates/errors；受控 `inspect`, `validate`, `compile`, `compare`, `revise` | 模型只建议结构化值；提供商或 Harness 替换不改变产品语义。 |
 
@@ -77,4 +77,4 @@ Core 现有 `StateAssertion | Unknown | Conflict` 与历史/变化接口可承�
 
 ## 风险与验证
 
-以带真实尺寸和授权的完整房间为 V0.2 目标；TUM 的 RGB-D 轨迹只用于前期几何实验，没有真实墙或 IFC 真值。必须增加独立尺度及留出照片核验、Bonsai/其他编辑器打开修改回读、GUID 保持与人工耗时对照，再评估 V0.2 发布。V0.3–V1.0 的具体门槛见 [路线图](../roadmap/worldstate-bim-product-reset.md)。
+以带真实尺寸和授权的完整房间为 V0.2 目标；TUM 的 RGB-D 轨迹只用于前期几何实验，没有真实墙或 IFC 真值。Bonsai 已保存局部墙参数长度修改并保留挤出实体，单墙长度可受控同步 IR；web-ifc 的高度修改目前不支持导入。必须增加独立尺度及留出照片核验、更多构件的独立编辑回读与人工耗时对照，再评估 V0.2 发布。V0.3–V1.0 的具体门槛见 [路线图](../roadmap/worldstate-bim-product-reset.md)。

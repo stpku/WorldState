@@ -1,0 +1,21 @@
+{
+  "schema": "worldstate-mesh-audit/0.1",
+  "source_sha256": "256181a2655530846b62c34209ccc1b9d38c00c46397ea17b4a5c0f46fb71b30",
+  "blender_version": "5.2.2 LTS",
+  "mesh_objects": 1588,
+  "vertices": 805514,
+  "polygons": 593324,
+  "bounds_min_model_units": [
+    -49.0,
+    -42.0,
+    -0.699999988079071
+  ],
+  "bounds_max_model_units": [
+    49.0,
+    42.0,
+    15.530781745910645
+  ],
+  "ifc_identified_objects": 0,
+  "import_seconds": 3.0185133969644085,
+  "status": "VISUAL_MESH_ONLY_NO_METRIC_OR_BIM_SEMANTICS_ESTABLISHED"
+}
