@@ -1,0 +1,60 @@
+{
+  "schema": "worldstate-bim-relative-depth-experiment/0.1",
+  "status": "RESEARCH_ONLY_NOT_A_BIM_MODEL",
+  "route": "Depth Anything V2 Small ONNX, monocular relative inverse depth",
+  "input": {
+    "file": "1305031910.765238.png",
+    "sha256": "94afe78f6c0efac7e2f268392a8014c7f5da3b763524eb098cd44265dded94c2"
+  },
+  "model_sha256": "afb6a5c28f3b6bf1618c6e43f02073ef9dfdc70e937502d51603e57b0a1df10c",
+  "model_revision": "4472b7362082ad9968fee890ca0f1e5aca36b93d",
+  "input_dimensions": [
+    640,
+    480
+  ],
+  "inference_dimensions": [
+    686,
+    518
+  ],
+  "relative_prediction_range": [
+    0.455522745847702,
+    6.6584153175354
+  ],
+  "initialization_seconds": 0.19302068511024117,
+  "inference_seconds": 1.4013029120396823,
+  "environment": {
+    "python": "3.12.3",
+    "onnxruntime": "1.20.1",
+    "opencv": "4.10.0",
+    "provider": "CPUExecutionProvider"
+  },
+  "limitations": [
+    "relative depth only",
+    "no camera pose",
+    "no multi-view consistency",
+    "no building semantics",
+    "no IFC output",
+    "pretraining overlap with this scene unknown"
+  ],
+  "depth_evaluation": {
+    "depth_file": "1305031910.771502.png",
+    "sha256": "0444d4bf29f6b52c5617d4190f4ff7d3d40a12356f6423212a750205176f3526",
+    "association_seconds": 0.0062639713287353516,
+    "calibration": "same-frame alternating 16x16 tiles fitted to inverse metric depth",
+    "calibration_pixels": 110213,
+    "held_out_valid_sensor_pixels": 110333,
+    "held_out_valid_prediction_pixels": 110333,
+    "held_out_positive_prediction_fraction": 1.0,
+    "median_abs_error_m": 0.017846628761291505,
+    "mean_abs_error_m": 0.051138474296930324,
+    "mean_absolute_relative_error": 0.03292048333080356,
+    "fitted_inverse_depth_scale": 0.13461241811387553,
+    "fitted_inverse_depth_shift": 0.3780632308047347
+  },
+  "same_pixels_diagnostic": {
+    "held_out_common_points": 27,
+    "model_median_abs_error_m": 0.020638660430908118,
+    "two_view_median_abs_error_m": 0.3071937621022036,
+    "caveat": "same pixels; different oracle inputs: same-frame dense depth for model versus trajectory baseline for two-view; not an independent contest"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "worldstate-benchmark-inputs/0.1",
+  "dataset": "TUM RGB-D fr1/room",
+  "split": "development only; no independent scene-level test",
+  "original_source": "https://cvg.cit.tum.de/data/datasets/rgbd-dataset/download",
+  "license": "CC BY 3.0 per https://cvg.cit.tum.de/_media/spezial/bib/sturm12iros_ws.pdf; cite the dataset authors",
+  "mirror_revision": "76818471ae555dd6cd4e100b7cedcccda660448d",
+  "notes": "Three RGB hashes and the trajectory were independently matched against the partially extracted TUM archive and TUM's separate official trajectory. Depth was fetched from the pinned mirror; independent byte comparison with the full official archive is pending. The archive download was interrupted.",
+  "files": [
+    {
+      "kind": "dataset",
+      "name": "1305031910.765238.png",
+      "url": "https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/76818471ae555dd6cd4e100b7cedcccda660448d/rgbd_dataset_freiburg1_room/rgb/1305031910.765238.png",
+      "sha256": "94afe78f6c0efac7e2f268392a8014c7f5da3b763524eb098cd44265dded94c2"
+    },
+    {
+      "kind": "dataset",
+      "name": "1305031911.097196.png",
+      "url": "https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/76818471ae555dd6cd4e100b7cedcccda660448d/rgbd_dataset_freiburg1_room/rgb/1305031911.097196.png",
+      "sha256": "4f56a4dbd982699ea723b47dcca6c25f31b667f103f58600bbb50d3f10e9b8fd"
+    },
+    {
+      "kind": "dataset",
+      "name": "1305031910.771502.png",
+      "url": "https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/76818471ae555dd6cd4e100b7cedcccda660448d/rgbd_dataset_freiburg1_room/depth/1305031910.771502.png",
+      "sha256": "0444d4bf29f6b52c5617d4190f4ff7d3d40a12356f6423212a750205176f3526"
+    },
+    {
+      "kind": "dataset",
+      "name": "1305031916.701048.png",
+      "url": "https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/76818471ae555dd6cd4e100b7cedcccda660448d/rgbd_dataset_freiburg1_room/rgb/1305031916.701048.png",
+      "sha256": "38633b1d8d8ae9d356a08cd30944bed5f38d167cbf0bb86836af75233125d51f"
+    },
+    {
+      "kind": "dataset",
+      "name": "1305031916.711186.png",
+      "url": "https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/76818471ae555dd6cd4e100b7cedcccda660448d/rgbd_dataset_freiburg1_room/depth/1305031916.711186.png",
+      "sha256": "c9449a82873029ffdf0e03b0e92efd4c46ce6080c55ea5c88ef22bc874caab82"
+    },
+    {
+      "kind": "dataset",
+      "name": "groundtruth.txt",
+      "url": "https://huggingface.co/datasets/voviktyl/TUM_RGBD-SLAM/resolve/76818471ae555dd6cd4e100b7cedcccda660448d/rgbd_dataset_freiburg1_room/groundtruth.txt",
+      "sha256": "66b6770d887a5a3b69c94c3b186c3f76fe092ca25399772177f41aed984bd1b0"
+    },
+    {
+      "kind": "model",
+      "name": "depth-anything-v2-small.onnx",
+      "url": "https://huggingface.co/onnx-community/depth-anything-v2-small/resolve/4472b7362082ad9968fee890ca0f1e5aca36b93d/onnx/model.onnx",
+      "sha256": "afb6a5c28f3b6bf1618c6e43f02073ef9dfdc70e937502d51603e57b0a1df10c",
+      "license": "Apache-2.0 per model card; separately review upstream code and conversion terms"
+    }
+  ]
+}

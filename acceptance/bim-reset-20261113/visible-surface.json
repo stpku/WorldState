@@ -1,0 +1,77 @@
+{
+  "schema": "worldstate-bim-visible-surface/0.1",
+  "status": "UNVERIFIED_VISIBLE_SURFACE_CANDIDATE",
+  "semantic_label": {
+    "value": "possible_wall",
+    "basis": "manual_image_region_label_not_an_observation"
+  },
+  "image": {
+    "file": "1305031916.701048.png",
+    "sha256": "38633b1d8d8ae9d356a08cd30944bed5f38d167cbf0bb86836af75233125d51f"
+  },
+  "depth": {
+    "file": "1305031916.711186.png",
+    "sha256": "c9449a82873029ffdf0e03b0e92efd4c46ce6080c55ea5c88ef22bc874caab82",
+    "unit_factor": 5000
+  },
+  "association_seconds": 0.01013803482055664,
+  "roi_xyxy": [
+    10,
+    228,
+    90,
+    295
+  ],
+  "intrinsics": [
+    [
+      525.0,
+      0.0,
+      319.5
+    ],
+    [
+      0.0,
+      525.0,
+      239.5
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "geometry": {
+    "frame": "color-camera",
+    "basis": "inferred_from_metric_depth_samples",
+    "normal_camera": [
+      -0.05380918077870501,
+      0.15016040036531741,
+      -0.9871962450425206
+    ],
+    "plane_offset_m": 2.9981618514921884,
+    "centroid_camera_m": [
+      -1.599781963241434,
+      0.13390613166248955,
+      3.1446150877193193
+    ],
+    "visible_sample_span_m": [
+      0.4859977064864204,
+      0.4292304326621128
+    ],
+    "valid_depth_samples": 1224,
+    "inlier_samples": 1140,
+    "median_residual_m": 0.008241202896511939
+  },
+  "unknown": [
+    "complete wall boundary",
+    "wall height",
+    "wall thickness",
+    "building coordinates",
+    "ground-truth wall dimensions",
+    "independent plane accuracy"
+  ],
+  "limitations": [
+    "manually selected region",
+    "single RGB-D frame",
+    "RANSAC residual is not independent accuracy",
+    "no IFC wall or editable solid generated"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "worldstate-bim-two-view-experiment/0.1",
+  "status": "RESEARCH_ONLY_NOT_A_BIM_MODEL",
+  "route": "SIFT + essential matrix + triangulation (RGB-only)",
+  "inputs": [
+    {
+      "file": "1305031910.765238.png",
+      "sha256": "94afe78f6c0efac7e2f268392a8014c7f5da3b763524eb098cd44265dded94c2"
+    },
+    {
+      "file": "1305031911.097196.png",
+      "sha256": "4f56a4dbd982699ea723b47dcca6c25f31b667f103f58600bbb50d3f10e9b8fd"
+    }
+  ],
+  "groundtruth_sha256": "66b6770d887a5a3b69c94c3b186c3f76fe092ca25399772177f41aed984bd1b0",
+  "pose_association_seconds": [
+    0.004261970520019531,
+    0.0024039745330810547
+  ],
+  "intrinsics": [
+    [
+      525.0,
+      0.0,
+      319.5
+    ],
+    [
+      0.0,
+      525.0,
+      239.5
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "matches_after_ratio_test": 129,
+  "triangulated_points": 66,
+  "median_reprojection_px": 0.2986900664814295,
+  "median_parallax_deg": 1.9339095543224167,
+  "rotation_error_deg": 0.5673493199192653,
+  "translation_direction_error_deg": 6.606148128411536,
+  "oracle_baseline_m": 0.08913730980908048,
+  "translation_error_m_with_oracle_baseline": 0.010271754021278027,
+  "scale_status": "unknown_without_independent_anchor; ground truth baseline is an evaluation oracle",
+  "elapsed_reconstruction_seconds": 0.2365247029811144,
+  "environment": {
+    "python": "3.12.3",
+    "opencv": "4.10.0",
+    "numpy": "1.26.4"
+  },
+  "limitations": [
+    "two views only",
+    "no semantic wall labels",
+    "no IFC output",
+    "no independent wall measurements",
+    "no held-out-view evaluation"
+  ],
+  "depth_evaluation": {
+    "depth_file": "1305031910.771502.png",
+    "sha256": "0444d4bf29f6b52c5617d4190f4ff7d3d40a12356f6423212a750205176f3526",
+    "association_seconds": 0.0062639713287353516,
+    "valid_points": 52,
+    "median_abs_error_m": 0.3377551525114385,
+    "mean_abs_error_m": 0.4388481809906383,
+    "scale": "ground-truth trajectory baseline oracle, not independently estimated"
+  }
+}
