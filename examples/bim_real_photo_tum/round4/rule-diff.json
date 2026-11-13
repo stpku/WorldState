@@ -1,0 +1,15 @@
+{
+  "previous_revision": 2,
+  "revision": 3,
+  "element_id": "wall-1",
+  "attribute": "length",
+  "before": 0.603848712701468,
+  "after": 0.803848712701468,
+  "changed_nodes": [
+    "node-2"
+  ],
+  "affected_elements": [
+    "wall-1"
+  ],
+  "reason_ref": "revision-3"
+}

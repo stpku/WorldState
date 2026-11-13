@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
+import copy
 import hashlib
 import io
 import json
@@ -12,6 +13,7 @@ import re
 import secrets
 import tempfile
 import threading
+import uuid
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -22,24 +24,54 @@ from .room_cli import save_version
 from .room_ifc import export_room
 from .room_ir import revise_element, validate_room
 from .room_sync import _verify_geometry
+from .photo_room import ANNOTATION_KINDS, build_photo_room
+
+
+def _write_json(path: Path, value: dict) -> None:
+    """Atomically persist product state without following a destination symlink."""
+    if path.is_symlink():
+        raise ValueError("状态文件不能是符号链接")
+    content = json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+    with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, prefix=".studio-", delete=False) as stream:
+        stream.write(content); temporary = Path(stream.name)
+    try:
+        if path.is_symlink():
+            raise ValueError("状态文件不能是符号链接")
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 class StudioServer(ThreadingHTTPServer):
     """Serve an explicitly selected room project on loopback only."""
-    def __init__(self, port: int, model_dir: Path, workspace: Path, point_cloud: Path | None = None):
+    def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None):
         super().__init__(("127.0.0.1",port),Handler)
-        self.model_dir=model_dir.resolve(strict=True)
         self.workspace=workspace.resolve()
         if self.workspace.is_relative_to(Path(__file__).resolve().parents[2]):
             raise ValueError("Studio workspace must be outside the source repository")
         self.workspace.mkdir(parents=True,exist_ok=True)
-        self.model=json.loads((self.model_dir/"model.json").read_text())
-        validate_room(self.model)
-        if not (self.model_dir/"model.ifc").is_file():raise ValueError("model.ifc required")
-        import ifcopenshell
-        with tempfile.TemporaryDirectory(prefix="worldstate-studio-") as temp:
-            expected=Path(temp)/"model.ifc";export_room(self.model,expected)
-            _verify_geometry(ifcopenshell.open(str(expected)),ifcopenshell.open(str(self.model_dir/"model.ifc")))
+        self.project_path = self.workspace / "photo-project.json"
+        if self.project_path.is_symlink():raise ValueError("project state cannot be a symlink")
+        self.project = json.loads(self.project_path.read_text()) if self.project_path.exists() else None
+        if self.project is not None and (not isinstance(self.project, dict) or self.project.get("schema") != "worldstate-photo-project/0.1"):
+            raise ValueError("unsupported photo project state")
+        if model_dir is None and self.project and self.project.get("current_revision"):
+            revision = self.project["current_revision"]
+            if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+                raise ValueError("invalid project revision")
+            model_dir = self.workspace / f"revision-{revision:03}"
+        self.model_dir=model_dir.resolve(strict=True) if model_dir is not None else None
+        self.model=None
+        if self.model_dir is not None:
+            self.model=json.loads((self.model_dir/"model.json").read_text())
+            validate_room(self.model)
+            if self.project and self.project.get("id") != self.model.get("project_id"):
+                raise ValueError("workspace project and selected model do not match")
+            if not (self.model_dir/"model.ifc").is_file():raise ValueError("model.ifc required")
+            import ifcopenshell
+            with tempfile.TemporaryDirectory(prefix="worldstate-studio-") as temp:
+                expected=Path(temp)/"model.ifc";export_room(self.model,expected)
+                _verify_geometry(ifcopenshell.open(str(expected)),ifcopenshell.open(str(self.model_dir/"model.ifc")))
         self.lock=threading.Lock();self.token=secrets.token_urlsafe(24)
         self.cloud=None
         if point_cloud is not None:
@@ -69,6 +101,12 @@ class StudioServer(ThreadingHTTPServer):
                 item.get("mime") not in {"image/png","image/jpeg"}):
                 raise ValueError("invalid evidence index entry")
 
+    def record(self, action: str, **details: object) -> None:
+        if self.project is None:
+            raise ValueError("请先创建房间项目")
+        self.project.setdefault("events", []).append({"action": action, "at": datetime.now(timezone.utc).isoformat(), **details})
+        _write_json(self.project_path, self.project)
+
 
 def mesh_data(model: dict, ifc_path: Path) -> dict:
     """Extract actual world-coordinate triangles from the current IFC file."""
@@ -91,10 +129,19 @@ def mesh_data(model: dict, ifc_path: Path) -> dict:
     return {"source":"current IFC triangulated by IfcOpenShell","objects":objects,"failures":failures}
 
 
-def parse_local_command(model: dict, text: str) -> tuple[str,str,float]:
+def parse_local_command(model: dict, text: str, selected_id: str | None = None) -> tuple[str,str,float]:
     """Recognize a deliberately small local rule syntax; this is not an LLM."""
     if not isinstance(text,str) or len(text)>300:
         raise ValueError("命令过长或无效")
+    relative=re.fullmatch(r"\s*(?:将|把)?\s*(?:选中的|当前)(?:墙|墙体)\s*(?:延长|增加)\s*(\d+(?:\.\d+)?)\s*(厘米|cm|米|m)\s*[，,。 ]*(?:检查相邻墙体和门窗是否仍然有效[。]?)?\s*",text)
+    if relative:
+        wall=next((e for e in model["elements"] if e["id"]==selected_id and e["ifc_type"]=="IfcWall"),None)
+        if wall is None:raise ValueError("请先选择一面墙")
+        nodes={n["id"]:n for n in model["nodes"]};a,b=nodes[wall["start"]],nodes[wall["end"]]
+        import math
+        increase=float(relative.group(1))/(100 if relative.group(2) in {"厘米","cm"} else 1)
+        if increase<=0:raise ValueError("延长量必须大于零")
+        return wall["id"],"length",math.hypot(b["x"]-a["x"],b["y"]-a["y"])+increase
     pattern=r"\s*(?:将|把)?\s*([A-Za-z0-9_-]+)\s*(?:的)?\s*(长度|高度|厚度|位置)\s*(?:设为|改为|调整为|=)\s*(\d+(?:\.\d+)?)\s*(?:米|m)?\s*"
     match=re.fullmatch(pattern,text)
     if not match:
@@ -127,16 +174,28 @@ class Handler(BaseHTTPRequestHandler):
         path=urlsplit(self.path).path
         try:
             with self.server.lock:
-                if path=="/":
-                    page=Path(__file__).with_name("studio.html").read_text().replace("__WS_TOKEN__",self.server.token)
+                if path in {"/", "/builder"}:
+                    filename="photo_studio.html" if path=="/builder" or self.server.model is None else "studio.html"
+                    page=Path(__file__).with_name(filename).read_text().replace("__WS_TOKEN__",self.server.token)
                     self.send_data(200,page.encode(),"text/html; charset=utf-8")
+                elif path=="/api/project":self.send_json(200,{"project":self.server.project,"uploads":self.server.uploaded,
+                                                               "has_model":self.server.model is not None})
+                elif path=="/api/versions":
+                    versions=[]
+                    for directory in sorted(self.server.workspace.glob("revision-*")):
+                        match=re.fullmatch(r"revision-([0-9]+)",directory.name)
+                        if match and directory.is_dir() and not directory.is_symlink() and (directory/"model.json").is_file():
+                            versions.append(int(match.group(1)))
+                    self.send_json(200,{"revisions":versions,"current":self.server.model["revision"] if self.server.model else None})
                 elif path=="/api/model":self.send_json(200,self.server.model)
-                elif path=="/api/mesh":self.send_json(200,mesh_data(self.server.model,self.server.model_dir/"model.ifc"))
-                elif path=="/api/evidence":self.send_json(200,{"model":self.server.model["evidence"],"uploads":self.server.uploaded,
+                elif path=="/api/mesh":self.send_json(200,mesh_data(self.server.model,self.server.model_dir/"model.ifc") if self.server.model else {"objects":[],"failures":[]})
+                elif path=="/api/evidence":self.send_json(200,{"model":self.server.model["evidence"] if self.server.model else [],"uploads":self.server.uploaded,
                     "point_cloud":({k:v for k,v in self.server.cloud.items() if k!="points"} if self.server.cloud else None)})
                 elif path=="/api/pointcloud":self.send_json(200,self.server.cloud)
-                elif path=="/api/report":self.send_json(200,{"geometry":validate_geometry(self.server.model),
-                    "quarantined":self.server.model.get("quarantined",[]),"history":self.server.model.get("history",[])})
+                elif path=="/api/report":self.send_json(200,{"geometry":validate_geometry(self.server.model) if self.server.model else None,
+                    "quarantined":self.server.model.get("quarantined",[]) if self.server.model else [],
+                    "history":self.server.model.get("history",[]) if self.server.model else [],
+                    "photo_project":self.server.project})
                 elif path=="/api/export/model.ifc":self.send_data(200,(self.server.model_dir/"model.ifc").read_bytes(),"application/octet-stream")
                 elif path=="/api/export/model.json":self.send_json(200,self.server.model)
                 elif path.startswith("/api/photo/"):
@@ -160,24 +219,174 @@ class Handler(BaseHTTPRequestHandler):
             body=json.loads(self.rfile.read(size))
             with self.server.lock:
                 if path=="/api/upload":self.upload(body);return
-                if path not in {"/api/revise","/api/command"}:self.send_data(404,b"not found","text/plain");return
+                if path=="/api/project":self.create_project(body);return
+                if path=="/api/annotation":self.add_annotation(body);return
+                if path=="/api/annotation/delete":self.delete_annotation(body);return
+                if path=="/api/layout":self.save_layout(body);return
+                if path=="/api/generate":self.generate(body);return
+                if path not in {"/api/revise","/api/command","/api/sync-ifc","/api/restore"}:self.send_data(404,b"not found","text/plain");return
+                if self.server.model is None:raise ValueError("请先生成或打开模型")
                 if body.get("revision")!=self.server.model["revision"]:
                     self.send_json(409,{"error":"模型已更新，请重新加载后再修改"});return
+                if path=="/api/sync-ifc":self.sync_ifc(body);return
+                if path=="/api/restore":self.restore(body);return
                 if path=="/api/command":
-                    ident,attribute,value=parse_local_command(self.server.model,body.get("command"))
+                    ident,attribute,value=parse_local_command(self.server.model,body.get("command"),body.get("selected_id"))
                     reason="本地规则命令："+body["command"]
                 else:
                     ident,attribute,value=body["element_id"],body["attribute"],body["value"]
                     reason=body["reason"]
                 before=self.server.model
-                revised,diff=revise_element(before,ident,attribute,value,reason=reason,operator="user")
+                operator="automation" if self.server.project and self.server.project.get("operator_kind")=="automation" else "user"
+                revised,diff=revise_element(before,ident,attribute,value,reason=reason,operator=operator)
                 target=self.server.workspace/f"revision-{revised['revision']:03}"
                 save_version(revised,target,diff=diff)
                 comparison=compare_revisions(before,revised)
                 self.server.model,self.server.model_dir=revised,target
+                if self.server.project:
+                    self.server.project["current_revision"]=revised["revision"]
+                    self.server.record("revise", element_id=ident, attribute=attribute)
                 self.send_json(200,{"model":revised,"diff":diff,"comparison":comparison})
-        except (KeyError,TypeError,ValueError,OSError,json.JSONDecodeError,binascii.Error) as exc:
+        except (KeyError,TypeError,ValueError,OSError,RuntimeError,json.JSONDecodeError,binascii.Error) as exc:
             self.send_json(400,{"error":str(exc)[:400]})
+
+    def create_project(self, body: dict) -> None:
+        if self.server.project is not None or self.server.model is not None:
+            raise ValueError("当前工作区已有项目或模型；请为新房间选择新的工作区")
+        name=body.get("name")
+        if not isinstance(name,str) or not name.strip() or len(name)>120:
+            raise ValueError("请输入不超过 120 字的项目名称")
+        operator=body.get("operator_kind","user")
+        if operator not in {"user","automation"}:raise ValueError("不支持的标注来源")
+        self.server.project={"schema":"worldstate-photo-project/0.1","id":"photo-room-"+uuid.uuid4().hex,
+                             "name":name.strip(),"operator_kind":operator,"created_at":datetime.now(timezone.utc).isoformat(),
+                             "annotations":[],"layout":{},"reference":{},"events":[],"current_revision":None}
+        self.server.record("project_created")
+        self.send_json(201,self.server.project)
+
+    def add_annotation(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        photo=next((p for p in self.server.uploaded if p["id"]==body.get("photo_id")),None)
+        kind=body.get("kind"); points=body.get("points"); wall=body.get("wall_id")
+        if not photo or kind not in ANNOTATION_KINDS or not isinstance(wall,str) or not re.fullmatch(r"wall-[1-9][0-9]*",wall):
+            raise ValueError("请选择已上传照片、标注类型和有效墙段")
+        from .photo_room import _point
+        if not isinstance(points,list) or len(points)!=(1 if kind=="corner" else 2):
+            raise ValueError("该标注的点数不正确")
+        for point in points:_point(point,photo["width"]-1,photo["height"]-1)
+        if len(points)==2 and points[0]==points[1]:raise ValueError("两个标注点不能相同")
+        elapsed=body.get("elapsed_ms",0)
+        if isinstance(elapsed,bool) or not isinstance(elapsed,int) or not 0<=elapsed<=86_400_000:
+            raise ValueError("标注耗时无效")
+        ann={"id":"ann-"+uuid.uuid4().hex,"photo_id":photo["id"],"kind":kind,"wall_id":wall,"points":points,
+             "object_id":body.get("object_id"),"dimensions":body.get("dimensions"),
+             "operator_kind":project.get("operator_kind","user"),"elapsed_ms":elapsed,"created_at":datetime.now(timezone.utc).isoformat()}
+        json.dumps(ann,allow_nan=False)
+        if len(project["annotations"])>=1000:raise ValueError("标注数量已达上限")
+        project["annotations"].append(ann)
+        self.server.record("annotation_added",annotation_id=ann["id"],elapsed_ms=elapsed)
+        self.send_json(201,ann)
+
+    def delete_annotation(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        ident=body.get("id"); before=len(project["annotations"])
+        project["annotations"]=[a for a in project["annotations"] if a["id"]!=ident]
+        if len(project["annotations"])==before:raise ValueError("未找到标注")
+        self.server.record("annotation_deleted",annotation_id=ident)
+        self.send_json(200,{"deleted":ident})
+
+    def save_layout(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        layout=body.get("layout"); reference=body.get("reference")
+        if not isinstance(layout,dict) or not isinstance(reference,dict):raise ValueError("草图和尺度格式无效")
+        json.dumps({"layout":layout,"reference":reference},allow_nan=False)
+        project["layout"]=layout;project["reference"]=reference
+        self.server.record("layout_saved",point_count=len(layout.get("points",[])) if isinstance(layout.get("points"),list) else 0)
+        self.send_json(200,{"saved":True})
+
+    def generate(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        if self.server.model is not None and body.get("confirm_regeneration") is not True:
+            raise ValueError("重新生成会用当前标注和草图替换编辑后的几何，请先确认")
+        for photo in self.server.uploaded:
+            if any(a.get("photo_id")==photo["id"] for a in project["annotations"]):
+                path=self.server.uploads/(photo["sha256"]+photo["extension"])
+                if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=photo["sha256"]:
+                    raise ValueError("照片证据缺失或哈希已变化，请重新上传")
+        try:
+            model=build_photo_room(project,self.server.uploaded)
+        except ValueError as exc:
+            self.server.record("generation_failed",reason=str(exc)[:300])
+            raise
+        before=self.server.model
+        if before:
+            model["revision"]=before["revision"]+1
+            model["history"]=before.get("history",[]) + [{"revision":model["revision"],"action":"regenerated_from_user_annotations",
+                "warning":"wall IDs follow the current sketch segment order; review identity after changing topology"}]
+        target=self.server.workspace/f"revision-{model['revision']:03}"
+        save_version(model,target)
+        self.server.model,self.server.model_dir=model,target
+        project["current_revision"]=model["revision"]
+        self.server.record("candidate_generated",revision=model["revision"],wall_count=sum(e["ifc_type"]=="IfcWall" for e in model["elements"]))
+        self.send_json(201,{"revision":model["revision"],"validation":model["validation"],"model":model})
+
+    def sync_ifc(self, body: dict) -> None:
+        from .room_sync import sync_external_ifc
+        raw=base64.b64decode(body.get("data_base64",""),validate=True)
+        if not raw or len(raw)>10_000_000:raise ValueError("IFC 文件须在 10 MB 以内")
+        if not raw.lstrip().startswith(b"ISO-10303-21;"):
+            raise ValueError("文件不是受支持的 IFC STEP 文本")
+        reason=body.get("reason")
+        if not isinstance(reason,str) or not reason.strip():raise ValueError("请填写外部修改依据")
+        before=self.server.model
+        with tempfile.NamedTemporaryFile(dir=self.server.workspace,suffix=".ifc",prefix=".external-",delete=False) as stream:
+            stream.write(raw); external=Path(stream.name)
+        try:
+            import ifcopenshell
+            try:
+                operator="automation" if self.server.project and self.server.project.get("operator_kind")=="automation" else "user"
+                revised,diff=sync_external_ifc(before,self.server.model_dir/"model.ifc",external,
+                    element_id=body["element_id"],attribute=body["attribute"],reason=reason,operator=operator)
+            except ifcopenshell.Error as exc:
+                raise ValueError("IFC 文件无法解析") from exc
+            target=self.server.workspace/f"revision-{revised['revision']:03}"
+            save_version(revised,target,diff=diff)
+            (target/"external.ifc").write_bytes(raw)
+            comparison=compare_revisions(before,revised)
+            self.server.model,self.server.model_dir=revised,target
+            if self.server.project:
+                self.server.project["current_revision"]=revised["revision"]
+                self.server.record("external_ifc_synced",element_id=body["element_id"],attribute=body["attribute"])
+            self.send_json(200,{"model":revised,"diff":diff,"comparison":comparison})
+        finally:external.unlink(missing_ok=True)
+
+    def restore(self, body: dict) -> None:
+        source_revision=body.get("source_revision")
+        if isinstance(source_revision,bool) or not isinstance(source_revision,int) or source_revision<1:
+            raise ValueError("请选择有效的历史版本")
+        directory=self.server.workspace/f"revision-{source_revision:03}"
+        if directory.is_symlink() or not directory.is_dir() or (directory/"model.json").is_symlink():
+            raise ValueError("历史版本不存在或路径不安全")
+        before=self.server.model; restored=json.loads((directory/"model.json").read_text())
+        validate_room(restored)
+        if restored["project_id"]!=before["project_id"] or restored["revision"]!=source_revision:
+            raise ValueError("历史版本不属于当前项目")
+        restored["revision"]=before["revision"]+1
+        restored["history"]=copy.deepcopy(before.get("history",[]))+[{"revision":restored["revision"],
+            "action":"restore_snapshot","source_revision":source_revision}]
+        restored["validation"]={"status":"REQUIRES_REVALIDATION","note":"Restored historical version; verify before use"}
+        target=self.server.workspace/f"revision-{restored['revision']:03}"
+        save_version(restored,target)
+        comparison=compare_revisions(before,restored)
+        self.server.model,self.server.model_dir=restored,target
+        if self.server.project:
+            self.server.project["current_revision"]=restored["revision"]
+            self.server.record("restore",source_revision=source_revision,revision=restored["revision"])
+        self.send_json(200,{"model":restored,"comparison":comparison,"source_revision":source_revision})
     def upload(self,body: dict)->None:
         from PIL import Image
         raw=base64.b64decode(body.get("data_base64",""),validate=True)
@@ -187,6 +396,9 @@ class Handler(BaseHTTPRequestHandler):
                 if img.format not in {"PNG","JPEG"} or img.width*img.height>30_000_000:
                     raise ValueError("仅支持不超过 3000 万像素的 PNG 或 JPEG")
                 width,height,fmt=img.width,img.height,img.format;img.verify()
+            with Image.open(io.BytesIO(raw)) as img:
+                if img.getexif().get(274,1)!=1:
+                    raise ValueError("照片含旋转方向元数据，请先旋转并另存，确保标注坐标一致")
         except (OSError,Image.DecompressionBombError) as exc:
             raise ValueError("图片格式无效或尺寸过大") from exc
         sha=hashlib.sha256(raw).hexdigest();ext=".png" if fmt=="PNG" else ".jpg"
@@ -198,9 +410,20 @@ class Handler(BaseHTTPRequestHandler):
         ident="upload-"+sha[:16]
         existing=next((x for x in self.server.uploaded if x["id"]==ident),None)
         if existing is None:
+            import cv2
+            import numpy as np
+            with Image.open(io.BytesIO(raw)) as img:
+                gray=img.convert("L");gray.thumbnail((640,640)); sample=np.asarray(gray)
+            brightness=float(sample.mean());sharpness=float(cv2.Laplacian(sample,cv2.CV_64F).var())
+            warnings=[]
+            if min(width,height)<480:warnings.append("分辨率较低")
+            if brightness<35 or brightness>225:warnings.append("可能过暗或过曝")
+            if sharpness<40:warnings.append("可能模糊")
             existing={"id":ident,"sha256":sha,"extension":ext,"mime":"image/png" if fmt=="PNG" else "image/jpeg",
                       "width":width,"height":height,"captured_at":"UNKNOWN",
-                      "added_at":datetime.now(timezone.utc).isoformat(),"status":"unassociated"}
+                      "added_at":datetime.now(timezone.utc).isoformat(),"status":"unassociated",
+                      "quality":{"brightness_mean":round(brightness,2),"laplacian_variance":round(sharpness,2),
+                                 "warnings":warnings,"note":"heuristic only; coverage and registration not verified"}}
             self.server.uploaded.append(existing)
             content=json.dumps({"schema":"worldstate-studio-evidence/0.1","uploads":self.server.uploaded},indent=2)+"\n"
             with tempfile.NamedTemporaryFile(mode="w",dir=self.server.workspace,prefix=".evidence-",delete=False) as stream:
@@ -209,12 +432,14 @@ class Handler(BaseHTTPRequestHandler):
                 if self.server.index.is_symlink():raise ValueError("evidence index cannot be a symlink")
                 os.replace(temporary,self.server.index)
             finally:temporary.unlink(missing_ok=True)
+            if self.server.project:self.server.record("photo_uploaded",photo_id=ident)
         self.send_json(201,existing)
 
 
 def main()->int:
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model-dir",type=Path,required=True);parser.add_argument("--workspace",type=Path,required=True)
+    parser.add_argument("--model-dir",type=Path,help="Existing IFC/IR directory; omit to create or resume a photo project")
+    parser.add_argument("--workspace",type=Path,required=True)
     parser.add_argument("--point-cloud",type=Path,help="Optional explicitly selected metre-coordinate NPY XYZ; alignment is not assumed")
     parser.add_argument("--port",type=int,default=8766)
     args=parser.parse_args();server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud)

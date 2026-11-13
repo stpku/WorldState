@@ -1,0 +1,39 @@
+{
+  "schema": "worldstate-studio-evidence/0.1",
+  "uploads": [
+    {
+      "id": "upload-16a398d2a61ed1ea",
+      "sha256": "16a398d2a61ed1eaec756f985b4cee59afe7086ce7661fe271d8facd10e75be9",
+      "extension": ".png",
+      "mime": "image/png",
+      "width": 640,
+      "height": 480,
+      "captured_at": "UNKNOWN",
+      "added_at": "2026-11-13T21:52:41.799635+00:00",
+      "status": "unassociated",
+      "quality": {
+        "brightness_mean": 123.81,
+        "laplacian_variance": 169.52,
+        "warnings": [],
+        "note": "heuristic only; coverage and registration not verified"
+      }
+    },
+    {
+      "id": "upload-38633b1d8d8ae9d3",
+      "sha256": "38633b1d8d8ae9d356a08cd30944bed5f38d167cbf0bb86836af75233125d51f",
+      "extension": ".png",
+      "mime": "image/png",
+      "width": 640,
+      "height": 480,
+      "captured_at": "UNKNOWN",
+      "added_at": "2026-11-13T21:52:41.831003+00:00",
+      "status": "unassociated",
+      "quality": {
+        "brightness_mean": 135.17,
+        "laplacian_variance": 180.42,
+        "warnings": [],
+        "note": "heuristic only; coverage and registration not verified"
+      }
+    }
+  ]
+}

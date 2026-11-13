@@ -1,0 +1,294 @@
+{
+  "schema": "worldstate-bim-room-ir/0.3",
+  "project_id": "photo-room-3cf6e2c732c747e4a3bcff7c61da3408",
+  "mode": "assisted",
+  "revision": 3,
+  "coordinate_system": {
+    "name": "camera_floor_local",
+    "unit": "m",
+    "georeferencing": "UNKNOWN"
+  },
+  "evidence": [
+    {
+      "id": "ann-75388b2e8a014ddeb3bf38a096a54026",
+      "kind": "scripted_photo_annotation",
+      "photo_ref": "upload-16a398d2a61ed1ea",
+      "annotation_type": "wall_boundary",
+      "wall_id": "wall-1",
+      "points_px": [
+        [
+          255,
+          170
+        ],
+        [
+          415,
+          155
+        ]
+      ],
+      "object_id": null,
+      "operator": "automation",
+      "created_at": "2026-11-13T21:52:41.996817+00:00",
+      "elapsed_ms": 141,
+      "status": "scripted_test"
+    },
+    {
+      "id": "ann-39234373ae4b46e8a42fc166f349403a",
+      "kind": "scripted_photo_annotation",
+      "photo_ref": "upload-16a398d2a61ed1ea",
+      "annotation_type": "corner",
+      "wall_id": "wall-1",
+      "points_px": [
+        [
+          255,
+          170
+        ]
+      ],
+      "object_id": "node-1",
+      "operator": "automation",
+      "created_at": "2026-11-13T21:52:42.129871+00:00",
+      "elapsed_ms": 96,
+      "status": "scripted_test"
+    },
+    {
+      "id": "ann-016ce948cfa1491ea7c65b3c263627c2",
+      "kind": "scripted_photo_annotation",
+      "photo_ref": "upload-16a398d2a61ed1ea",
+      "annotation_type": "corner",
+      "wall_id": "wall-1",
+      "points_px": [
+        [
+          400,
+          155
+        ]
+      ],
+      "object_id": "node-2",
+      "operator": "automation",
+      "created_at": "2026-11-13T21:52:43.980089+00:00",
+      "elapsed_ms": 98,
+      "status": "scripted_test"
+    },
+    {
+      "id": "upload-16a398d2a61ed1ea",
+      "kind": "image",
+      "sha256": "16a398d2a61ed1eaec756f985b4cee59afe7086ce7661fe271d8facd10e75be9",
+      "width_px": 640,
+      "height_px": 480,
+      "captured_at": "UNKNOWN",
+      "authorization": "user_supplied_unverified",
+      "quality": {
+        "brightness_mean": 123.81,
+        "laplacian_variance": 169.52,
+        "warnings": [],
+        "note": "heuristic only; coverage and registration not verified"
+      }
+    },
+    {
+      "id": "camera-1",
+      "kind": "user_camera_calibration",
+      "photo_id": "upload-16a398d2a61ed1ea",
+      "corner_refs": [
+        "ann-39234373ae4b46e8a42fc166f349403a",
+        "ann-016ce948cfa1491ea7c65b3c263627c2"
+      ],
+      "fx": 525.0,
+      "fy": 525.0,
+      "cx": 319.5,
+      "cy": 239.5,
+      "pitch_down_deg": 30.0,
+      "description": "近似内参；俯角 30° 和零横滚均为未核实假设",
+      "roll_deg": 0,
+      "assumptions": "level floor, pinhole camera, camera roll zero; lens distortion not compensated; no multiview triangulation",
+      "status": "user_supplied_unverified"
+    },
+    {
+      "id": "layout-1",
+      "kind": "pinhole_floor_backprojection",
+      "points": [
+        [
+          -0.31881571075130427,
+          2.4191110214360294
+        ],
+        [
+          0.425204083769531,
+          2.624715281569508
+        ]
+      ],
+      "closed": false,
+      "note": "manual photo corner rays intersect an assumed level floor; camera calibration and pose require verification",
+      "photo_ref": "upload-16a398d2a61ed1ea",
+      "corner_refs": [
+        "ann-39234373ae4b46e8a42fc166f349403a",
+        "ann-016ce948cfa1491ea7c65b3c263627c2"
+      ]
+    },
+    {
+      "id": "scale-1",
+      "kind": "user_scale_reference",
+      "basis": "same_sensor",
+      "description": "同传感器深度帧 deprojection，非独立测量",
+      "wall_id": "wall-1",
+      "relative_endpoints": [
+        [
+          -0.31881571075130427,
+          2.4191110214360294
+        ],
+        [
+          0.425204083769531,
+          2.624715281569508
+        ]
+      ],
+      "distance_m": 0.6038487127014679,
+      "relative_distance": 0.7719058015223497,
+      "metres_per_relative_unit": 0.7822829048707236,
+      "verification": "NOT_INDEPENDENTLY_VERIFIED"
+    },
+    {
+      "id": "height-1",
+      "kind": "user_height",
+      "basis": "assumed",
+      "value_m": 0.45,
+      "verification": "NOT_INDEPENDENTLY_VERIFIED"
+    },
+    {
+      "id": "thickness-1",
+      "kind": "user_assumption",
+      "value_m": 0.12,
+      "description": "unobserved wall thickness assumed for IFC geometry"
+    },
+    {
+      "id": "revision-3",
+      "kind": "manual_revision",
+      "operator": "automation",
+      "reason": "本地规则命令：将选中的墙延长20厘米，检查相邻墙体和门窗是否仍然有效"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node-1",
+      "x": 0.0,
+      "y": 0.0,
+      "status": "inferred",
+      "evidence_refs": [
+        "layout-1",
+        "scale-1",
+        "camera-1",
+        "ann-75388b2e8a014ddeb3bf38a096a54026",
+        "ann-39234373ae4b46e8a42fc166f349403a",
+        "ann-016ce948cfa1491ea7c65b3c263627c2"
+      ]
+    },
+    {
+      "id": "node-2",
+      "x": 0.7748087303793472,
+      "y": 0.21411255040223848,
+      "status": "simulated",
+      "evidence_refs": [
+        "layout-1",
+        "scale-1",
+        "camera-1",
+        "ann-75388b2e8a014ddeb3bf38a096a54026",
+        "ann-39234373ae4b46e8a42fc166f349403a",
+        "ann-016ce948cfa1491ea7c65b3c263627c2",
+        "revision-3"
+      ]
+    }
+  ],
+  "storeys": [
+    {
+      "id": "storey-1",
+      "elevation": {
+        "value": 0.0,
+        "unit": "m",
+        "status": "assumed",
+        "evidence_refs": [
+          "layout-1"
+        ],
+        "note": "Local datum"
+      }
+    }
+  ],
+  "elements": [
+    {
+      "id": "wall-1",
+      "ifc_type": "IfcWall",
+      "start": "node-1",
+      "end": "node-2",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "ann-75388b2e8a014ddeb3bf38a096a54026",
+          "ann-39234373ae4b46e8a42fc166f349403a",
+          "ann-016ce948cfa1491ea7c65b3c263627c2"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 0.45,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "height-1"
+          ],
+          "note": "Supplied by operator; not independently verified"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "thickness-1"
+          ],
+          "note": "Not observed"
+        },
+        "base_elevation": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "assumed",
+          "evidence_refs": [
+            "layout-1"
+          ],
+          "note": "Local reference elevation"
+        }
+      },
+      "unknown": [
+        "actual wall thickness",
+        "occluded wall extent and openings",
+        "wall identity and camera calibration and floor assumptions require independent verification"
+      ]
+    }
+  ],
+  "constraints": [],
+  "scale": {
+    "status": "applied",
+    "anchor_ref": "scale-1",
+    "metres_per_relative_unit": 0.7822829048707236,
+    "independence": "same_sensor",
+    "method": "photo_floor"
+  },
+  "validation": {
+    "status": "REQUIRES_REVALIDATION"
+  },
+  "history": [
+    {
+      "revision": 2,
+      "action": "regenerated_from_user_annotations",
+      "warning": "wall IDs follow the current sketch segment order; review identity after changing topology"
+    },
+    {
+      "previous_revision": 2,
+      "revision": 3,
+      "element_id": "wall-1",
+      "attribute": "length",
+      "before": 0.603848712701468,
+      "after": 0.803848712701468,
+      "changed_nodes": [
+        "node-2"
+      ],
+      "affected_elements": [
+        "wall-1"
+      ],
+      "reason_ref": "revision-3"
+    }
+  ]
+}

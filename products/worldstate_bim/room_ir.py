@@ -258,7 +258,7 @@ def revise_element(model: dict[str, Any], element_id: str, attribute: str, value
                    *, reason: str, operator: str) -> tuple[dict[str, Any], dict[str, Any]]:
     """Create a revision, propagating shared corners and angular constraints."""
     validate_room(model)
-    if operator not in {"user", "analyst"} or not isinstance(reason, str) or not reason.strip():
+    if operator not in {"user", "analyst", "automation"} or not isinstance(reason, str) or not reason.strip():
         raise ValueError("revision operator and reason required")
     if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value):
         raise ValueError("finite numeric revision required")
@@ -271,7 +271,7 @@ def revise_element(model: dict[str, Any], element_id: str, attribute: str, value
     kind = element["ifc_type"]
     ref = f"revision-{result['revision'] + 1}"
     result["evidence"].append({"id": ref, "kind": "manual_revision", "operator": operator, "reason": reason})
-    status = "human_confirmed" if operator == "user" else "inferred"
+    status = "human_confirmed" if operator == "user" else "simulated" if operator == "automation" else "inferred"
     changed_nodes: set[str] = set()
     if kind == "IfcWall" and attribute == "length":
         if value <= 0:

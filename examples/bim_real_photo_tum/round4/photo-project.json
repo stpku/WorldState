@@ -1,0 +1,169 @@
+{
+  "schema": "worldstate-photo-project/0.1",
+  "id": "photo-room-3cf6e2c732c747e4a3bcff7c61da3408",
+  "name": "TUM 开发样例：可见墙面片段",
+  "operator_kind": "automation",
+  "created_at": "2026-11-13T21:52:41.683548+00:00",
+  "annotations": [
+    {
+      "id": "ann-75388b2e8a014ddeb3bf38a096a54026",
+      "photo_id": "upload-16a398d2a61ed1ea",
+      "kind": "wall_boundary",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          255,
+          170
+        ],
+        [
+          415,
+          155
+        ]
+      ],
+      "object_id": null,
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 141,
+      "created_at": "2026-11-13T21:52:41.996817+00:00"
+    },
+    {
+      "id": "ann-39234373ae4b46e8a42fc166f349403a",
+      "photo_id": "upload-16a398d2a61ed1ea",
+      "kind": "corner",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          255,
+          170
+        ]
+      ],
+      "object_id": "node-1",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 96,
+      "created_at": "2026-11-13T21:52:42.129871+00:00"
+    },
+    {
+      "id": "ann-016ce948cfa1491ea7c65b3c263627c2",
+      "photo_id": "upload-16a398d2a61ed1ea",
+      "kind": "corner",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          400,
+          155
+        ]
+      ],
+      "object_id": "node-2",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 98,
+      "created_at": "2026-11-13T21:52:43.980089+00:00"
+    }
+  ],
+  "layout": {
+    "mode": "photo_floor",
+    "points": [],
+    "closed": false,
+    "confirmed_schematic": false,
+    "confirmed_camera_assumptions": true,
+    "photo_id": "upload-16a398d2a61ed1ea",
+    "camera": {
+      "fx": 525,
+      "fy": 525,
+      "cx": 319.5,
+      "cy": 239.5,
+      "pitch_down_deg": 30,
+      "description": "近似内参；俯角 30° 和零横滚均为未核实假设"
+    }
+  },
+  "reference": {
+    "wall_index": 1,
+    "length_m": 0.6038487127014679,
+    "basis": "same_sensor",
+    "description": "同传感器深度帧 deprojection，非独立测量",
+    "height_m": 0.45,
+    "height_basis": "assumed",
+    "thickness_m": 0.12
+  },
+  "events": [
+    {
+      "action": "project_created",
+      "at": "2026-11-13T21:52:41.683569+00:00"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-13T21:52:41.800039+00:00",
+      "photo_id": "upload-16a398d2a61ed1ea"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-13T21:52:41.831498+00:00",
+      "photo_id": "upload-38633b1d8d8ae9d3"
+    },
+    {
+      "action": "annotation_added",
+      "at": "2026-11-13T21:52:41.996863+00:00",
+      "annotation_id": "ann-75388b2e8a014ddeb3bf38a096a54026",
+      "elapsed_ms": 141
+    },
+    {
+      "action": "annotation_added",
+      "at": "2026-11-13T21:52:42.129907+00:00",
+      "annotation_id": "ann-39234373ae4b46e8a42fc166f349403a",
+      "elapsed_ms": 96
+    },
+    {
+      "action": "annotation_added",
+      "at": "2026-11-13T21:52:42.246009+00:00",
+      "annotation_id": "ann-f4a0b68f187e4ee4adaa39fe2d8f1da3",
+      "elapsed_ms": 81
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-13T21:52:42.629635+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "candidate_generated",
+      "at": "2026-11-13T21:52:43.135609+00:00",
+      "revision": 1,
+      "wall_count": 1
+    },
+    {
+      "action": "annotation_deleted",
+      "at": "2026-11-13T21:52:43.847605+00:00",
+      "annotation_id": "ann-f4a0b68f187e4ee4adaa39fe2d8f1da3"
+    },
+    {
+      "action": "annotation_added",
+      "at": "2026-11-13T21:52:43.980133+00:00",
+      "annotation_id": "ann-016ce948cfa1491ea7c65b3c263627c2",
+      "elapsed_ms": 98
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-13T21:52:44.046211+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "candidate_generated",
+      "at": "2026-11-13T21:52:44.069959+00:00",
+      "revision": 2,
+      "wall_count": 1
+    },
+    {
+      "action": "revise",
+      "at": "2026-11-13T21:52:44.274211+00:00",
+      "element_id": "wall-1",
+      "attribute": "length"
+    },
+    {
+      "action": "external_ifc_synced",
+      "at": "2026-11-13T21:53:13.823614+00:00",
+      "element_id": "wall-1",
+      "attribute": "length"
+    }
+  ],
+  "current_revision": 4
+}

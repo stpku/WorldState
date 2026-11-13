@@ -66,7 +66,52 @@ def test_local_rule_is_explicit_and_bounded(server):
     model=server.model;wall=next(e for e in model["elements"] if e["ifc_type"]=="IfcWall")
     ident,attr,value=parse_local_command(model,"把 "+wall["id"]+" 的高度改为 3.6 米")
     assert (ident,attr,value)==(wall["id"],"height",3.6)
+    ident,attr,value=parse_local_command(model,"将选中的墙延长20厘米，检查相邻墙体和门窗是否仍然有效",wall["id"])
+    nodes={n["id"]:n for n in model["nodes"]};a,b=nodes[wall["start"]],nodes[wall["end"]]
+    import math
+    assert (ident,attr)==(wall["id"],"length") and value==pytest.approx(math.dist((a["x"],a["y"]),(b["x"],b["y"]))+.2)
     with pytest.raises(ValueError):parse_local_command(model,"delete everything")
+
+
+def test_photo_project_annotation_generation_revision_restore_and_restart(tmp_path):
+    workspace=tmp_path/"photo-project"
+    instance=StudioServer(0,None,workspace)
+    thread=threading.Thread(target=instance.serve_forever,daemon=True);thread.start()
+    try:
+        assert api(instance,"/api/project")[1]["project"] is None
+        assert api(instance,"/api/project",{"name":"Synthetic photo flow","operator_kind":"automation"})[0]==201
+        image=Image.new("RGB",(640,480),"white");buffer=io.BytesIO();image.save(buffer,format="PNG")
+        status,photo=api(instance,"/api/upload",{"data_base64":base64.b64encode(buffer.getvalue()).decode()})
+        assert status==201
+        for i in range(1,4):
+            body={"photo_id":photo["id"],"kind":"wall_boundary","wall_id":f"wall-{i}",
+                  "points":[[10,10+i],[100,60+i]],"elapsed_ms":100}
+            assert api(instance,"/api/annotation",body)[0]==201
+        body={"layout":{"points":[[20,20],[220,20],[220,170],[60,170]],"closed":False,"confirmed_schematic":True},
+              "reference":{"wall_index":1,"length_m":4,"basis":"independent_user_declared","description":"test ruler",
+                           "height_m":2.8,"height_basis":"assumed","thickness_m":0.12}}
+        assert api(instance,"/api/layout",body)[0]==200
+        status,result=api(instance,"/api/generate",{})
+        assert status==201 and result["model"]["validation"]["scope"]=="PARTIAL_OPEN"
+        assert len([e for e in result["model"]["elements"] if e["ifc_type"]=="IfcWall"])==3
+        assert all(e["classification"]["status"]=="simulated" for e in result["model"]["elements"])
+        assert api(instance,"/api/export/model.ifc")[1].startswith(b"ISO-10303-21")
+        status,result=api(instance,"/api/command",{"revision":1,"selected_id":"wall-1",
+            "command":"将选中的墙延长20厘米，检查相邻墙体和门窗是否仍然有效"})
+        assert status==200 and result["diff"]["after"]==pytest.approx(4.2)
+        assert next(n for n in result["model"]["nodes"] if n["id"]=="node-2")["status"]=="simulated"
+        assert api(instance,"/api/generate",{})[0]==400
+        assert api(instance,"/api/sync-ifc",{"revision":2,"element_id":"wall-1","attribute":"length",
+            "reason":"invalid","data_base64":base64.b64encode(b"not IFC").decode()})[0]==400
+        status,result=api(instance,"/api/restore",{"revision":2,"source_revision":1})
+        assert status==200 and result["model"]["revision"]==3
+        assert api(instance,"/api/versions")[1]["revisions"]==[1,2,3]
+    finally:
+        instance.shutdown();instance.server_close();thread.join()
+    resumed=StudioServer(0,None,workspace)
+    try:
+        assert resumed.model["revision"]==3 and resumed.project["current_revision"]==3
+    finally:resumed.server_close()
 
 
 def test_point_cloud_requires_explicit_finite_xyz_and_marks_alignment_unknown(tmp_path):

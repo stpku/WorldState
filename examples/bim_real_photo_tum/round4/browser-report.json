@@ -1,0 +1,45 @@
+{
+  "kind": "SCRIPTED_BROWSER_DEVELOPMENT_RUN",
+  "photo1_sha256": "16a398d2a61ed1eaec756f985b4cee59afe7086ce7661fe271d8facd10e75be9",
+  "photo2_sha256": "38633b1d8d8ae9d356a08cd30944bed5f38d167cbf0bb86836af75233125d51f",
+  "real_photo": true,
+  "automatic_clicks_not_human_labor": true,
+  "annotation_classification": "simulated",
+  "scope": "PARTIAL_OPEN",
+  "method": "photo_floor",
+  "anchor_basis": "same_sensor",
+  "anchor_m": 0.6038487127014679,
+  "assumptions": "floor level; pitch 30°, roll zero and approximate intrinsics are unverified; wall height 0.45 m and thickness 0.12 m assumed",
+  "original_node_2": {
+    "id": "node-2",
+    "x": 0.5858541671256865,
+    "y": 0.14631528523256912,
+    "status": "inferred",
+    "evidence_refs": [
+      "layout-1",
+      "scale-1",
+      "camera-1",
+      "ann-75388b2e8a014ddeb3bf38a096a54026",
+      "ann-39234373ae4b46e8a42fc166f349403a",
+      "ann-f4a0b68f187e4ee4adaa39fe2d8f1da3"
+    ]
+  },
+  "corrected_node_2": {
+    "id": "node-2",
+    "x": 0.582033966139078,
+    "y": 0.16084069787101343,
+    "status": "inferred",
+    "evidence_refs": [
+      "layout-1",
+      "scale-1",
+      "camera-1",
+      "ann-75388b2e8a014ddeb3bf38a096a54026",
+      "ann-39234373ae4b46e8a42fc166f349403a",
+      "ann-016ce948cfa1491ea7c65b3c263627c2"
+    ]
+  },
+  "revised_length_m": 0.803848712701468,
+  "ifc_status": 200,
+  "report_status": 200,
+  "errors": []
+}
