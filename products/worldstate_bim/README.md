@@ -1,14 +1,16 @@
 # WorldState BIM — Evidence-to-Editable-BIM vertical slice
 
-**Status: runnable proposal-to-IFC4 prototype; NOT automatic photos-to-BIM yet.**
+**Status: experimental assisted Photo/Scan-to-BIM and local Studio; V0.2 is NOT release-ready.**
+
+**Round 3:** the [real CRASLAB multi-object example](../../examples/bim_real_scan_craslab/room_round3/README.md) has eight inferred walls, one slab and five windows/openings; four conflicting source objects are quarantined. The multi-wall IR, constraints, IFC export, Bonsai edit and restricted readback run locally. No independent real-room accuracy or labor-savings acceptance is claimed.
 
 **Round 2:** an [assisted real-photo + RGB-D wall-patch IFC example](../../examples/bim_real_photo_tum/README.md) and local editing viewer are available. The example's scale is derived from the same sensor, its thickness is assumed, and it is not a complete room or V0.2 acceptance.
 
 The product boundary is recorded in [SCOPE.md](SCOPE.md). A separate
 [real-room benchmark](../../benchmarks/bim_real_room/README.md) now exercises
 photo-only sparse geometry, monocular relative depth and an operator-selected
-RGB-D surface patch. These experiments do not yet produce full semantic walls
-or IFC from photographs.
+RGB-D surface patch. The photo path is still a single visible patch; the
+multi-object example is scan-driven and not a complete verified room.
 
 [Download the synthetic four-wall IFC example](examples/synthetic_room.ifc) to inspect the native `IfcWall` objects. This is a teaching model made from explicit simulated coordinates, **not** a photo reconstruction. Its IFC file, four wall geometric representations and stable IFC object GUIDs were checked with IfcOpenShell 0.9.0post1 in an isolated Python 3.12 environment; native Bonsai authoring review remains pending.
 
@@ -23,12 +25,26 @@ multimodal modeling agent → structured parametric building proposal → editab
 IFC4 objects → review and revision. WorldState Core remains independent,
 domain-neutral and unchanged.
 
-The first executable path now accepts a bounded **DSH output proposal** and
+The historical v0.1 path accepts a bounded **DSH output proposal** and
 converts supported `IfcWall` elements to an IFC4 BIM model (with IfcOpenShell
 installed). It does **not** yet accept photographs and independently infer
-geometry; the image-to-proposal stage is the next milestone.
+geometry independently; the newer assisted RGB-D path requires an operator-selected region.
 
-## Current functionality
+## Run WorldState Studio locally
+
+Install the Python 3.12 product dependencies as described in [Benchmark setup](../../benchmarks/README.md), then run from the repository root:
+
+```bash
+OPENBLAS_NUM_THREADS=1 PYTHONPATH=. /tmp/ws-bim-venv/bin/python -m products.worldstate_bim.studio_server \
+  --model-dir examples/bim_real_scan_craslab/room_round3 \
+  --workspace /tmp/worldstate-studio --port 8766
+```
+
+Open `http://127.0.0.1:8766/`. The workspace must be **outside** the source repository; the server binds only to loopback. It renders triangles extracted from the current IFC, lists evidence and quarantined objects, permits selection and supported parameter changes, and exports IFC, IR, evidence and validation reports. Uploaded PNG/JPEG photos remain local and explicitly unassociated; they do not automatically affect the model. The command field uses a small local rule parser and is explicitly **not DSH**.
+
+Optionally append `--point-cloud /path/to/xyz.npy` for an explicitly selected local `N×3` metre-coordinate point cloud. At most 8,000 points are shown; its alignment with the IFC is not automatically verified. Multi-wall edit and IFC readback commands are in the [example](../../examples/bim_real_scan_craslab/room_round3/README.md).
+
+## Historical proposal/0.1 functionality
 
 - Read a structured proposal with image evidence identifiers and SHA-256 hashes.
 - Verify local image bytes and block traversal outside the evidence directory.
@@ -84,7 +100,9 @@ For an intentionally approximate, unscaled *draft*, add
 `--allow-approximate-scale`; this does **not** make dimensions reliable.
 Open and inspect the IFC in Bonsai or an independent IFC viewer before use.
 
-## Product capability roadmap
+## Historical proposal roadmap
+
+The current release gates and product sequence are in the [reset roadmap](../../docs/roadmap/worldstate-bim-product-reset.md); the table below describes the earlier proposal-stage plan.
 
 | Iteration | Working capability | Acceptance evidence |
 | --- | --- | --- |
