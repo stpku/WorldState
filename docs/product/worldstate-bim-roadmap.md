@@ -1,5 +1,10 @@
 # WorldState: from evidence records to buildable, editable BIM assets
 
+> **2026-11-13 reset:** The active version sequence and release gates are in the
+> [product reset roadmap](../roadmap/worldstate-bim-product-reset.md). The
+> earlier milestones below are historical context; none imply that real-photo
+> IFC reconstruction is complete.
+
 **Architecture revision: 2026-11-11**  
 **Decision:** Product priority is **evidence-driven BIM reconstruction**. Truth
 Fidelity and Unknown/Conflict remain enabling reliability semantics, not the

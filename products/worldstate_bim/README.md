@@ -2,6 +2,12 @@
 
 **Status: runnable proposal-to-IFC4 prototype; NOT automatic photos-to-BIM yet.**
 
+The product boundary is recorded in [SCOPE.md](SCOPE.md). A separate
+[real-room benchmark](../../benchmarks/bim_real_room/README.md) now exercises
+photo-only sparse geometry, monocular relative depth and an operator-selected
+RGB-D surface patch. These experiments do not yet produce full semantic walls
+or IFC from photographs.
+
 [Download the synthetic four-wall IFC example](examples/synthetic_room.ifc) to inspect the native `IfcWall` objects. This is a teaching model made from explicit simulated coordinates, **not** a photo reconstruction. Its IFC file, four wall geometric representations and stable IFC object GUIDs were checked with IfcOpenShell 0.9.0post1 in an isolated Python 3.12 environment; native Bonsai authoring review remains pending.
 
 ## North Star
