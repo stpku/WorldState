@@ -9,7 +9,7 @@
 | 路线 | 实际结果 | 选择与限制 |
 | --- | --- | --- |
 | A 多视角 | pycolmap 4.2.1 CPU，固定同一 TUM 房间序列 4/8/16/32 张、真实运行，下表含失败 | 作为密集照片的候选几何 provider；稀疏点不是 BIM。VGGT-Omega 的 GPU 包已准备，模型和 adapter 均 NOT_TESTED，许可证限非商业研究。 |
-| B 扫描→语义 IFC | [CRASLAB 真实点云](../../examples/bim_real_scan_craslab/)选出一个待确认墙片段、原生 IFC4，标签点精确率 65.65%，整个多房间样本召回 4.45% | 可用于指出算法错误，不可作为可靠自动墙识别。未配准数据集参考 IFC，独立墙几何误差未测；完整 SpatialLM / BIMStruct3D / Cloud2BIM 管线未测。 |
+| B 扫描→语义 IFC | [CRASLAB 真实点云](../../examples/bim_real_scan_craslab/)生成一个 WorldState 墙片段；Cloud2BIM 输出 9 墙、6 窗，PyStruct3D 包围盒组件实测 | 完整 Cloud2BIM 研究管线已跑，IFC 存在 6 个必填属性缺失；参考 IFC 尚未配准、独立尺寸未测；SpatialLM / 完整 BIMStruct3D 未测。 |
 | C 视觉 + 辅助建模 | [TUM RGB-D 照片](../../examples/bim_real_photo_tum/) + CPU Depth Anything V2 ONNX 实际推理、分析者选区、同传感器尺度、墙厚假设 → 受限 IR / IFC | 已有局部可编辑墙和浏览器；相对深度模型不提供语义标签或公制尺度。DSH headless 0.2.2-rc.1 最小请求仍返回 `MISSING_CREDENTIAL`，不是 DSH 自动建模。未测试视觉路由、MCP、费用和稳定性。 |
 
 ### A：COLMAP 开发试验
@@ -29,6 +29,10 @@
 
 从公开 CC BY 4.0 的 4.27 GB 标注档案中确定性间隔抽样，生成候选期间没有加载类别标签。采样 292,351 点，冻结 IFC 后读取标签：3,042 个候选点中墙体 1,997、白板 975、其他 70。精确率 1,997/3,042；1 个候选无法覆盖全部场景的 44,890 个参考墙点，因此整体召回率低。保留由此暴露的白板误识别，不将推断当成人工确认。厚 0.12 m 只是构建草稿的显式假设。结果详见[案例](../../examples/bim_real_scan_craslab/README.md)。
 
+对同一已冻结的 3,042 个候选点，在独立环境运行 PyStruct3D 0.17.0（源码 `fcbe3070deef2d9ed2662abd77fdf0ad35c39f87`，MIT）`BBox.fit_horizontal_aligned`：包围盒长 2.1826 m、高 2.4670 m、点分布宽 0.0684 m；与本产品候选支持长度 2.1837 m、高 2.4678 m 接近。**相同选择点上的拟合接近不等于相对于独立真值精度高；包围盒宽度不是墙厚。**此试验没有运行 BIMStruct3D 分割、语义识别或完整管线。Open3D 0.19.0、NumPy 2.5.4、SciPy 1.18.1，记录见 [JSON](pystruct-bbox.json)。
+
+同样的 292,351 点还实际运行 Cloud2BIM（源码 `cfb10b09ee7a53ac348c65b7e8f0ce8728f9852e`，MIT，先因缺 LaTeX 中止，后仅禁用绘图 LaTeX 重跑），得到 IFC4：9 墙、2 楼板、6 窗、6 开口及对应关系；9/9 墙能生成几何。IfcOpenShell 独立 schema 校验发现 6 项 `IfcWindowType.PartitioningType` 缺失，地点 0°/0° 为占位，材料/板厚含未核实假设。对两种 IFC 在相同点云、同一 4 cm「点到最近墙三角面」协议下测试：Cloud2BIM precision 0.5956、recall 0.1994；单墙基线 precision 0.6112、recall 0.0454。分别输出 [Cloud2BIM](cloud2bim-ifc-evaluation.json) 和 [WorldState](worldstate-ifc-surface-evaluation.json) 报告。构件数量、覆盖和假设不同，这些仅是开发场景点邻近指标，不是 IFC 实例匹配或独立尺寸误差；Cloud2BIM 值得优先进一步集成和修复，尚不能判为符合发布条件。
+
 ### C：RGB-D、独立工具与修订
 
 真实 TUM 照片 `1305031916.701048.png` 与深度帧、人工 ROI、同传感器锚点实跑；Depth Anything V2 Small 的 ONNX SHA-256 `afb6a5c28f3b6bf1618c6e43f02073ef9dfdc70e937502d51603e57b0a1df10c`，本例 CPU 推理 1.85 秒，仅提供相对深度过滤。局部墙可见范围约 0.428 × 0.401 m，厚度 0.12 m 为假设；独立尺度、整墙长度/高度和精度 **NOT_MEASURED**。`0.0002 m/raw-unit` 由输入的距离和像素实际求得，但此距离来自同一深度传感器，不能作为独立标尺结果。
@@ -47,6 +51,6 @@ WS-RealRoom 的采集、数据隔离、参考测量和预先冻结门槛见[协�
 
 1. 采集有授权的新房间：多视角、独立标尺、留出照片、至少三项不参与建模的测量和参考 IFC；按冻结协议运行。
 2. 多墙与墙角、墙体完整范围、门窗和开口关系、约束及局部影响；现在只有单块墙面。
-3. 在隔离 GPU 上实测许可合适的视觉基础模型、SpatialLM 或混元；同输入比较 Cloud2BIM / PyStruct3D 的适用范围。
+3. 在隔离 GPU 上实测许可合适的视觉基础模型、SpatialLM 或混元；对 Cloud2BIM 的 IFC 校验、实例匹配和证据属性继续修复与独立评估。
 4. 拓展外部 BIM 编辑读回、自然语言修改、DSH 真实视觉与工具调用；当前只支持明确参数和局部墙长回读。
 5. 完成人工基线/审核与失败成本测量、用户场景评估、错误修复及发布门禁。尚未获得的每项结果均不得声称完成。

@@ -1,0 +1,45 @@
+{
+  "dataset": "CRASLAB development sample, CC-BY-4.0",
+  "ifc_sha256": "58861822907e637feb807e623565c6f4e28778699e4e96c758396ca0aa1cd2c8",
+  "points_sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+  "labels_sha256": "2fd6087f7516338c7751b6ac66f04b16513cfa64090ccde01cc5d32fd7ed64e5",
+  "evaluation": "point distance to nearest world-space IfcWall triangle; reference class 3 = wall",
+  "threshold_m": 0.04,
+  "predicted_points": 3333,
+  "tp": 2037,
+  "fp": 1296,
+  "fn": 42853,
+  "precision": 0.6111611161116112,
+  "recall": 0.04537758966362219,
+  "f1": 0.08448250834663958,
+  "predicted_points_by_reference_class": {
+    "0": 48,
+    "1": 217,
+    "2": 4,
+    "3": 2037,
+    "4": 29,
+    "15": 975,
+    "20": 9,
+    "22": 14
+  },
+  "ifc_schema": "IFC4",
+  "entity_counts": {
+    "IfcWall": 1,
+    "IfcSlab": 0,
+    "IfcOpeningElement": 0,
+    "IfcWindow": 0,
+    "IfcDoor": 0,
+    "IfcSpace": 0,
+    "IfcRelVoidsElement": 0,
+    "IfcRelFillsElement": 0
+  },
+  "wall_geometry_success": 1,
+  "wall_geometry_failure": 0,
+  "schema_validation_issues": {},
+  "evaluation_seconds": 0.09032198099885136,
+  "limitations": [
+    "same development scene; not an independent scene test",
+    "point proximity is not object instance matching or independent dimensional error",
+    "output uses modelled material, thickness and site metadata assumptions"
+  ]
+}

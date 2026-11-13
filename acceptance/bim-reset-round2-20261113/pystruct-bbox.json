@@ -1,0 +1,63 @@
+{
+  "method": "PyStruct3D BBox.fit_horizontal_aligned",
+  "package_revision": "fcbe3070deef2d9ed2662abd77fdf0ad35c39f87",
+  "license": "MIT",
+  "dataset": "CRASLAB CC-BY-4.0",
+  "point_sha256": "5ce630c757205f68e33cd6ee52727275f21a44b11ca225b7dee20045997e5576",
+  "mask_sha256": "28f9bf70a843c21179003113da449cb4d5977c09884eba9c9b36baf47c3a1e50",
+  "selected_points": 3042,
+  "fitting_seconds": 0.001262799953110516,
+  "envelope_m": {
+    "length": 2.182602721280777,
+    "width": 0.06839613638563767,
+    "height": 2.467
+  },
+  "corners_m": [
+    [
+      11.076847101367385,
+      -2.010778506045881,
+      -0.9165
+    ],
+    [
+      11.126066222171998,
+      0.17126918295852633,
+      -0.9165
+    ],
+    [
+      11.057687478811166,
+      0.1728115606283196,
+      -0.9165
+    ],
+    [
+      11.008468358006553,
+      -2.0092361283760876,
+      -0.9165
+    ],
+    [
+      11.076847101367385,
+      -2.010778506045881,
+      1.5505
+    ],
+    [
+      11.126066222171998,
+      0.17126918295852633,
+      1.5505
+    ],
+    [
+      11.057687478811166,
+      0.1728115606283196,
+      1.5505
+    ],
+    [
+      11.008468358006553,
+      -2.0092361283760876,
+      1.5505
+    ]
+  ],
+  "limitations": [
+    "same preselected candidate, not an independent end-to-end method",
+    "fitted point-envelope width is not wall thickness",
+    "semantic labels not loaded",
+    "independent reference geometric error not measured"
+  ]
+}

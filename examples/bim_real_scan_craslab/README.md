@@ -8,4 +8,6 @@
 
 IFCOpenShell 及 web-ifc 均读取到一个 `IfcWall`、GUID `3GH0h4u7XQCRyf_8mGlGBt`；IfcOpenShell 生成了 8 顶点实体。长度 2.184 m、可见高度 2.468 m 是所选表面支持范围，不是整墙尺寸。厚度 0.12 m 为显式假设；完整边界、门窗、整墙和 storey 均未核实。数据集还提供 IFC 参考，但它与点云坐标系不同；本轮没有完成配准，因此与参考 IFC 的几何误差 **NOT_MEASURED**。
 
+[Cloud2BIM 对照 IFC](cloud2bim-unverified.ifc) 是使用 MIT 许可的 Cloud2BIM 研究代码对同一 XYZ 样本生成的原始输出，含 9 墙、2 楼板、6 窗及 6 对开口关系；所有构件均未经人工确认。它的 `IfcWindowType.PartitioningType` 有 6 处必填字段缺失；0°/0° 站点经纬度是脚本占位值，非真实地理位置，程序默认材料（包括混凝土）、楼板厚度等也没有实测依据，**只作研究失败/对照材料，禁止作为工程模型使用**。相同开发点云下的 4 cm 表面邻近指标见 [Cloud2BIM 评测](../../acceptance/bim-reset-round2-20261113/cloud2bim-ifc-evaluation.json) 与 [单墙基线评测](../../acceptance/bim-reset-round2-20261113/worldstate-ifc-surface-evaluation.json)；它们不是实例识别或独立尺寸精度。
+
 复现及依赖安装见 [Benchmark 入口](../../benchmarks/README.md)。使用前检查数据集与本示例的来源、许可及标注限制。

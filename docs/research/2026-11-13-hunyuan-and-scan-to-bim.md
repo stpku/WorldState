@@ -19,8 +19,8 @@
 | 项目 | 输入及输出范围 | 本轮状态 |
 | --- | --- | --- |
 | [SpatialLM](https://github.com/manycore-research/SpatialLM) | 点云生成结构化空间布局；模型权重及工具链有独立许可和资源要求 | 未运行，NOT_TESTED；不是现成已验证 IFC 编辑器。 |
-| [BIMStruct3D / PyStruct3D](https://github.com/humantecheu/pystruct3d) | MIT 的实例边界盒、评估和点云工具；PyStruct3D 不是完整的实例分割或 IFC 产品 | 参见本轮状态报告；分割输入、参数和环境必须单独报告，不能声称完整 BIMStruct3D 已实测。 |
-| [Cloud2BIM](https://github.com/VaclavNezerka/Cloud2BIM) | MIT 的点云到 IFC 研究管线，支持墙、楼板、开口等；实际质量依赖数据和配置 | 已审查代码与依赖，完整运行 NOT_TESTED；其配置、依赖及输出必须在隔离环境测量。 |
+| [BIMStruct3D / PyStruct3D](https://github.com/humantecheu/pystruct3d) | MIT 的实例边界盒、评估和点云工具；PyStruct3D 不是完整的实例分割或 IFC 产品 | 已对同一 CRASLAB 候选点运行 `BBox.fit_horizontal_aligned`；[结果](../../acceptance/bim-reset-round2-20261113/pystruct-bbox.json)。它不是完整 BIMStruct3D，不能将同一组点的包围盒差异当成独立精度。 |
+| [Cloud2BIM](https://github.com/VaclavNezerka/Cloud2BIM) | MIT 的点云到 IFC 研究管线，支持墙、楼板、开口等；实际质量依赖数据和配置 | **已运行**相同 CRASLAB 开发样本，得到 9 墙、2 板及 6 个开口和窗，但 6 处 IFC 窗类型必填属性缺失，模型默认材料/现场坐标不可信；[结果](../../acceptance/bim-reset-round2-20261113/cloud2bim-ifc-evaluation.json)。先前运行因 LaTeX 缺失失败，后来仅关闭排版的 LaTeX 渲染重跑成功。 |
 | WorldState 点云几何基线 | 明确 Z 竖直先验，用点密度选一块垂直平面，生成一个局部原生 IfcWall | **已运行**，见 [真实案例](../../examples/bim_real_scan_craslab/README.md)。精确率 65.6%，大量白板混入；未确认类别，不能作为可靠自动语义模型。 |
 
-优先继续将真实用户辅助标注、明确尺度、参数化 IFC 和独立验证贯通；候选项目须做统一输入对照后才可宣称优于当前方法。
+Cloud2BIM 输出的构件覆盖比单墙研究基线更广，值得作为 Scan-to-BIM 的优先集成候选；先修复 IFC 校验、证据和未知状态，验证墙窗实例及真实尺寸，再决定产品集成。两个方法同输入表面邻近指标只是开发样本比较，不是跨场景排名或人工成本结论。
