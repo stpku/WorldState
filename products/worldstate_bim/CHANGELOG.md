@@ -2,6 +2,8 @@
 
 ## Unreleased — 2026-11-14
 
+- Add experimental multiview wall-floor line fitting, attributed corner triangulation and Studio inspection using the shared semantic floor. Compare both routes on the same real development input; reject an unstable third wall candidate. New-room accuracy, independent scale and human savings remain unmeasured.
+
 - Fuse real registered multiview semantic tracks into provisional 3D surfaces and plane intersections; bind a triangulated two-view scale to observations and camera poses, preserve evidence, and compile selected partial surfaces to IFC. The real example has two candidates and assumed, non-independent scale; no three-wall or release acceptance is claimed.
 
 - Add optional local CPU semantic vision proposals, overlay inspection, explicit accept/reject and model provenance; a real-photo scripted preview generates three disconnected editable IFC wall-segment candidates with **assumed** scale and height. That earlier single-photo workflow does not triangulate wall corners; semantic surface hypotheses remain research.

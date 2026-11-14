@@ -2,6 +2,8 @@
 
 **Status: experimental assisted Photo/Scan-to-BIM and local Studio; V0.2 is NOT release-ready.**
 
+**Round 7:** [real multiview wall-floor lines](../../examples/bim_eyeful_room/round7/README.md) and the sparse-plane route were compared on the same development data. Studio can inspect the line candidates, triangulate attributed corner clicks and export a partial IFC; conflicting candidates remain excluded. Independent room accuracy, measured metric scale and human-cost savings are not measured.
+
 **Round 6:** [real multiview semantic tracks and 3D plane intersections](../../examples/bim_eyeful_room/round6/README.md) now drive two partial editable IFC wall candidates in a common frame. Studio supports registered-view fusion and triangulated scale endpoints. The example uses a correlated, assumed scale; a third wall, real-room accuracy and human-cost acceptance remain unverified.
 
 **Round 5:** local CPU semantic inference proposes image regions and boundaries that can be reviewed in Studio; a [real-photo three-segment IFC draft](../../examples/bim_eyeful_room/README.md) was generated and edited. Its scale, height and camera attitude are assumptions, not measurements. Studio can run experimental CPU SfM on uploaded same-camera photos and use a registered focal estimate; wall endpoints still use single-photo backprojection, not multiview triangulation. No independently measured three-wall room or labor-savings acceptance is claimed.
