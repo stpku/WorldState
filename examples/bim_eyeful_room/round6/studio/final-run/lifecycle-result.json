@@ -1,0 +1,18 @@
+{
+  "operator": "automation",
+  "basis": "assumed from correlated same-scene reconstruction",
+  "scenario": "scripted 20% reference change; not a physical measurement",
+  "stale_binding_rejected": "尺度端点、测量或相机已改变；请重新求解",
+  "scale_ratio": 1.2,
+  "wall_length_ratios": {
+    "wall-06350fcfc37426e2": 1.2,
+    "wall-8eb3e70381275f0f": 1.2
+  },
+  "camera_change_fusion_rejected": "相机输入已改变，请先重新恢复相机",
+  "camera_change_generation_rejected": "相机输入已改变，请先重新恢复相机",
+  "camera_change_after_reload_rejected": "相机输入已改变，请先重新恢复相机",
+  "revision_before": 2,
+  "revision_after": 3,
+  "human_time": "NOT_MEASURED",
+  "independent_accuracy": "NOT_MEASURED"
+}

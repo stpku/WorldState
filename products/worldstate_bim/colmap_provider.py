@@ -81,11 +81,11 @@ def reconstruct_images(image_dir: Path, names: list[str], output_dir: Path) -> d
     return result
 
 
-def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_dir: Path, *, threads: int = 4) -> dict[str, Any]:
+def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_dir: Path, *, threads: int = 4, calibration: dict | None = None) -> dict[str, Any]:
     """Run CPU SfM on 4–32 images declared to share one undistorted camera.
 
-    Focal length and poses are estimates; the output coordinate frame has no
-    physical scale. The caller must verify that the images are from the same
+    Focal length and poses are estimates unless an explicitly sourced, fixed
+    camera calibration is supplied; the output coordinate frame has no physical scale. The caller must verify that the images are from the same
     camera and raster dimensions, and must not treat reprojection error as
     reconstruction accuracy.
     """
@@ -107,12 +107,28 @@ def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_di
     database=output_dir/'database.db';sparse=output_dir/'sparse'
     if database.exists() or sparse.exists():raise FileExistsError('COLMAP 输出目录必须为空')
     sparse.mkdir()
-    reader=pycolmap.ImageReaderOptions(camera_model='SIMPLE_PINHOLE')
+    if calibration is None:
+        reader=pycolmap.ImageReaderOptions(camera_model='SIMPLE_PINHOLE')
+    else:
+        if calibration.get('confirmed') is not True or not isinstance(calibration.get('source'),str) or not calibration['source'].strip():
+            raise ValueError('请确认相机标定对应当前照片并记录来源')
+        values=[calibration.get(k) for k in ('fx','fy','cx','cy')]
+        if any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in values):raise ValueError('相机标定参数无效')
+        fx,fy,cx,cy=values;width,height=next(iter(dimensions))
+        if not (.05*max(width,height)<=fx<=10*max(width,height) and .05*max(width,height)<=fy<=10*max(width,height) and 0<=cx<width and 0<=cy<height):
+            raise ValueError('相机标定参数超出图像有效范围')
+        sha=calibration.get('source_sha256')
+        if sha is not None and (not isinstance(sha,str) or len(sha)!=64 or any(c not in '0123456789abcdef' for c in sha)):
+            raise ValueError('相机标定来源哈希无效')
+        reader=pycolmap.ImageReaderOptions(camera_model='PINHOLE',camera_params=','.join(str(v) for v in values))
     extraction=pycolmap.FeatureExtractionOptions(num_threads=threads,use_gpu=False,max_image_size=1200)
     extraction.sift.first_octave=0
     matching=pycolmap.FeatureMatchingOptions(num_threads=threads,use_gpu=False)
     mapper=pycolmap.IncrementalPipelineOptions(num_threads=threads,random_seed=0,multiple_models=False,min_model_size=3)
     mapper.mapper.init_min_tri_angle=3.0;mapper.mapper.init_min_num_inliers=50
+    if calibration is not None:
+        mapper.ba_refine_focal_length=False;mapper.ba_refine_principal_point=False;mapper.ba_refine_extra_params=False
+        mapper.mapper.abs_pose_refine_focal_length=False;mapper.mapper.abs_pose_refine_extra_params=False
     started=time.perf_counter()
     pycolmap.extract_features(database,image_dir,image_names=names,camera_mode=pycolmap.CameraMode.SINGLE,
                               reader_options=reader,extraction_options=extraction,device=pycolmap.Device.cpu)
@@ -127,7 +143,8 @@ def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_di
         hashes.append({'file':name,'sha256':sha})
     result={'schema':'worldstate-bim-geometry-candidate/0.1','provider':'COLMAP/pycolmap',
         'provider_version':pycolmap.__version__,'status':'RECONSTRUCTION_FAILED','inputs':hashes,
-        'input_camera_assumption':'all images from one camera; focal length self-calibrated',
+        'input_camera_assumption':'all images from one camera; '+('focal length self-calibrated' if calibration is None else 'user-declared fixed calibration'),
+        'supplied_calibration':calibration,
         'coordinate_frame':'COLMAP arbitrary reconstruction frame','scale':{'status':'unknown','unit':'arbitrary'},
         'timing_seconds':{'feature_extraction':after_features-started,'matching':after_matching-after_features,
                           'mapping':finished-after_matching,'total':finished-started},
@@ -150,4 +167,9 @@ def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_di
         result['registered_cameras'].sort(key=lambda x:x['name'])
         result['camera_parameters']=[{'model':str(cam.model),'width':cam.width,'height':cam.height,'params':cam.params.tolist()}
                                      for cam in model.cameras.values()]
+        for cam in model.cameras.values():
+            focal=float(cam.params[0]);extent=max(cam.width,cam.height)
+            if not math.isfinite(focal) or not .05*extent<=focal<=10*extent:
+                result['status']='DEGENERATE_CALIBRATION'
+                result['limitations'].append('estimated focal length is implausible for the image dimensions')
     return result

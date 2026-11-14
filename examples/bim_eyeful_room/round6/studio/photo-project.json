@@ -1,0 +1,1572 @@
+{
+  "schema": "worldstate-photo-project/0.1",
+  "id": "photo-room-e54cfba4d7744019a16a98fc8a828fe1",
+  "name": "Real multiview semantic surface development",
+  "operator_kind": "automation",
+  "created_at": "2026-11-14T04:58:39.178962+00:00",
+  "annotations": [
+    {
+      "id": "ann-73d6b7694675421ab5f0271940576162",
+      "photo_id": "upload-c3ef25f26fd0a343",
+      "kind": "scale",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          293,
+          740
+        ],
+        [
+          133,
+          373
+        ]
+      ],
+      "object_id": null,
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 140,
+      "created_at": "2026-11-14T05:00:12.021511+00:00"
+    },
+    {
+      "id": "ann-4c2a35aae2ca4b299cdc57994ec5f356",
+      "photo_id": "upload-9df05175dd5c9421",
+      "kind": "scale",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          238,
+          770
+        ],
+        [
+          42,
+          335
+        ]
+      ],
+      "object_id": null,
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 123,
+      "created_at": "2026-11-14T05:00:12.189370+00:00"
+    }
+  ],
+  "layout": {
+    "mode": "photo_floor",
+    "points": [],
+    "closed": false,
+    "confirmed_schematic": false,
+    "confirmed_camera_assumptions": false,
+    "photo_id": "upload-9df05175dd5c9421",
+    "camera": {
+      "fx": 370.44972319567233,
+      "fy": 370.5319905115052,
+      "cx": 371.5,
+      "cy": 563,
+      "pitch_down_deg": null,
+      "description": "Eyeful Tower raf_emptyroom same camera sensor 9; COLMAP undistorted cameras.bin, resized to uploaded dimensions",
+      "calibration_sha256": "05e702e72fb9076d6fef2eb40e6dbd082ad7615dc381cb2709bace449fec74b7",
+      "geometry_run_id": null
+    }
+  },
+  "reference": {
+    "wall_index": 1,
+    "length_m": 2.3805946423053923,
+    "basis": "assumed",
+    "description": "SCRIPTED DEBUG: assumed from correlated same-scene Metashape camera baseline; selected feature points are not independently measured ruler endpoints",
+    "measurement_uncertainty_m": null,
+    "height_m": null,
+    "height_basis": "",
+    "thickness_m": 0.12
+  },
+  "events": [
+    {
+      "action": "project_created",
+      "at": "2026-11-14T04:58:39.178980+00:00"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.307411+00:00",
+      "photo_id": "upload-720c93ea847cc6fb"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.339411+00:00",
+      "photo_id": "upload-d9ec6b965189347a"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.371252+00:00",
+      "photo_id": "upload-62fa37734d6c053c"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.407778+00:00",
+      "photo_id": "upload-c44bb0d3c36640b8"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.446122+00:00",
+      "photo_id": "upload-af1f8670b66063a2"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.480145+00:00",
+      "photo_id": "upload-88f979658764b8fc"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.513052+00:00",
+      "photo_id": "upload-8e2e9cde4625034a"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.547090+00:00",
+      "photo_id": "upload-97767b7e2b99f952"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.579845+00:00",
+      "photo_id": "upload-210679990fa5000a"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.612189+00:00",
+      "photo_id": "upload-9bbe04f87acfe1a5"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.644235+00:00",
+      "photo_id": "upload-83892f78e8e58d06"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.693416+00:00",
+      "photo_id": "upload-252095ef062ddc32"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.724227+00:00",
+      "photo_id": "upload-6225330919873f46"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.755873+00:00",
+      "photo_id": "upload-0e9d358c51bc56ab"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.783256+00:00",
+      "photo_id": "upload-3ef9a7393cd1da4d"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.815475+00:00",
+      "photo_id": "upload-8d45a7f36fb4a1b3"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.846536+00:00",
+      "photo_id": "upload-3396e2d6f6effc05"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.876201+00:00",
+      "photo_id": "upload-b5aeb707686bd3b9"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.907297+00:00",
+      "photo_id": "upload-0b3b200b0eba0bec"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.939591+00:00",
+      "photo_id": "upload-9a1fc328b545207e"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:39.972397+00:00",
+      "photo_id": "upload-019ca9c1950d43ee"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.000334+00:00",
+      "photo_id": "upload-1a837a72719a5157"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.032458+00:00",
+      "photo_id": "upload-c3ef25f26fd0a343"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.061789+00:00",
+      "photo_id": "upload-544ab170f2ef345c"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.111700+00:00",
+      "photo_id": "upload-e43088ba7f256095"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.145948+00:00",
+      "photo_id": "upload-a7612f67892b3eab"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.177840+00:00",
+      "photo_id": "upload-9df05175dd5c9421"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.209052+00:00",
+      "photo_id": "upload-37843b18e95115fc"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.241899+00:00",
+      "photo_id": "upload-f67efce37f48d467"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.269720+00:00",
+      "photo_id": "upload-1d09b59aef55ac63"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.302033+00:00",
+      "photo_id": "upload-0f34e66b197d46ef"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T04:58:40.330352+00:00",
+      "photo_id": "upload-fce0d16d57a5ff3f"
+    },
+    {
+      "action": "geometry_reconstructed",
+      "at": "2026-11-14T04:58:44.822047+00:00",
+      "geometry_run_id": "geometry-c716d557f495447eac692fe80126611c",
+      "status": "UNVERIFIED_RESEARCH_CANDIDATE",
+      "registered": 28,
+      "photos": 32,
+      "elapsed_seconds": 4.1578924029599875
+    },
+    {
+      "action": "fusion_reconstructed",
+      "at": "2026-11-14T05:00:11.122643+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "geometry_run_id": "geometry-c716d557f495447eac692fe80126611c",
+      "registered_photos": 28,
+      "track_count": 476,
+      "wall_candidates": 3,
+      "floor_planes": 1,
+      "ambiguous_pairs": 1,
+      "segmentation_seconds": 80.455,
+      "status": "UNVERIFIED_DEVELOPMENT_CANDIDATE"
+    },
+    {
+      "action": "annotation_added",
+      "at": "2026-11-14T05:00:12.021567+00:00",
+      "annotation_id": "ann-73d6b7694675421ab5f0271940576162",
+      "elapsed_ms": 140
+    },
+    {
+      "action": "annotation_added",
+      "at": "2026-11-14T05:00:12.189408+00:00",
+      "annotation_id": "ann-4c2a35aae2ca4b299cdc57994ec5f356",
+      "elapsed_ms": 123
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T05:00:12.404905+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "multiview_scale_solved",
+      "at": "2026-11-14T05:00:12.440750+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "basis": "assumed",
+      "binding_sha256": "76a73caa4e9af46ea277ba877039be4496dd2a7bf28d74623fb3a981736b13c9",
+      "operator": "automation"
+    },
+    {
+      "action": "multiview_candidate_generated",
+      "at": "2026-11-14T05:00:13.678622+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "revision": 1,
+      "surface_ids": [
+        "surface-e416ac030192242f",
+        "surface-c9c0e60f0e4d7af6"
+      ],
+      "operator": "automation"
+    },
+    {
+      "action": "revise",
+      "at": "2026-11-14T05:00:14.322607+00:00",
+      "element_id": "wall-e416ac030192242f",
+      "attribute": "height"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T05:02:14.815950+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "multiview_scale_solved",
+      "at": "2026-11-14T05:02:14.856263+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "basis": "assumed",
+      "binding_sha256": "29a596af473c520296651108a53914cc28bb19ec97653114d0de44dba89edcac",
+      "operator": "automation"
+    },
+    {
+      "action": "multiview_candidate_generated",
+      "at": "2026-11-14T05:02:15.008498+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "revision": 3,
+      "surface_ids": [
+        "surface-e416ac030192242f",
+        "surface-c9c0e60f0e4d7af6"
+      ],
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T05:06:50.238621+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "multiview_scale_solved",
+      "at": "2026-11-14T05:06:50.353363+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "basis": "assumed",
+      "binding_sha256": "29a596af473c520296651108a53914cc28bb19ec97653114d0de44dba89edcac",
+      "operator": "automation"
+    },
+    {
+      "action": "multiview_candidate_generated",
+      "at": "2026-11-14T05:06:50.584382+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "revision": 4,
+      "surface_ids": [
+        "surface-e416ac030192242f",
+        "surface-c9c0e60f0e4d7af6"
+      ],
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T05:08:29.785030+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "multiview_scale_solved",
+      "at": "2026-11-14T05:08:29.897504+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "basis": "assumed",
+      "binding_sha256": "29a596af473c520296651108a53914cc28bb19ec97653114d0de44dba89edcac",
+      "operator": "automation"
+    },
+    {
+      "action": "multiview_candidate_generated",
+      "at": "2026-11-14T05:08:30.135010+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "revision": 5,
+      "surface_ids": [
+        "surface-e416ac030192242f",
+        "surface-c9c0e60f0e4d7af6"
+      ],
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T07:28:22.599044+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "multiview_scale_solved",
+      "at": "2026-11-14T07:28:22.713803+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "basis": "assumed",
+      "binding_sha256": "29a596af473c520296651108a53914cc28bb19ec97653114d0de44dba89edcac",
+      "operator": "automation"
+    },
+    {
+      "action": "multiview_candidate_generated",
+      "at": "2026-11-14T07:28:22.945160+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "revision": 6,
+      "surface_ids": [
+        "surface-e416ac030192242f",
+        "surface-c9c0e60f0e4d7af6"
+      ],
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T07:33:51.102986+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "multiview_scale_solved",
+      "at": "2026-11-14T07:33:51.226722+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "basis": "assumed",
+      "binding_sha256": "29a596af473c520296651108a53914cc28bb19ec97653114d0de44dba89edcac",
+      "operator": "automation"
+    },
+    {
+      "action": "multiview_candidate_generated",
+      "at": "2026-11-14T07:33:51.462939+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "revision": 7,
+      "surface_ids": [
+        "surface-e416ac030192242f",
+        "surface-c9c0e60f0e4d7af6"
+      ],
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T07:34:24.535108+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "multiview_scale_solved",
+      "at": "2026-11-14T07:34:24.583937+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "basis": "assumed",
+      "binding_sha256": "29a596af473c520296651108a53914cc28bb19ec97653114d0de44dba89edcac",
+      "operator": "automation"
+    },
+    {
+      "action": "multiview_candidate_generated",
+      "at": "2026-11-14T07:34:24.820358+00:00",
+      "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "revision": 8,
+      "surface_ids": [
+        "surface-e416ac030192242f",
+        "surface-c9c0e60f0e4d7af6"
+      ],
+      "operator": "automation"
+    }
+  ],
+  "current_revision": 8,
+  "geometry_runs": [
+    {
+      "schema": "worldstate-bim-geometry-candidate/0.1",
+      "provider": "COLMAP/pycolmap",
+      "provider_version": "4.2.1",
+      "status": "UNVERIFIED_RESEARCH_CANDIDATE",
+      "inputs": [
+        {
+          "file": "0000-720c93ea847cc6fb173a9ad8360359abd0a724dca77d63a54d61035bb4638e5c.jpg",
+          "sha256": "720c93ea847cc6fb173a9ad8360359abd0a724dca77d63a54d61035bb4638e5c",
+          "photo_id": "upload-720c93ea847cc6fb"
+        },
+        {
+          "file": "0001-d9ec6b965189347a2a3e5175afe0447196c46470560f50015c02053cdc9bae5e.jpg",
+          "sha256": "d9ec6b965189347a2a3e5175afe0447196c46470560f50015c02053cdc9bae5e",
+          "photo_id": "upload-d9ec6b965189347a"
+        },
+        {
+          "file": "0002-62fa37734d6c053c776e49866d17c4de2e2e0529b00b42d3b35b7226ae5d6efe.jpg",
+          "sha256": "62fa37734d6c053c776e49866d17c4de2e2e0529b00b42d3b35b7226ae5d6efe",
+          "photo_id": "upload-62fa37734d6c053c"
+        },
+        {
+          "file": "0003-c44bb0d3c36640b8c7aaf27ab6f4ee26bd4cf0ad916851ec5788831c6b7c9058.jpg",
+          "sha256": "c44bb0d3c36640b8c7aaf27ab6f4ee26bd4cf0ad916851ec5788831c6b7c9058",
+          "photo_id": "upload-c44bb0d3c36640b8"
+        },
+        {
+          "file": "0004-af1f8670b66063a2b2627568d9e33a062db08e8c7e4058921a1f88a3a8cac034.jpg",
+          "sha256": "af1f8670b66063a2b2627568d9e33a062db08e8c7e4058921a1f88a3a8cac034",
+          "photo_id": "upload-af1f8670b66063a2"
+        },
+        {
+          "file": "0005-88f979658764b8fce12fc45b65871ab1f940c9925da346c9b6e87646d6f0f374.jpg",
+          "sha256": "88f979658764b8fce12fc45b65871ab1f940c9925da346c9b6e87646d6f0f374",
+          "photo_id": "upload-88f979658764b8fc"
+        },
+        {
+          "file": "0006-8e2e9cde4625034a5fbe79b42f174070110c41d02b2135f0316ef7503af1c7e5.jpg",
+          "sha256": "8e2e9cde4625034a5fbe79b42f174070110c41d02b2135f0316ef7503af1c7e5",
+          "photo_id": "upload-8e2e9cde4625034a"
+        },
+        {
+          "file": "0007-97767b7e2b99f9520bb0cff22fd58a0da3734e65f1237ebbb7c5189418471836.jpg",
+          "sha256": "97767b7e2b99f9520bb0cff22fd58a0da3734e65f1237ebbb7c5189418471836",
+          "photo_id": "upload-97767b7e2b99f952"
+        },
+        {
+          "file": "0008-210679990fa5000a4b18280a62d00d80c14a13d824f4519d2a5005196e25733a.jpg",
+          "sha256": "210679990fa5000a4b18280a62d00d80c14a13d824f4519d2a5005196e25733a",
+          "photo_id": "upload-210679990fa5000a"
+        },
+        {
+          "file": "0009-9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2.jpg",
+          "sha256": "9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2",
+          "photo_id": "upload-9bbe04f87acfe1a5"
+        },
+        {
+          "file": "0010-83892f78e8e58d0641fb7b89be6674fd3f1e184f339e377259526499f0f495b0.jpg",
+          "sha256": "83892f78e8e58d0641fb7b89be6674fd3f1e184f339e377259526499f0f495b0",
+          "photo_id": "upload-83892f78e8e58d06"
+        },
+        {
+          "file": "0011-252095ef062ddc32e13cede2d0175a2bc070c3fb678ef75d8feb12741111ae64.jpg",
+          "sha256": "252095ef062ddc32e13cede2d0175a2bc070c3fb678ef75d8feb12741111ae64",
+          "photo_id": "upload-252095ef062ddc32"
+        },
+        {
+          "file": "0012-6225330919873f46d2850a16f719f3158711d1dea970fa0a9ed74ce918c24191.jpg",
+          "sha256": "6225330919873f46d2850a16f719f3158711d1dea970fa0a9ed74ce918c24191",
+          "photo_id": "upload-6225330919873f46"
+        },
+        {
+          "file": "0013-0e9d358c51bc56ab9b25944df60e00b8fae6e93a7271b9a7cf1e6408d7160eb1.jpg",
+          "sha256": "0e9d358c51bc56ab9b25944df60e00b8fae6e93a7271b9a7cf1e6408d7160eb1",
+          "photo_id": "upload-0e9d358c51bc56ab"
+        },
+        {
+          "file": "0014-3ef9a7393cd1da4de40cb986c42c2991d7e24b0e6f5edf6bad760290036dbc62.jpg",
+          "sha256": "3ef9a7393cd1da4de40cb986c42c2991d7e24b0e6f5edf6bad760290036dbc62",
+          "photo_id": "upload-3ef9a7393cd1da4d"
+        },
+        {
+          "file": "0015-8d45a7f36fb4a1b3678a430520de574b71df2c524b3bc35e7b7eda1c742521cb.jpg",
+          "sha256": "8d45a7f36fb4a1b3678a430520de574b71df2c524b3bc35e7b7eda1c742521cb",
+          "photo_id": "upload-8d45a7f36fb4a1b3"
+        },
+        {
+          "file": "0016-3396e2d6f6effc05bbdf75c68400c2157c3e759651fb697feebe5584a3430b98.jpg",
+          "sha256": "3396e2d6f6effc05bbdf75c68400c2157c3e759651fb697feebe5584a3430b98",
+          "photo_id": "upload-3396e2d6f6effc05"
+        },
+        {
+          "file": "0017-b5aeb707686bd3b9154aead99ce87a3dc53261dc30a92e2552ffc30384f13860.jpg",
+          "sha256": "b5aeb707686bd3b9154aead99ce87a3dc53261dc30a92e2552ffc30384f13860",
+          "photo_id": "upload-b5aeb707686bd3b9"
+        },
+        {
+          "file": "0018-0b3b200b0eba0bece14f00745a3c118a3fc0663d26e842ab7864c9cf50f3f1f5.jpg",
+          "sha256": "0b3b200b0eba0bece14f00745a3c118a3fc0663d26e842ab7864c9cf50f3f1f5",
+          "photo_id": "upload-0b3b200b0eba0bec"
+        },
+        {
+          "file": "0019-9a1fc328b545207e2995d73c696079b625b3db405b44c4d4c13c2b3ad1b6ed25.jpg",
+          "sha256": "9a1fc328b545207e2995d73c696079b625b3db405b44c4d4c13c2b3ad1b6ed25",
+          "photo_id": "upload-9a1fc328b545207e"
+        },
+        {
+          "file": "0020-019ca9c1950d43ee027abb2141fc9633085867fd9480907eeaeb0f284242fb8a.jpg",
+          "sha256": "019ca9c1950d43ee027abb2141fc9633085867fd9480907eeaeb0f284242fb8a",
+          "photo_id": "upload-019ca9c1950d43ee"
+        },
+        {
+          "file": "0021-1a837a72719a5157e9a479b9c44506a703417126c1f8d3b803e07b021ac61e10.jpg",
+          "sha256": "1a837a72719a5157e9a479b9c44506a703417126c1f8d3b803e07b021ac61e10",
+          "photo_id": "upload-1a837a72719a5157"
+        },
+        {
+          "file": "0022-c3ef25f26fd0a34372cd2d2a5a60d679fdae9c236ad9d133762a4f5d105e6803.jpg",
+          "sha256": "c3ef25f26fd0a34372cd2d2a5a60d679fdae9c236ad9d133762a4f5d105e6803",
+          "photo_id": "upload-c3ef25f26fd0a343"
+        },
+        {
+          "file": "0023-544ab170f2ef345c34dd40c061a137bd1ce3a65f02737e9b181d327c011cdd4f.jpg",
+          "sha256": "544ab170f2ef345c34dd40c061a137bd1ce3a65f02737e9b181d327c011cdd4f",
+          "photo_id": "upload-544ab170f2ef345c"
+        },
+        {
+          "file": "0024-e43088ba7f256095cc22be89f27b372551bdffc9255b9aba4a7e78f05f551602.jpg",
+          "sha256": "e43088ba7f256095cc22be89f27b372551bdffc9255b9aba4a7e78f05f551602",
+          "photo_id": "upload-e43088ba7f256095"
+        },
+        {
+          "file": "0025-a7612f67892b3eab786e1c6e0db3bb6b18bca776c741039da47d890f2ed10871.jpg",
+          "sha256": "a7612f67892b3eab786e1c6e0db3bb6b18bca776c741039da47d890f2ed10871",
+          "photo_id": "upload-a7612f67892b3eab"
+        },
+        {
+          "file": "0026-9df05175dd5c9421e3d56b08db561990825023c26612f8bba53f2987040bd958.jpg",
+          "sha256": "9df05175dd5c9421e3d56b08db561990825023c26612f8bba53f2987040bd958",
+          "photo_id": "upload-9df05175dd5c9421"
+        },
+        {
+          "file": "0027-37843b18e95115fc2e8baca0760e301a3b25091ea31df998d4b1baafaeb82c61.jpg",
+          "sha256": "37843b18e95115fc2e8baca0760e301a3b25091ea31df998d4b1baafaeb82c61",
+          "photo_id": "upload-37843b18e95115fc"
+        },
+        {
+          "file": "0028-f67efce37f48d4671d7885cd780a771a1c483f9a670c6b065a4760ff0e3a892e.jpg",
+          "sha256": "f67efce37f48d4671d7885cd780a771a1c483f9a670c6b065a4760ff0e3a892e",
+          "photo_id": "upload-f67efce37f48d467"
+        },
+        {
+          "file": "0029-1d09b59aef55ac63b5bf5a22d27360da91c245d55a9d837b27083aecbef40ea5.jpg",
+          "sha256": "1d09b59aef55ac63b5bf5a22d27360da91c245d55a9d837b27083aecbef40ea5",
+          "photo_id": "upload-1d09b59aef55ac63"
+        },
+        {
+          "file": "0030-0f34e66b197d46ef37589a27e85578c58dea3340c6fe50daef9bf15d18b8c994.jpg",
+          "sha256": "0f34e66b197d46ef37589a27e85578c58dea3340c6fe50daef9bf15d18b8c994",
+          "photo_id": "upload-0f34e66b197d46ef"
+        },
+        {
+          "file": "0031-fce0d16d57a5ff3f006f3e2789bfdc67e17d3c8066c4455c564e39e4a3d500cd.jpg",
+          "sha256": "fce0d16d57a5ff3f006f3e2789bfdc67e17d3c8066c4455c564e39e4a3d500cd",
+          "photo_id": "upload-fce0d16d57a5ff3f"
+        }
+      ],
+      "input_camera_assumption": "all images from one camera; user-declared fixed calibration",
+      "supplied_calibration": {
+        "confirmed": true,
+        "fx": 370.44972319567233,
+        "fy": 370.5319905115052,
+        "cx": 371.5,
+        "cy": 563,
+        "source": "Eyeful Tower raf_emptyroom same camera sensor 9; COLMAP undistorted cameras.bin, resized to uploaded dimensions",
+        "source_sha256": "05e702e72fb9076d6fef2eb40e6dbd082ad7615dc381cb2709bace449fec74b7"
+      },
+      "coordinate_frame": "COLMAP arbitrary reconstruction frame",
+      "scale": {
+        "status": "unknown",
+        "unit": "arbitrary"
+      },
+      "timing_seconds": {
+        "feature_extraction": 3.1143650059821084,
+        "matching": 0.40414831100497395,
+        "mapping": 0.6393790859729052,
+        "total": 4.1578924029599875
+      },
+      "registered_cameras": [
+        {
+          "name": "0000-720c93ea847cc6fb173a9ad8360359abd0a724dca77d63a54d61035bb4638e5c.jpg",
+          "center": [
+            -2.573341368608894,
+            0.05614207213180753,
+            -4.881823554639173
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.998594892778926,
+              0.007253663439500943,
+              0.052494042352935526
+            ],
+            [
+              -0.00781828065108823,
+              0.9999136926815166,
+              0.010558488323346084
+            ],
+            [
+              -0.05241292401217624,
+              -0.010954065670784687,
+              0.9985654179079977
+            ]
+          ],
+          "photo_id": "upload-720c93ea847cc6fb"
+        },
+        {
+          "name": "0001-d9ec6b965189347a2a3e5175afe0447196c46470560f50015c02053cdc9bae5e.jpg",
+          "center": [
+            -0.005730369236217179,
+            0.09932850206697948,
+            -4.757502878140504
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9998787434031481,
+              0.0024534284354226863,
+              0.015377879549986654
+            ],
+            [
+              -0.002704113973419401,
+              0.9998634543527863,
+              0.016302159897761903
+            ],
+            [
+              -0.015335783584818751,
+              -0.01634176669230404,
+              0.99974884866311
+            ]
+          ],
+          "photo_id": "upload-d9ec6b965189347a"
+        },
+        {
+          "name": "0002-62fa37734d6c053c776e49866d17c4de2e2e0529b00b42d3b35b7226ae5d6efe.jpg",
+          "center": [
+            1.9045799811062931,
+            0.04901110207290011,
+            -4.657323256011044
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9998077111075788,
+              0.006708584241088811,
+              0.018426494710182786
+            ],
+            [
+              -0.006962892825155658,
+              0.9998809188180904,
+              0.013771939115342614
+            ],
+            [
+              -0.018331910247695826,
+              -0.013897592632233932,
+              0.999735363976737
+            ]
+          ],
+          "photo_id": "upload-62fa37734d6c053c"
+        },
+        {
+          "name": "0003-c44bb0d3c36640b8c7aaf27ab6f4ee26bd4cf0ad916851ec5788831c6b7c9058.jpg",
+          "center": [
+            -0.37786879737260937,
+            0.052906095191288166,
+            -3.233732882911587
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999881298878832,
+              -0.003943609015920449,
+              0.0028614736174886355
+            ],
+            [
+              0.0039028401131492472,
+              0.9998927488619348,
+              0.014115899276166369
+            ],
+            [
+              -0.002916834308839931,
+              -0.01410456384484228,
+              0.999896271298359
+            ]
+          ],
+          "photo_id": "upload-c44bb0d3c36640b8"
+        },
+        {
+          "name": "0004-af1f8670b66063a2b2627568d9e33a062db08e8c7e4058921a1f88a3a8cac034.jpg",
+          "center": [
+            -2.6775586322543354,
+            0.04956096140504174,
+            -3.2305583577675683
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9995174062310157,
+              0.0017266393625561234,
+              0.031015695345008004
+            ],
+            [
+              -0.0020959722408846948,
+              0.9999272410557268,
+              0.011879372670637815
+            ],
+            [
+              -0.030992927283303204,
+              -0.011938647795882398,
+              0.9994483013879296
+            ]
+          ],
+          "photo_id": "upload-af1f8670b66063a2"
+        },
+        {
+          "name": "0005-88f979658764b8fce12fc45b65871ab1f940c9925da346c9b6e87646d6f0f374.jpg",
+          "center": [
+            -1.828947675079976,
+            0.04429405115848356,
+            -2.4474902683448256
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9991444218281547,
+              0.008832244329896636,
+              -0.040403165591070954
+            ],
+            [
+              -0.008321035520113212,
+              0.9998834097151276,
+              0.012803411433024391
+            ],
+            [
+              0.040511537832517604,
+              -0.012456260937668825,
+              0.9991014247141764
+            ]
+          ],
+          "photo_id": "upload-88f979658764b8fc"
+        },
+        {
+          "name": "0006-8e2e9cde4625034a5fbe79b42f174070110c41d02b2135f0316ef7503af1c7e5.jpg",
+          "center": [
+            0.7108394986954267,
+            0.03428040772360186,
+            -2.513104919937212
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9991796812298238,
+              -0.0003673652436571397,
+              -0.04049481028780574
+            ],
+            [
+              0.000980472437184873,
+              0.9998851818185844,
+              0.015121569145304988
+            ],
+            [
+              0.04048460560839818,
+              -0.015148868683636803,
+              0.9990653174274134
+            ]
+          ],
+          "photo_id": "upload-8e2e9cde4625034a"
+        },
+        {
+          "name": "0007-97767b7e2b99f9520bb0cff22fd58a0da3734e65f1237ebbb7c5189418471836.jpg",
+          "center": [
+            -2.3894847277488984,
+            0.04269953976506367,
+            -0.8744848489603784
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.999912792379671,
+              0.0026898117133547167,
+              0.012929522359144718
+            ],
+            [
+              -0.0028771054101987582,
+              0.9998908891377887,
+              0.014489033221750441
+            ],
+            [
+              -0.012889138836537082,
+              -0.014524969266373087,
+              0.9998114299045913
+            ]
+          ],
+          "photo_id": "upload-97767b7e2b99f952"
+        },
+        {
+          "name": "0008-210679990fa5000a4b18280a62d00d80c14a13d824f4519d2a5005196e25733a.jpg",
+          "center": [
+            0.45769379139505234,
+            -0.013209618573168184,
+            -0.584651010248972
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999510307084376,
+              -0.0006823624096093986,
+              -0.009872718302229027
+            ],
+            [
+              0.0008051740387768631,
+              0.9999222851727823,
+              0.012440872542087289
+            ],
+            [
+              0.009863461861866539,
+              -0.012448212577841596,
+              0.9998738691073571
+            ]
+          ],
+          "photo_id": "upload-210679990fa5000a"
+        },
+        {
+          "name": "0009-9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2.jpg",
+          "center": [
+            3.3774554183043004,
+            0.005789657752948449,
+            -0.6332726605111078
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9993714248053873,
+              -0.0018122272485750057,
+              -0.035404394004836505
+            ],
+            [
+              0.002460009225403941,
+              0.9998302154660765,
+              0.018261670122690657
+            ],
+            [
+              0.03536528859010072,
+              -0.018337286425711065,
+              0.9992062050895603
+            ]
+          ],
+          "photo_id": "upload-9bbe04f87acfe1a5"
+        },
+        {
+          "name": "0010-83892f78e8e58d0641fb7b89be6674fd3f1e184f339e377259526499f0f495b0.jpg",
+          "center": [
+            6.331175439774889,
+            0.021988367182443742,
+            -0.8176503192924484
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999867614967017,
+              -0.005108718652740133,
+              0.0006146747641628404
+            ],
+            [
+              0.005097897697209121,
+              0.9998512366197698,
+              0.01647774465714132
+            ],
+            [
+              -0.0006987634845522083,
+              -0.01647439296739957,
+              0.9998640438109315
+            ]
+          ],
+          "photo_id": "upload-83892f78e8e58d06"
+        },
+        {
+          "name": "0011-252095ef062ddc32e13cede2d0175a2bc070c3fb678ef75d8feb12741111ae64.jpg",
+          "center": [
+            4.333361131178862,
+            -0.013559914025523341,
+            0.09453311454042819
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9997869741229578,
+              0.002954401213743962,
+              -0.020427380828884116
+            ],
+            [
+              -0.0025310430209000176,
+              0.9997821156758402,
+              0.020719917856188073
+            ],
+            [
+              0.020484144973280854,
+              -0.0206638013978323,
+              0.9995766139303703
+            ]
+          ],
+          "photo_id": "upload-252095ef062ddc32"
+        },
+        {
+          "name": "0012-6225330919873f46d2850a16f719f3158711d1dea970fa0a9ed74ce918c24191.jpg",
+          "center": [
+            1.4321880619308551,
+            -0.05934337217070734,
+            -0.024108340051996132
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9998841880787953,
+              -0.000986294423565343,
+              -0.015186759144676123
+            ],
+            [
+              0.001146204053352928,
+              0.9999439596035441,
+              0.01052444148892842
+            ],
+            [
+              0.015175527874721106,
+              -0.010540629758028901,
+              0.9998292846671514
+            ]
+          ],
+          "photo_id": "upload-6225330919873f46"
+        },
+        {
+          "name": "0013-0e9d358c51bc56ab9b25944df60e00b8fae6e93a7271b9a7cf1e6408d7160eb1.jpg",
+          "center": [
+            -1.315774237981367,
+            0.005918909348007089,
+            -0.09065535450229821
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9997002257544022,
+              -0.00046690522974377066,
+              0.024479391865478543
+            ],
+            [
+              0.00011649464594450101,
+              0.9998975428706929,
+              0.0143139858232555
+            ],
+            [
+              -0.02448356705210018,
+              -0.01430684314086553,
+              0.9995978537310631
+            ]
+          ],
+          "photo_id": "upload-0e9d358c51bc56ab"
+        },
+        {
+          "name": "0014-3ef9a7393cd1da4de40cb986c42c2991d7e24b0e6f5edf6bad760290036dbc62.jpg",
+          "center": [
+            -3.2075469206578617,
+            0.0460761461568904,
+            -0.023433167889966064
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9993490054771927,
+              -0.005885761245756736,
+              0.03559386276176895
+            ],
+            [
+              0.00542093826710547,
+              0.9998989519177177,
+              0.013141513693405216
+            ],
+            [
+              -0.03566761388220308,
+              -0.012940006507250038,
+              0.9992799295250268
+            ]
+          ],
+          "photo_id": "upload-3ef9a7393cd1da4d"
+        },
+        {
+          "name": "0015-8d45a7f36fb4a1b3678a430520de574b71df2c524b3bc35e7b7eda1c742521cb.jpg",
+          "center": [
+            -1.227711893016939,
+            -0.017496723739870202,
+            0.7509275773649728
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9992041966580697,
+              0.001031906959233712,
+              0.03987365733073592
+            ],
+            [
+              -0.0016459169795180178,
+              0.9998805332449237,
+              0.015369131242321277
+            ],
+            [
+              -0.039853034240795254,
+              -0.015422529165952213,
+              0.9990865234082218
+            ]
+          ],
+          "photo_id": "upload-8d45a7f36fb4a1b3"
+        },
+        {
+          "name": "0016-3396e2d6f6effc05bbdf75c68400c2157c3e759651fb697feebe5584a3430b98.jpg",
+          "center": [
+            -3.0847052891579323,
+            -0.01359544077558486,
+            1.0730624946579455
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9998333239142426,
+              -0.004100195117344108,
+              0.017790806350382708
+            ],
+            [
+              0.0038091642482364456,
+              0.9998588831860961,
+              0.016361661944398514
+            ],
+            [
+              -0.017855381774889816,
+              -0.016291166743131958,
+              0.9997078489377886
+            ]
+          ],
+          "photo_id": "upload-3396e2d6f6effc05"
+        },
+        {
+          "name": "0017-b5aeb707686bd3b9154aead99ce87a3dc53261dc30a92e2552ffc30384f13860.jpg",
+          "center": [
+            -0.9847740723838072,
+            -0.02813320536341852,
+            0.8420069949502862
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999984748577968,
+              0.00045548387504058076,
+              -0.0016860653960866555
+            ],
+            [
+              -0.00043287297142972203,
+              0.9999103015626514,
+              0.013386614578683516
+            ],
+            [
+              0.0016920115457373325,
+              -0.013385864310054636,
+              0.9999089737239095
+            ]
+          ],
+          "photo_id": "upload-b5aeb707686bd3b9"
+        },
+        {
+          "name": "0018-0b3b200b0eba0bece14f00745a3c118a3fc0663d26e842ab7864c9cf50f3f1f5.jpg",
+          "center": [
+            1.3574265475666012,
+            -0.040411019227395394,
+            0.859156597619837
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9996522761179066,
+              -0.002508486601020324,
+              0.026249463751876007
+            ],
+            [
+              0.0021171197749531375,
+              0.9998863492360992,
+              0.014926701416052613
+            ],
+            [
+              -0.02628392391076822,
+              -0.014865937786698362,
+              0.9995439756396789
+            ]
+          ],
+          "photo_id": "upload-0b3b200b0eba0bec"
+        },
+        {
+          "name": "0019-9a1fc328b545207e2995d73c696079b625b3db405b44c4d4c13c2b3ad1b6ed25.jpg",
+          "center": [
+            3.837761774827847,
+            -0.05624491562091456,
+            0.8384380912302893
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999552455170769,
+              -0.0029729545995223787,
+              -0.008981564664999846
+            ],
+            [
+              0.0031280015768253688,
+              0.9998454791782577,
+              0.017298363302220936
+            ],
+            [
+              0.00892874957750373,
+              -0.017325683471350408,
+              0.9998100310175092
+            ]
+          ],
+          "photo_id": "upload-9a1fc328b545207e"
+        },
+        {
+          "name": "0021-1a837a72719a5157e9a479b9c44506a703417126c1f8d3b803e07b021ac61e10.jpg",
+          "center": [
+            3.483538892723411,
+            -0.040680955032142106,
+            2.133621476337137
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999150312049075,
+              -0.0026754861740218654,
+              0.012758218693120126
+            ],
+            [
+              0.0025475927980293613,
+              0.9999464517119079,
+              0.010030128598400063
+            ],
+            [
+              -0.012784370982738685,
+              -0.009996773604400157,
+              0.999868303516057
+            ]
+          ],
+          "photo_id": "upload-1a837a72719a5157"
+        },
+        {
+          "name": "0022-c3ef25f26fd0a34372cd2d2a5a60d679fdae9c236ad9d133762a4f5d105e6803.jpg",
+          "center": [
+            1.1281439390169417,
+            -0.04475440686786765,
+            2.1871439619493733
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999777423297294,
+              -0.004358808175827134,
+              0.00505130046856612
+            ],
+            [
+              0.0043418129088042936,
+              0.9999848936462252,
+              0.0033706290232687615
+            ],
+            [
+              -0.005065916087178523,
+              -0.0033486221993386874,
+              0.9999815614417916
+            ]
+          ],
+          "photo_id": "upload-c3ef25f26fd0a343"
+        },
+        {
+          "name": "0023-544ab170f2ef345c34dd40c061a137bd1ce3a65f02737e9b181d327c011cdd4f.jpg",
+          "center": [
+            -1.5650978079177071,
+            -0.01638312239007211,
+            1.9027676433913752
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9997866402780291,
+              -0.00045851898091090517,
+              0.02065099711672469
+            ],
+            [
+              0.00020603403647191323,
+              0.9999252292476006,
+              0.012226751985261257
+            ],
+            [
+              -0.020655059223992606,
+              -0.012219888480563946,
+              0.9997119799492131
+            ]
+          ],
+          "photo_id": "upload-544ab170f2ef345c"
+        },
+        {
+          "name": "0024-e43088ba7f256095cc22be89f27b372551bdffc9255b9aba4a7e78f05f551602.jpg",
+          "center": [
+            -2.511550293409629,
+            -0.0017410634446084123,
+            2.769502552158129
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9994792709052571,
+              -0.006022728996243717,
+              0.031700374857932444
+            ],
+            [
+              0.00602961766735153,
+              0.9999818142827993,
+              -0.0001217146933385327
+            ],
+            [
+              -0.031699065309267284,
+              0.00031279245326150927,
+              0.9994974094110499
+            ]
+          ],
+          "photo_id": "upload-e43088ba7f256095"
+        },
+        {
+          "name": "0025-a7612f67892b3eab786e1c6e0db3bb6b18bca776c741039da47d890f2ed10871.jpg",
+          "center": [
+            -0.6702623336574663,
+            -0.019078740139322942,
+            2.751099891443999
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.999961214116905,
+              0.004496179472946329,
+              0.007573284095584704
+            ],
+            [
+              -0.004507997437095098,
+              0.9999886467405438,
+              0.0015441337775927348
+            ],
+            [
+              -0.007566255411531136,
+              -0.0015782142322938429,
+              0.9999701300633357
+            ]
+          ],
+          "photo_id": "upload-a7612f67892b3eab"
+        },
+        {
+          "name": "0026-9df05175dd5c9421e3d56b08db561990825023c26612f8bba53f2987040bd958.jpg",
+          "center": [
+            1.5639852584152951,
+            -0.04888393432147815,
+            2.9282049907856336
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999882455791247,
+              -0.0006086996710655851,
+              0.004810217073538465
+            ],
+            [
+              0.0006158731903800156,
+              0.999998700346425,
+              -0.0014899683467250165
+            ],
+            [
+              -0.004809303878680099,
+              0.0014929133167454788,
+              0.9999873208226349
+            ]
+          ],
+          "photo_id": "upload-9df05175dd5c9421"
+        },
+        {
+          "name": "0030-0f34e66b197d46ef37589a27e85578c58dea3340c6fe50daef9bf15d18b8c994.jpg",
+          "center": [
+            0.9129421202361097,
+            -0.04023809569810312,
+            3.893696796502462
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9999078199482848,
+              -0.0018395010809974363,
+              -0.013452428852869028
+            ],
+            [
+              0.0017439282383409536,
+              0.9999731831242551,
+              -0.007112787543890417
+            ],
+            [
+              0.013465152081131904,
+              0.007088671816215991,
+              0.9998842135024004
+            ]
+          ],
+          "photo_id": "upload-0f34e66b197d46ef"
+        },
+        {
+          "name": "0031-fce0d16d57a5ff3f006f3e2789bfdc67e17d3c8066c4455c564e39e4a3d500cd.jpg",
+          "center": [
+            -2.038453075550287,
+            -0.014358998158113858,
+            3.676676431282663
+          ],
+          "rotation_camera_from_world": [
+            [
+              0.9996129685648536,
+              -0.006497967940920491,
+              0.02704975951094283
+            ],
+            [
+              0.006685892696696059,
+              0.9999540997920833,
+              -0.006862736178277587
+            ],
+            [
+              -0.027003924081683735,
+              0.007040931873207075,
+              0.9996105308381598
+            ]
+          ],
+          "photo_id": "upload-fce0d16d57a5ff3f"
+        }
+      ],
+      "sparse_points": 476,
+      "limitations": [
+        "no independent metric scale or ground truth",
+        "self-calibration and sparse geometry unverified",
+        "not a BIM or wall-instance reconstruction",
+        "registration below 3 images or 50% is marked insufficient; this is not a release criterion"
+      ],
+      "mean_reprojection_error_px": 0.7491855880044548,
+      "point_cloud_file": "points.ply",
+      "camera_parameters": [
+        {
+          "model": "CameraModelId.PINHOLE",
+          "width": 743,
+          "height": 1126,
+          "params": [
+            370.44972319567233,
+            370.5319905115052,
+            371.5,
+            563.0
+          ]
+        }
+      ],
+      "id": "geometry-c716d557f495447eac692fe80126611c",
+      "created_at": "2026-11-14T04:58:44.820283+00:00",
+      "reconstruction_files": [
+        {
+          "file": "cameras.bin",
+          "sha256": "a63777be5686b6261480de82762e24d51ae26ad29a39ef41d5261e32d50e51f5"
+        },
+        {
+          "file": "frames.bin",
+          "sha256": "e524271f88dc0065932ec81e11778e185736ce48ba283bef9f8a06b9ca1e2f78"
+        },
+        {
+          "file": "images.bin",
+          "sha256": "31b2c747ac5c16cef4f33721b3de287d5e3333a3705d8ff49cf1c9f2272c25f8"
+        },
+        {
+          "file": "points3D.bin",
+          "sha256": "71b23aee404198b3cba07190142885811ae0c6e8f5c13fbdd98885dba1fb02f2"
+        },
+        {
+          "file": "rigs.bin",
+          "sha256": "73e4d5f0da0a84a5711b46ae716a149f1532832f95bb09b4b01e73cf2c5afbe9"
+        }
+      ]
+    }
+  ],
+  "fusion_runs": [
+    {
+      "id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+      "geometry_run_id": "geometry-c716d557f495447eac692fe80126611c",
+      "sha256": "ba031e0e696b2a55600feb4fd64ca56c78a3f18f3212bb8bf6e8f5d3a4cdd5fd",
+      "registered_photos": 28,
+      "track_count": 476,
+      "wall_candidates": 3,
+      "floor_planes": 1,
+      "ambiguous_pairs": 1,
+      "segmentation_seconds": 80.455,
+      "status": "UNVERIFIED_DEVELOPMENT_CANDIDATE"
+    }
+  ],
+  "fusion_scale": {
+    "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
+    "anchor": {
+      "schema": "worldstate-multiview-scale-anchor/0.1",
+      "confirmed": true,
+      "basis": "assumed",
+      "distance_m": 2.3805946423053923,
+      "measurement_uncertainty_m": null,
+      "description": "SCRIPTED DEBUG: assumed from correlated same-scene Metashape camera baseline; selected feature points are not independently measured ruler endpoints",
+      "annotation_ids": [
+        "ann-4c2a35aae2ca4b299cdc57994ec5f356",
+        "ann-73d6b7694675421ab5f0271940576162"
+      ],
+      "endpoints": [
+        {
+          "id": "wall-1-scale-a",
+          "observations": [
+            {
+              "image_id": 24,
+              "photo_sha256": "c3ef25f26fd0a34372cd2d2a5a60d679fdae9c236ad9d133762a4f5d105e6803",
+              "pixel_xy": [
+                293,
+                740
+              ]
+            },
+            {
+              "image_id": 27,
+              "photo_sha256": "9df05175dd5c9421e3d56b08db561990825023c26612f8bba53f2987040bd958",
+              "pixel_xy": [
+                238,
+                770
+              ]
+            }
+          ]
+        },
+        {
+          "id": "wall-1-scale-b",
+          "observations": [
+            {
+              "image_id": 24,
+              "photo_sha256": "c3ef25f26fd0a34372cd2d2a5a60d679fdae9c236ad9d133762a4f5d105e6803",
+              "pixel_xy": [
+                133,
+                373
+              ]
+            },
+            {
+              "image_id": 27,
+              "photo_sha256": "9df05175dd5c9421e3d56b08db561990825023c26612f8bba53f2987040bd958",
+              "pixel_xy": [
+                42,
+                335
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "solution": {
+      "schema": "worldstate-multiview-scale-solution/0.1",
+      "binding_sha256": "29a596af473c520296651108a53914cc28bb19ec97653114d0de44dba89edcac",
+      "metres_per_sfm_unit": 0.4787532373378629,
+      "reference_distance_arbitrary": 4.9724878217906925,
+      "reference_distance_m": 2.3805946423053923,
+      "measurement_uncertainty_m": null,
+      "basis": "assumed",
+      "description": "SCRIPTED DEBUG: assumed from correlated same-scene Metashape camera baseline; selected feature points are not independently measured ruler endpoints",
+      "endpoint_solutions": [
+        {
+          "xyz": [
+            0.11214612718024321,
+            2.1911169063335105,
+            6.905214739127919
+          ],
+          "observations": [
+            {
+              "image_id": 24,
+              "pixel_xy": [
+                293.0,
+                740.0
+              ],
+              "reprojection_error_px": 0.464177813573899
+            },
+            {
+              "image_id": 27,
+              "pixel_xy": [
+                238.0,
+                770.0
+              ],
+              "reprojection_error_px": 0.5887150738284429
+            }
+          ],
+          "max_reprojection_error_px": 0.5887150738284429,
+          "rms_reprojection_error_px": 0.5301162517632686,
+          "max_parallax_degrees": 7.697145203884469,
+          "uncertainty": "NOT_QUANTIFIED",
+          "status": "MULTIVIEW_TRIANGULATED_CORRESPONDENCE_UNVERIFIED"
+        },
+        {
+          "xyz": [
+            -1.8353316449509636,
+            -2.3802030907307308,
+            6.715480848238078
+          ],
+          "observations": [
+            {
+              "image_id": 24,
+              "pixel_xy": [
+                133.0,
+                373.0
+              ],
+              "reprojection_error_px": 0.06031011216235667
+            },
+            {
+              "image_id": 27,
+              "pixel_xy": [
+                42.0,
+                335.0
+              ],
+              "reprojection_error_px": 0.08107831689366336
+            }
+          ],
+          "max_reprojection_error_px": 0.08107831689366336,
+          "rms_reprojection_error_px": 0.07145279245538742,
+          "max_parallax_degrees": 8.055849243425687,
+          "uncertainty": "NOT_QUANTIFIED",
+          "status": "MULTIVIEW_TRIANGULATED_CORRESPONDENCE_UNVERIFIED"
+        }
+      ],
+      "measurement_only_scale_uncertainty_m_per_unit": null,
+      "applicability": "Uniform scale for the bound COLMAP reconstruction and its registered geometry only; not georeferenced.",
+      "fitted_constraint_residual_m": 0.0,
+      "uncertainty": "measurement uncertainty is unknown; triangulation and scale uncertainty NOT_QUANTIFIED",
+      "verification": "USER_DECLARATION_NOT_INDEPENDENTLY_VERIFIED",
+      "warning": "The fitted anchor residual is tautological, not independent accuracy."
+    }
+  }
+}

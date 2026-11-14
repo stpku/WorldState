@@ -201,6 +201,10 @@ class Handler(BaseHTTPRequestHandler):
                     "photo_project":self.server.project})
                 elif path=="/api/export/model.ifc":self.send_data(200,(self.server.model_dir/"model.ifc").read_bytes(),"application/octet-stream")
                 elif path=="/api/export/model.json":self.send_json(200,self.server.model)
+                elif path.startswith("/api/fusion/"):
+                    ident=path.rsplit("/",1)[-1]
+                    result=self.read_fusion(ident)
+                    self.send_json(200,result)
                 elif path.startswith("/api/vision/overlay/"):
                     ident=path.rsplit("/",1)[-1]
                     if not re.fullmatch(r"vision-[0-9a-f]{32}",ident):raise ValueError("视觉结果编号无效")
@@ -234,6 +238,9 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/upload":self.upload(body);return
                 if path=="/api/project":self.create_project(body);return
                 if path=="/api/geometry/reconstruct":self.reconstruct_photos(body);return
+                if path=="/api/fusion/reconstruct":self.reconstruct_fusion(body);return
+                if path=="/api/fusion/scale":self.solve_fusion_scale(body);return
+                if path=="/api/fusion/generate":self.generate_fusion_room(body);return
                 if path=="/api/vision/analyze":self.analyze_photo(body);return
                 if path=="/api/vision/decision":self.decide_candidate(body);return
                 if path=="/api/vision/accept-segments":self.accept_segments(body);return
@@ -282,6 +289,151 @@ class Handler(BaseHTTPRequestHandler):
         self.server.record("project_created")
         self.send_json(201,self.server.project)
 
+    def read_fusion(self, ident: str) -> dict:
+        if not isinstance(ident,str) or not re.fullmatch(r"fusion-[0-9a-f]{32}",ident):raise ValueError("融合结果编号无效")
+        run=next((x for x in (self.server.project or {}).get("fusion_runs",[]) if x.get("id")==ident),None)
+        directory=self.server.workspace/"fusion"/ident;path=directory/"fusion.json"
+        if not run or directory.is_symlink() or path.is_symlink() or not path.is_file():raise ValueError("融合结果不可用")
+        if hashlib.sha256(path.read_bytes()).hexdigest()!=run.get("sha256"):raise ValueError("融合结果哈希不符")
+        return json.loads(path.read_text())
+
+    def reconstruct_fusion(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        if self.server.vision_model is None:raise ValueError("请使用 --vision-model 配置本地视觉模型")
+        geometry=next((x for x in project.get("geometry_runs",[]) if x.get("id")==body.get("geometry_run_id")),None)
+        if not geometry or geometry.get("status")!="UNVERIFIED_RESEARCH_CANDIDATE":raise ValueError("请先获得足够已注册照片的多视图结果")
+        if project['geometry_runs'][-1]['id']!=geometry['id']:raise ValueError('相机结果已更新，请融合最新重建')
+        if project.get('fusion_camera_input_changed') and project.get('fusion_camera_dirty_geometry_id')==geometry['id']:
+            raise ValueError('相机输入已改变，请先重新恢复相机')
+        camera_inputs=body.get('camera_inputs')
+        if camera_inputs is not None and not isinstance(camera_inputs,dict):raise ValueError('相机输入格式无效')
+        camera_keys=('fx','fy','cx','cy','description','calibration_sha256','geometry_run_id')
+        camera_snapshot={k:camera_inputs.get(k) for k in camera_keys} if camera_inputs is not None else None
+        gid=geometry['id']
+        if not re.fullmatch(r"geometry-[0-9a-f]{32}",gid):raise ValueError("几何结果编号无效")
+        root=self.server.workspace/"geometry"/gid;sparse=root/"sparse"/"0";images=root/"input"
+        if root.is_symlink() or sparse.is_symlink() or images.is_symlink() or not sparse.is_dir() or not images.is_dir():
+            raise ValueError("多视图几何或照片不可用")
+        expected_files=geometry.get('reconstruction_files')
+        if not expected_files:raise ValueError('旧几何结果缺少完整哈希，请重新运行相机恢复')
+        actual_files={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sparse.glob('*.bin') if not p.is_symlink()}
+        if actual_files!={x['file']:x['sha256'] for x in expected_files}:raise ValueError('三维重建文件哈希不符')
+        for item in geometry.get('inputs',[]):
+            name=item.get('file','');path=images/name
+            if Path(name).name!=name or path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=item.get('sha256'):
+                raise ValueError('多视图原始照片哈希不符')
+        if len(project.get("fusion_runs",[]))>=10:raise ValueError("融合次数已达工作区上限")
+        parent=self.server.workspace/"fusion"
+        if parent.is_symlink():raise ValueError("融合目录不能是符号链接")
+        parent.mkdir(mode=0o700,exist_ok=True);ident="fusion-"+uuid.uuid4().hex;target=parent/ident;target.mkdir(mode=0o700)
+        try:
+            from .multiview_fusion import infer_masks,fuse_multiview
+            masks=infer_masks(sparse,images,self.server.vision_model,target/"masks")
+            result=fuse_multiview(sparse,images,target/"masks")
+            if project.get('fusion_runs'):
+                from .multiview_fusion import associate_surface_identities
+                previous=self.read_fusion(project['fusion_runs'][-1]['id'])
+                association=associate_surface_identities(previous,result)
+                for match in association['matches']:
+                    surface=next(x for x in result['wall_surfaces'] if x['id']==match['current_surface_id'])
+                    surface['persistent_id']=match['persistent_id']
+                result['previous_association']=association
+        except ImportError as exc:raise ValueError("缺少多视图或视觉模型依赖") from exc
+        except (ValueError,RuntimeError,OSError) as exc:
+            self.server.record("fusion_failed",fusion_id=ident,reason=str(exc)[:300]);raise
+        result['id']=ident;result['geometry_run_id']=gid;result['segmentation_seconds']=masks['runtime_seconds'];result['camera_calibration']=geometry.get('supplied_calibration')
+        output=target/"fusion.json";_write_json(output,result)
+        summary={'id':ident,'geometry_run_id':gid,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
+            'registered_photos':len(result['cameras']),'track_count':len(result['tracks']),
+            'wall_candidates':len(result['wall_surfaces']),'floor_planes':len(result['floor_planes']),
+            'ambiguous_pairs':len(result['ambiguous_surface_pairs']),'segmentation_seconds':masks['runtime_seconds'],
+            'camera_input_snapshot':camera_snapshot,
+            'status':'UNVERIFIED_DEVELOPMENT_CANDIDATE'}
+        project.setdefault('fusion_runs',[]).append(summary)
+        project['fusion_camera_input_changed']=False
+        project.pop('fusion_camera_dirty_geometry_id',None)
+        self.server.record('fusion_reconstructed',fusion_id=ident,**{k:v for k,v in summary.items() if k not in {'id','sha256'}})
+        self.send_json(201,summary)
+
+    def require_current_fusion(self, fusion: dict) -> None:
+        project=self.server.project
+        geometry_runs=(project or {}).get('geometry_runs',[])
+        if not geometry_runs or fusion.get('geometry_run_id')!=geometry_runs[-1].get('id'):
+            raise ValueError('相机结果已更新，请重新进行多视图融合')
+        if project.get('fusion_camera_input_changed'):
+            raise ValueError('相机输入已改变，请重新恢复相机并进行多视图融合')
+
+    def fusion_anchor(self, fusion: dict, reference: dict, *, confirmed: bool) -> dict:
+        project=self.server.project
+        wall=reference.get('wall_index')
+        if isinstance(wall,bool) or not isinstance(wall,int) or wall<1:raise ValueError('请选择尺度标注关联的墙段编号')
+        anns=[a for a in project['annotations'] if a.get('kind')=='scale' and a.get('wall_id')==f'wall-{wall}']
+        if len(anns)<2:raise ValueError('请在至少两张已注册照片中按相同顺序标记尺度的两个物理端点')
+        photos={p['id']:p for p in self.server.uploaded};cameras={c['sha256']:c for c in fusion['cameras']}
+        observations=[[],[]];seen=set();annotation_ids=[]
+        for ann in anns:
+            photo=photos.get(ann['photo_id']);camera=cameras.get(photo['sha256']) if photo else None
+            if camera is None:raise ValueError('尺度标注必须使用已注册照片')
+            path=self.server.uploads/(photo['sha256']+photo['extension'])
+            if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=photo['sha256']:
+                raise ValueError('尺度照片丢失或哈希不符')
+            if camera['image_id'] in seen:raise ValueError('同一照片只能提供一组尺度端点')
+            if len(ann.get('points',[]))!=2:raise ValueError('尺度标注需要两个端点')
+            seen.add(camera['image_id']);annotation_ids.append(ann['id'])
+            for i,point in enumerate(ann['points']):
+                observations[i].append({'image_id':camera['image_id'],'photo_sha256':photo['sha256'],'pixel_xy':point})
+        for obs in observations:obs.sort(key=lambda x:x['image_id'])
+        return {'schema':'worldstate-multiview-scale-anchor/0.1','confirmed':confirmed,
+            'basis':reference.get('basis'),'distance_m':reference.get('length_m'),
+            'measurement_uncertainty_m':reference.get('measurement_uncertainty_m'),
+            'description':reference.get('description'),'annotation_ids':sorted(annotation_ids),
+            'endpoints':[{'id':f'wall-{wall}-scale-a','observations':observations[0]},
+                         {'id':f'wall-{wall}-scale-b','observations':observations[1]}]}
+
+    def solve_fusion_scale(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        fusion=self.read_fusion(body.get('fusion_id'))
+        self.require_current_fusion(fusion)
+        anchor=self.fusion_anchor(fusion,project.get('reference') or {},confirmed=body.get('confirmed_endpoints'))
+        from .multiview_fusion import solve_multiview_scale
+        solution=solve_multiview_scale(fusion,anchor)
+        project['fusion_scale']={'fusion_id':fusion['id'],'anchor':anchor,'solution':solution}
+        self.server.record('multiview_scale_solved',fusion_id=fusion['id'],basis=anchor['basis'],
+                           binding_sha256=solution['binding_sha256'],operator=project.get('operator_kind','user'))
+        self.send_json(200,solution)
+
+    def generate_fusion_room(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        fusion=self.read_fusion(body.get('fusion_id'));stored=project.get('fusion_scale') or {}
+        self.require_current_fusion(fusion)
+        photos={p['sha256']:p for p in self.server.uploaded}
+        for camera in fusion['cameras']:
+            photo=photos.get(camera['sha256']);path=self.server.uploads/(photo['sha256']+photo['extension']) if photo else None
+            if not photo or path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=camera['sha256']:
+                raise ValueError('融合来源照片丢失或哈希不符')
+        if stored.get('fusion_id')!=fusion['id']:raise ValueError('请先求解当前融合结果的多视图尺度')
+        if self.server.model is not None and body.get('confirm_regeneration') is not True:
+            raise ValueError('重新生成会替换当前几何，请先确认；旧版本会保留')
+        anchor=self.fusion_anchor(fusion,project.get('reference') or {},confirmed=True)
+        from .multiview_fusion import build_multiview_room
+        model=build_multiview_room(fusion,anchor,stored.get('solution') or {},body.get('surface_ids'),
+            project_id=project['id'],assumed_thickness_m=(project.get('reference') or {}).get('thickness_m'),
+            confirmed_candidates=body.get('confirmed_candidates'),allow_assumed_scale=body.get('allow_assumed_scale') is True,
+            operator_kind=project.get('operator_kind','user'))
+        before=self.server.model
+        if before:
+            model['revision']=before['revision']+1
+            model['history']=before.get('history',[])+[{'revision':model['revision'],'action':'regenerated_from_multiview',
+                'warning':'surface identity must be re-associated after a new SfM solve'}]
+        target=self.server.workspace/f"revision-{model['revision']:03}";save_version(model,target)
+        self.server.model,self.server.model_dir=model,target;project['current_revision']=model['revision']
+        self.server.record('multiview_candidate_generated',fusion_id=fusion['id'],revision=model['revision'],
+                           surface_ids=body['surface_ids'],operator=project.get('operator_kind','user'))
+        self.send_json(201,{'revision':model['revision'],'model':model,'validation':model['validation']})
+
     def reconstruct_photos(self, body: dict) -> None:
         project=self.server.project
         if project is None:raise ValueError("请先创建房间项目")
@@ -311,13 +463,18 @@ class Handler(BaseHTTPRequestHandler):
             names.append(filename);photo_by_name[filename]=photo["id"]
         try:
             from .colmap_provider import reconstruct_uncalibrated_images
-            result=reconstruct_uncalibrated_images(input_dir,names,target)
+            calibration=body.get('camera_calibration')
+            if calibration is not None and not isinstance(calibration,dict):raise ValueError('相机标定格式无效')
+            result=reconstruct_uncalibrated_images(input_dir,names,target,calibration=calibration)
         except ImportError as exc:
             raise ValueError("缺少 pycolmap；请安装 benchmarks/ws_geometry/requirements-round2-cpu.txt") from exc
         except (ValueError,RuntimeError,OSError) as exc:
             self.server.record("geometry_failed",geometry_run_id=ident,reason=str(exc)[:300])
             raise
         result["id"]=ident;result["created_at"]=datetime.now(timezone.utc).isoformat()
+        source_sparse=target/'sparse'/'0'
+        result['reconstruction_files']=[{'file':p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+                                         for p in sorted(source_sparse.glob('*.bin')) if p.is_file() and not p.is_symlink()]
         for camera in result["registered_cameras"]:camera["photo_id"]=photo_by_name[camera["name"]]
         for entry in result["inputs"]:entry["photo_id"]=photo_by_name[entry["file"]]
         _write_json(target/"geometry-candidate.json",result)
@@ -471,6 +628,16 @@ class Handler(BaseHTTPRequestHandler):
         layout=body.get("layout"); reference=body.get("reference")
         if not isinstance(layout,dict) or not isinstance(reference,dict):raise ValueError("草图和尺度格式无效")
         json.dumps({"layout":layout,"reference":reference},allow_nan=False)
+        old_camera=(project.get('layout') or {}).get('camera') or {}
+        new_camera=layout.get('camera') or {}
+        camera_keys=('fx','fy','cx','cy','description','calibration_sha256','geometry_run_id')
+        fusion_runs=project.get('fusion_runs',[])
+        snapshot=fusion_runs[-1].get('camera_input_snapshot') if fusion_runs else None
+        baseline=snapshot if snapshot is not None else (old_camera if project.get('fusion_scale') else None)
+        if baseline is not None and any(baseline.get(k)!=new_camera.get(k) for k in camera_keys):
+            project['fusion_camera_input_changed']=True
+            runs=project.get('geometry_runs',[])
+            project['fusion_camera_dirty_geometry_id']=runs[-1]['id'] if runs else None
         project["layout"]=layout;project["reference"]=reference
         self.server.record("layout_saved",point_count=len(layout.get("points",[])) if isinstance(layout.get("points"),list) else 0)
         self.send_json(200,{"saved":True})

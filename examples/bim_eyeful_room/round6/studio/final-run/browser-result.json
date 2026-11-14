@@ -1,0 +1,24 @@
+{
+  "operator": "automation",
+  "source_photos": 32,
+  "registered": 28,
+  "tracks": 461,
+  "surface_hypotheses": 3,
+  "selected_surface_ids": [
+    "surface-06350fcfc37426e2",
+    "surface-8eb3e70381275f0f"
+  ],
+  "wall_candidates": 2,
+  "calibration_source_sha256": "05e702e72fb9076d6fef2eb40e6dbd082ad7615dc381cb2709bace449fec74b7",
+  "calibration_sensor": 9,
+  "anchor_basis": "assumed from correlated same-scene camera baseline; not a ruler measurement",
+  "assumed_anchor_m": 2.380997265429341,
+  "anchor_track_ids": [
+    30,
+    128
+  ],
+  "metric_accuracy": "NOT_MEASURED",
+  "human_time": "NOT_MEASURED",
+  "scope": "PARTIAL_OPEN",
+  "studio_edit_revision": 2
+}

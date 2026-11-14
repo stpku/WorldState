@@ -73,6 +73,32 @@ def test_local_rule_is_explicit_and_bounded(server):
     with pytest.raises(ValueError):parse_local_command(model,"delete everything")
 
 
+def test_camera_change_invalidates_fusion_even_before_first_scale_solution(server):
+    """A saved camera edit cannot be applied to an old 3D reconstruction."""
+    import hashlib
+    server.model=None;server.model_dir=None  # This test creates an isolated project.
+    assert api(server,'/api/project',{'name':'Camera change guard'})[0]==201
+    geometry_id='geometry-'+'1'*32;fusion_id='fusion-'+'2'*32
+    camera={'fx':500.,'fy':500.,'cx':320.,'cy':240.,'description':'test camera',
+            'calibration_sha256':None,'geometry_run_id':None}
+    server.project['geometry_runs']=[{'id':geometry_id,'status':'UNVERIFIED_RESEARCH_CANDIDATE'}]
+    directory=server.workspace/'fusion'/fusion_id;directory.mkdir(parents=True)
+    raw=json.dumps({'id':fusion_id,'geometry_run_id':geometry_id}).encode();(directory/'fusion.json').write_bytes(raw)
+    server.project['fusion_runs']=[{'id':fusion_id,'geometry_run_id':geometry_id,
+       'sha256':hashlib.sha256(raw).hexdigest(),'camera_input_snapshot':camera.copy()}]
+    body={'layout':{'camera':camera.copy()},'reference':{}}
+    assert api(server,'/api/layout',body)[0]==200
+    assert not server.project.get('fusion_camera_input_changed')
+    body['layout']['camera']['fx']=501.
+    assert api(server,'/api/layout',body)[0]==200
+    assert server.project['fusion_camera_input_changed'] is True
+    status,error=api(server,'/api/fusion/scale',{'fusion_id':fusion_id,'confirmed_endpoints':True})
+    assert status==400 and '重新恢复相机' in error['error']
+    server.vision_model=Path('/test-only-do-not-load')
+    status,error=api(server,'/api/fusion/reconstruct',{'geometry_run_id':geometry_id,'camera_inputs':body['layout']['camera']})
+    assert status==400 and '重新恢复相机' in error['error']
+
+
 def test_photo_project_annotation_generation_revision_restore_and_restart(tmp_path):
     workspace=tmp_path/"photo-project"
     instance=StudioServer(0,None,workspace)
@@ -174,7 +200,7 @@ def test_vision_candidate_decisions_preserve_source_in_ifc_evidence(tmp_path):
 def test_multiview_endpoint_requires_consent_and_maps_photo_provenance(tmp_path,monkeypatch):
     """Fake geometry provider checks wiring; real COLMAP browser run is separate."""
     from products.worldstate_bim import colmap_provider
-    def fake(images,names,output_dir):
+    def fake(images,names,output_dir,*,calibration=None):
         output_dir.mkdir(parents=True,exist_ok=True)
         return {'schema':'worldstate-bim-geometry-candidate/0.1','provider':'FAKE_TEST_ONLY',
                 'status':'UNVERIFIED_RESEARCH_CANDIDATE','inputs':[{'file':n} for n in names],

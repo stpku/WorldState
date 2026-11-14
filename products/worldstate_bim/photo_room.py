@@ -116,10 +116,11 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
         if not geometry_run or geometry_run.get("status")!="UNVERIFIED_RESEARCH_CANDIDATE" or not any(c.get("photo_id")==layout.get("photo_id") for c in geometry_run.get("registered_cameras",[])):
             raise ValueError("当前照片没有可用的多视图相机估计")
         parameters=geometry_run.get("camera_parameters",[])
-        if len(parameters)!=1 or len(parameters[0].get("params",[]))!=3:
+        if len(parameters)!=1 or len(parameters[0].get("params",[])) not in {3,4}:
             raise ValueError("多视图相机模型不受支持")
-        f,cx,cy=parameters[0]["params"]
-        for name,expected in (("fx",f),("fy",f),("cx",cx),("cy",cy)):
+        values=parameters[0]["params"]
+        fx,fy,cx,cy=(values[0],values[0],values[1],values[2]) if len(values)==3 else values
+        for name,expected in (("fx",fx),("fy",fy),("cx",cx),("cy",cy)):
             if not math.isclose(camera_evidence[name],expected,rel_tol=1e-9,abs_tol=1e-9):
                 raise ValueError("相机参数已改变，请重新选择多视图估计或标记为人工参数")
         for entry in geometry_run.get("inputs",[]):
