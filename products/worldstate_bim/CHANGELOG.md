@@ -2,7 +2,9 @@
 
 ## Unreleased — 2026-11-14
 
-- Add optional local CPU semantic vision proposals, overlay inspection, explicit accept/reject and model provenance; a real-photo scripted preview generates three disconnected editable IFC wall-segment candidates with **assumed** scale and height. Studio can run CPU multi-view SfM and attach its focal estimate and source photo hashes to model evidence; wall corners are not yet triangulated and semantic surface hypotheses remain research.
+- Fuse real registered multiview semantic tracks into provisional 3D surfaces and plane intersections; bind a triangulated two-view scale to observations and camera poses, preserve evidence, and compile selected partial surfaces to IFC. The real example has two candidates and assumed, non-independent scale; no three-wall or release acceptance is claimed.
+
+- Add optional local CPU semantic vision proposals, overlay inspection, explicit accept/reject and model provenance; a real-photo scripted preview generates three disconnected editable IFC wall-segment candidates with **assumed** scale and height. That earlier single-photo workflow does not triangulate wall corners; semantic surface hypotheses remain research.
 - Bind scale to source photo, physical endpoint observations, selected wall, measurement and camera; changed inputs require explicit rechecking and rebinding. Historical unbound photo projects must bind before regeneration.
 
 - Add local photo-project creation, image annotation, explicit camera-floor backprojection or manually drawn floor-layout geometry, scale application, versioned IFC generation, and browser IFC readback. The real-photo result is a partial, unverified wall; scripted annotations are marked simulated.
