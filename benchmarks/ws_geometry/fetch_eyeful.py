@@ -10,7 +10,8 @@ from pathlib import Path
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--output',required=True,type=Path)
 p.add_argument('--sfm-only',action='store_true',help='exclude the vision-only photo')
-a=p.parse_args();manifest=json.loads(Path(__file__).with_name('eyeful-emptyroom-manifest.json').read_text())
+p.add_argument('--manifest',type=Path,default=Path(__file__).with_name('eyeful-emptyroom-manifest.json'))
+a=p.parse_args();manifest=json.loads(a.manifest.read_text())
 a.output.mkdir(parents=True,exist_ok=True)
 for item in manifest['input_photos']:
     if a.sfm_only and item['usage']=='vision_only':continue

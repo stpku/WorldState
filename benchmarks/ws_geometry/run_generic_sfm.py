@@ -53,7 +53,8 @@ def main() -> None:
     if models:
         m=max(models.values(),key=lambda x:x.num_reg_images())
         m.export_PLY(args.output/'points.ply')
-        result.update(status='UNVERIFIED_RESEARCH_CANDIDATE',sparse_points=m.num_points3D(),
+        status='UNVERIFIED_RESEARCH_CANDIDATE' if m.num_reg_images()>=3 else 'INSUFFICIENT_REGISTRATION'
+        result.update(status=status,sparse_points=m.num_points3D(),
                       mean_reprojection_error_px=m.compute_mean_reprojection_error(),point_cloud_file='points.ply')
         for i in m.reg_image_ids():
             image=m.image(i)

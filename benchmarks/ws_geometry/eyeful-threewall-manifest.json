@@ -1,0 +1,121 @@
+{
+  "scene": "Eyeful Tower raf_emptyroom",
+  "license": "MIT",
+  "input_photos": [
+    {
+      "filename": "19_DSC3403.jpg",
+      "sha256": "b8aef7ac64ea5448bcc5ba0463f7f789c803d30906e18b62520edab8991b1cc9",
+      "bytes": 458551,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3403.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3439.jpg",
+      "sha256": "3b64c674c590b970d936a00417789ffd2d917ee175b2df2144546e565ace40ff",
+      "bytes": 394275,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3439.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3475.jpg",
+      "sha256": "c75cb046b69f3c1fa84e155c773f4eb453219d35f0597ff63b912d0d32c74181",
+      "bytes": 447292,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3475.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3511.jpg",
+      "sha256": "e4c2f28a3ccaf0650af7e2eafbec069a72ba5638663403b88bd091d2e602dc24",
+      "bytes": 461587,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3511.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3547.jpg",
+      "sha256": "8c5634112c4b22e4868ba35620c81b8e7bab58810a2ed026dcb51d8d4ed03577",
+      "bytes": 443995,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3547.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3583.jpg",
+      "sha256": "d97d9f9a5cb8e8211b42ac3ee2bdd42ff8e54a74af6ecf631740adfc2faa4b91",
+      "bytes": 450413,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3583.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3619.jpg",
+      "sha256": "94d8b9bbccf9688714b1d7ef2b8a8aa71306ff0f8884e5f6d278b1cd3b7f3933",
+      "bytes": 448856,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3619.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3655.jpg",
+      "sha256": "d3105e146b2ac0a42aa115d63d13b9610d6580f5d912bf6f3d389a7adc1ede92",
+      "bytes": 457974,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3655.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3691.jpg",
+      "sha256": "b83b709d19dc7ba633ae66a1a3c91de5c6137fd7387707231417a975aa4d01e8",
+      "bytes": 454919,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3691.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3727.jpg",
+      "sha256": "9cf87815debdab98c709291ab6112d0fb24b877cbca223eb6a337b909d9206e9",
+      "bytes": 413669,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3727.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3763.jpg",
+      "sha256": "e2f5ea7814daeaa5290025d339f6ea3940a6ab58346db7a8cc4b5604f3cf23f7",
+      "bytes": 453376,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3763.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3799.jpg",
+      "sha256": "879951151b04056610c6b3feed31cd8454d493abf13162a97f319dce96ede45c",
+      "bytes": 448126,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3799.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3835.jpg",
+      "sha256": "b0e69769dc68cddcd399b7463caef8aaffe1ab2e5536cacf9b914f34057f6172",
+      "bytes": 444815,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3835.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3871.jpg",
+      "sha256": "270b760e20ad4634b6c06d647d9a7de94f866fd84606b15ead8e294aa2f6c23c",
+      "bytes": 423524,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3871.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3907.jpg",
+      "sha256": "7e25c0c8cd532c8345748d2f07b83734243fb2eece07cc02111d8f1fbde4e377",
+      "bytes": 439570,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3907.jpg",
+      "usage": "three_wall_development"
+    },
+    {
+      "filename": "19_DSC3943.jpg",
+      "sha256": "f1fac74575e9aed0353057bcc7ffcb38b9eb8fad7a673618db23ec610667ab22",
+      "bytes": 434438,
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/raf_emptyroom/colmap/images_8/19_DSC3943.jpg",
+      "usage": "three_wall_development"
+    }
+  ],
+  "source": "https://github.com/facebookresearch/EyefulTower",
+  "license_url": "https://github.com/facebookresearch/EyefulTower/blob/main/LICENSE",
+  "data_scope": "development only; failed low-parallax registration; not independent evaluation"
+}
