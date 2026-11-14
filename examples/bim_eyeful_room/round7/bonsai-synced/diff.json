@@ -1,0 +1,17 @@
+{
+  "previous_revision": 1,
+  "revision": 2,
+  "element_id": "wall-eed8b11b857e9f01",
+  "attribute": "height",
+  "before": 2.3,
+  "after": 2.5,
+  "changed_nodes": [],
+  "affected_elements": [
+    "wall-eed8b11b857e9f01"
+  ],
+  "reason_ref": "revision-2",
+  "external_ifc_sha256": "eee10266ff088eed0fe9bb2243488452a196a13f4a3dbce7cf820f20a51742ce",
+  "warnings": [
+    "Only the requested geometry attribute is synchronized; IFC metadata outside the checked fields is not imported. Review before using the regenerated IFC."
+  ]
+}

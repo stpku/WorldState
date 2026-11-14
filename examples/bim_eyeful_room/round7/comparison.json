@@ -1,0 +1,195 @@
+{
+  "schema": "worldstate-structure-comparison/0.1",
+  "input": {
+    "registered_photos": 28,
+    "tracks": 446,
+    "source_reconstruction": [
+      {
+        "file": "cameras.bin",
+        "sha256": "3846f1278b42e988448c2dcd67c4b07a6fd2905ae74a382bf14b0c9481ae057e"
+      },
+      {
+        "file": "frames.bin",
+        "sha256": "75d69fbcf4b75cb802162a9ee2975604c557f2f6ec13596157dd91c96bbd1b33"
+      },
+      {
+        "file": "images.bin",
+        "sha256": "3f7ddbb990a9aac59efae316942f99bcbd15827a656381fdc41eb53350a09e2a"
+      },
+      {
+        "file": "points3D.bin",
+        "sha256": "6ab6f3ed63e57b64b81e97cfbad3382d6d74188d68c081dfb6af7efacd832a47"
+      },
+      {
+        "file": "rigs.bin",
+        "sha256": "73e4d5f0da0a84a5711b46ae716a149f1532832f95bb09b4b01e73cf2c5afbe9"
+      }
+    ],
+    "semantic_manifest_sha256": "7422020bf061e099c2e65ed50d34bdd3eb9e4830e851fdf8f46997dd23f11a4f",
+    "scale": "ASSUMED_CORRELATED_NOT_INDEPENDENTLY_MEASURED",
+    "height": "ASSUMED_NOT_MEASURED",
+    "height_m": 2.3,
+    "thickness_m": 0.12
+  },
+  "route_a": {
+    "method": "COLMAP + semantic 3D tracks + sparse planes",
+    "runtime_seconds": 3.243,
+    "selected_surfaces": [
+      {
+        "id": "surface-4d70e4bffc47b76b",
+        "support_points": 182,
+        "support_views": 28
+      },
+      {
+        "id": "surface-67c8391fca7258ec",
+        "support_points": 18,
+        "support_views": 22
+      }
+    ],
+    "candidate_extents": [
+      {
+        "id": "wall-4d70e4bffc47b76b",
+        "visible_support_extent_assumed_m": 4.410912683024488,
+        "height_assumed_m": 2.3,
+        "warning": "Different support extents, not verified physical wall dimensions."
+      },
+      {
+        "id": "wall-67c8391fca7258ec",
+        "visible_support_extent_assumed_m": 2.7718013329196802,
+        "height_assumed_m": 2.3,
+        "warning": "Different support extents, not verified physical wall dimensions."
+      }
+    ],
+    "ifc": {
+      "schema": "IFC4",
+      "walls": 2,
+      "geometry_generated": 2,
+      "schema_issues": 0,
+      "guids": [
+        "1hrk86hUbKGO9j5QzKwA$u",
+        "02Rtreh1HMxOiVLuSDA6rf"
+      ]
+    }
+  },
+  "route_b": {
+    "method": "COLMAP cameras + UPerNet boundary lines + multiview plane intersections, with shared sparse floor prior",
+    "runtime_seconds": 5.627,
+    "image_line_proposals": 123,
+    "groups": [
+      {
+        "id": "structure-line-eed8b11b857e9f01",
+        "support_views": 28,
+        "floor_consistency": "CONSISTENT_WITH_SPARSE_FLOOR_NOT_ACCURACY",
+        "floor_joint_holdout_status": "CONSISTENT_UNVERIFIED",
+        "floor_joint_holdout_max_px": 5.1905322115444505,
+        "free_line_holdout_max_px": 8.451427354795896,
+        "selected_for_ifc": true
+      },
+      {
+        "id": "structure-line-ec287fc69baafd3b",
+        "support_views": 13,
+        "floor_consistency": "CONSISTENT_WITH_SPARSE_FLOOR_NOT_ACCURACY",
+        "floor_joint_holdout_status": "CONSISTENT_UNVERIFIED",
+        "floor_joint_holdout_max_px": 5.509875586917133,
+        "free_line_holdout_max_px": 13.04045079934258,
+        "selected_for_ifc": true
+      },
+      {
+        "id": "structure-line-3c35844869f4d0b4",
+        "support_views": 4,
+        "floor_consistency": "CONSISTENT_WITH_SPARSE_FLOOR_NOT_ACCURACY",
+        "floor_joint_holdout_status": "CONFLICT_OR_INSUFFICIENT",
+        "floor_joint_holdout_max_px": 14.565459877034872,
+        "free_line_holdout_max_px": 156.58817601542967,
+        "selected_for_ifc": false
+      },
+      {
+        "id": "structure-line-9ec2418cad3dd5f9",
+        "support_views": 3,
+        "floor_consistency": "CONFLICT_WITH_SPARSE_FLOOR",
+        "floor_joint_holdout_status": "CONSISTENT_UNVERIFIED",
+        "floor_joint_holdout_max_px": 7.448266276237973,
+        "free_line_holdout_max_px": 10.208505328413594,
+        "selected_for_ifc": false
+      }
+    ],
+    "corner_candidates": [
+      {
+        "line_ids": [
+          "structure-line-eed8b11b857e9f01",
+          "structure-line-ec287fc69baafd3b"
+        ],
+        "views": 2,
+        "reprojection_max_px": 2.1987258690579337,
+        "parallax_deg": 14.898716916824291,
+        "floor_residual_relative": 0.035716010221589656,
+        "floor_consistency": "CONSISTENT_WITH_SPARSE_FLOOR_NOT_ACCURACY"
+      },
+      {
+        "line_ids": [
+          "structure-line-eed8b11b857e9f01",
+          "structure-line-3c35844869f4d0b4"
+        ],
+        "views": 2,
+        "reprojection_max_px": 3.374011934318655,
+        "parallax_deg": 20.406788294723782,
+        "floor_residual_relative": 0.37629919794541467,
+        "floor_consistency": "CONFLICT_WITH_SPARSE_FLOOR"
+      },
+      {
+        "line_ids": [
+          "structure-line-ec287fc69baafd3b",
+          "structure-line-9ec2418cad3dd5f9"
+        ],
+        "views": 2,
+        "reprojection_max_px": 0.09226841069458307,
+        "parallax_deg": 12.197314759175573,
+        "floor_residual_relative": 0.12303849151207924,
+        "floor_consistency": "CONFLICT_WITH_SPARSE_FLOOR"
+      }
+    ],
+    "candidate_extents": [
+      {
+        "id": "wall-eed8b11b857e9f01",
+        "visible_support_extent_assumed_m": 6.686650027742994,
+        "height_assumed_m": 2.3,
+        "warning": "Different support extents, not verified physical wall dimensions."
+      },
+      {
+        "id": "wall-ec287fc69baafd3b",
+        "visible_support_extent_assumed_m": 1.6580300809183068,
+        "height_assumed_m": 2.3,
+        "warning": "Different support extents, not verified physical wall dimensions."
+      }
+    ],
+    "ifc": {
+      "schema": "IFC4",
+      "walls": 2,
+      "geometry_generated": 2,
+      "schema_issues": 0,
+      "guids": [
+        "0oxtzkva1TFODRMBc0y4Bs",
+        "1V2vmooX5ULgAV0O6TAuDs"
+      ]
+    }
+  },
+  "overlays": [
+    "19_DSC2359-structure.jpg",
+    "19_DSC2395-structure.jpg",
+    "19_DSC0541-structure.jpg",
+    "19_DSC0577-structure.jpg",
+    "19_DSC0397-structure.jpg",
+    "19_DSC0469-structure.jpg"
+  ],
+  "independent_wall_precision_recall": "NOT_MEASURED",
+  "independent_dimension_error": "NOT_MEASURED",
+  "human_time_and_cost": "NOT_MEASURED",
+  "release_status": "NOT_RELEASE_READY",
+  "caveats": [
+    "Both methods share the same cached registered photos, cameras, semantic masks and assumed scale.",
+    "Route B also uses route A semantic floor as an association and consistency prior; it is a hybrid, not independent.",
+    "One-view-out excludes a view only during line fitting; line association, camera poses and floor used all views.",
+    "Pixel reprojection residuals, candidate counts and fitted plane residuals are not independent wall accuracy.",
+    "No physical ruler, human annotation time or independent reference model is available in this development run."
+  ]
+}
