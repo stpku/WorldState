@@ -169,3 +169,32 @@ def test_vision_candidate_decisions_preserve_source_in_ifc_evidence(tmp_path):
         assert status==400 and '视觉候选被修改' in error['error']
     finally:
         instance.shutdown();instance.server_close();thread.join()
+
+
+def test_multiview_endpoint_requires_consent_and_maps_photo_provenance(tmp_path,monkeypatch):
+    """Fake geometry provider checks wiring; real COLMAP browser run is separate."""
+    from products.worldstate_bim import colmap_provider
+    def fake(images,names,output_dir):
+        output_dir.mkdir(parents=True,exist_ok=True)
+        return {'schema':'worldstate-bim-geometry-candidate/0.1','provider':'FAKE_TEST_ONLY',
+                'status':'UNVERIFIED_RESEARCH_CANDIDATE','inputs':[{'file':n} for n in names],
+                'registered_cameras':[{'name':n} for n in names[:3]],'sparse_points':8,
+                'scale':{'status':'unknown','unit':'arbitrary'},'timing_seconds':{'total':0}}
+    monkeypatch.setattr(colmap_provider,'reconstruct_uncalibrated_images',fake)
+    instance=StudioServer(0,None,tmp_path/'sfm-work')
+    thread=threading.Thread(target=instance.serve_forever,daemon=True);thread.start()
+    try:
+        assert api(instance,'/api/project',{'name':'Synthetic SfM wiring','operator_kind':'automation'})[0]==201
+        ids=[]
+        for color in ['red','blue','green','yellow']:
+            image=Image.new('RGB',(640,480),color);buffer=io.BytesIO();image.save(buffer,format='PNG')
+            status,photo=api(instance,'/api/upload',{'data_base64':base64.b64encode(buffer.getvalue()).decode()})
+            assert status==201;ids.append(photo['id'])
+        assert api(instance,'/api/geometry/reconstruct',{})[0]==400
+        status,result=api(instance,'/api/geometry/reconstruct',{'confirmed_same_camera':True})
+        assert status==201 and result['provider']=='FAKE_TEST_ONLY' and result['scale']['status']=='unknown'
+        assert {x['photo_id'] for x in result['inputs']}==set(ids)
+        assert len(result['registered_cameras'])==3
+        assert api(instance,'/api/project')[1]['project']['events'][-1]['action']=='geometry_reconstructed'
+    finally:
+        instance.shutdown();instance.server_close();thread.join()

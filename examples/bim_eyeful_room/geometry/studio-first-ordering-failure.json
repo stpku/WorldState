@@ -1,0 +1,334 @@
+{
+  "schema": "worldstate-bim-geometry-candidate/0.1",
+  "provider": "COLMAP/pycolmap",
+  "provider_version": "4.2.1",
+  "status": "UNVERIFIED_RESEARCH_CANDIDATE",
+  "inputs": [
+    {
+      "file": "720c93ea847cc6fb173a9ad8360359abd0a724dca77d63a54d61035bb4638e5c.jpg",
+      "sha256": "720c93ea847cc6fb173a9ad8360359abd0a724dca77d63a54d61035bb4638e5c",
+      "photo_id": "upload-720c93ea847cc6fb"
+    },
+    {
+      "file": "d9ec6b965189347a2a3e5175afe0447196c46470560f50015c02053cdc9bae5e.jpg",
+      "sha256": "d9ec6b965189347a2a3e5175afe0447196c46470560f50015c02053cdc9bae5e",
+      "photo_id": "upload-d9ec6b965189347a"
+    },
+    {
+      "file": "62fa37734d6c053c776e49866d17c4de2e2e0529b00b42d3b35b7226ae5d6efe.jpg",
+      "sha256": "62fa37734d6c053c776e49866d17c4de2e2e0529b00b42d3b35b7226ae5d6efe",
+      "photo_id": "upload-62fa37734d6c053c"
+    },
+    {
+      "file": "c44bb0d3c36640b8c7aaf27ab6f4ee26bd4cf0ad916851ec5788831c6b7c9058.jpg",
+      "sha256": "c44bb0d3c36640b8c7aaf27ab6f4ee26bd4cf0ad916851ec5788831c6b7c9058",
+      "photo_id": "upload-c44bb0d3c36640b8"
+    },
+    {
+      "file": "af1f8670b66063a2b2627568d9e33a062db08e8c7e4058921a1f88a3a8cac034.jpg",
+      "sha256": "af1f8670b66063a2b2627568d9e33a062db08e8c7e4058921a1f88a3a8cac034",
+      "photo_id": "upload-af1f8670b66063a2"
+    },
+    {
+      "file": "88f979658764b8fce12fc45b65871ab1f940c9925da346c9b6e87646d6f0f374.jpg",
+      "sha256": "88f979658764b8fce12fc45b65871ab1f940c9925da346c9b6e87646d6f0f374",
+      "photo_id": "upload-88f979658764b8fc"
+    },
+    {
+      "file": "8e2e9cde4625034a5fbe79b42f174070110c41d02b2135f0316ef7503af1c7e5.jpg",
+      "sha256": "8e2e9cde4625034a5fbe79b42f174070110c41d02b2135f0316ef7503af1c7e5",
+      "photo_id": "upload-8e2e9cde4625034a"
+    },
+    {
+      "file": "97767b7e2b99f9520bb0cff22fd58a0da3734e65f1237ebbb7c5189418471836.jpg",
+      "sha256": "97767b7e2b99f9520bb0cff22fd58a0da3734e65f1237ebbb7c5189418471836",
+      "photo_id": "upload-97767b7e2b99f952"
+    },
+    {
+      "file": "210679990fa5000a4b18280a62d00d80c14a13d824f4519d2a5005196e25733a.jpg",
+      "sha256": "210679990fa5000a4b18280a62d00d80c14a13d824f4519d2a5005196e25733a",
+      "photo_id": "upload-210679990fa5000a"
+    },
+    {
+      "file": "9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2.jpg",
+      "sha256": "9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2",
+      "photo_id": "upload-9bbe04f87acfe1a5"
+    },
+    {
+      "file": "83892f78e8e58d0641fb7b89be6674fd3f1e184f339e377259526499f0f495b0.jpg",
+      "sha256": "83892f78e8e58d0641fb7b89be6674fd3f1e184f339e377259526499f0f495b0",
+      "photo_id": "upload-83892f78e8e58d06"
+    },
+    {
+      "file": "252095ef062ddc32e13cede2d0175a2bc070c3fb678ef75d8feb12741111ae64.jpg",
+      "sha256": "252095ef062ddc32e13cede2d0175a2bc070c3fb678ef75d8feb12741111ae64",
+      "photo_id": "upload-252095ef062ddc32"
+    },
+    {
+      "file": "6225330919873f46d2850a16f719f3158711d1dea970fa0a9ed74ce918c24191.jpg",
+      "sha256": "6225330919873f46d2850a16f719f3158711d1dea970fa0a9ed74ce918c24191",
+      "photo_id": "upload-6225330919873f46"
+    },
+    {
+      "file": "0e9d358c51bc56ab9b25944df60e00b8fae6e93a7271b9a7cf1e6408d7160eb1.jpg",
+      "sha256": "0e9d358c51bc56ab9b25944df60e00b8fae6e93a7271b9a7cf1e6408d7160eb1",
+      "photo_id": "upload-0e9d358c51bc56ab"
+    },
+    {
+      "file": "3ef9a7393cd1da4de40cb986c42c2991d7e24b0e6f5edf6bad760290036dbc62.jpg",
+      "sha256": "3ef9a7393cd1da4de40cb986c42c2991d7e24b0e6f5edf6bad760290036dbc62",
+      "photo_id": "upload-3ef9a7393cd1da4d"
+    },
+    {
+      "file": "8d45a7f36fb4a1b3678a430520de574b71df2c524b3bc35e7b7eda1c742521cb.jpg",
+      "sha256": "8d45a7f36fb4a1b3678a430520de574b71df2c524b3bc35e7b7eda1c742521cb",
+      "photo_id": "upload-8d45a7f36fb4a1b3"
+    },
+    {
+      "file": "3396e2d6f6effc05bbdf75c68400c2157c3e759651fb697feebe5584a3430b98.jpg",
+      "sha256": "3396e2d6f6effc05bbdf75c68400c2157c3e759651fb697feebe5584a3430b98",
+      "photo_id": "upload-3396e2d6f6effc05"
+    },
+    {
+      "file": "b5aeb707686bd3b9154aead99ce87a3dc53261dc30a92e2552ffc30384f13860.jpg",
+      "sha256": "b5aeb707686bd3b9154aead99ce87a3dc53261dc30a92e2552ffc30384f13860",
+      "photo_id": "upload-b5aeb707686bd3b9"
+    },
+    {
+      "file": "0b3b200b0eba0bece14f00745a3c118a3fc0663d26e842ab7864c9cf50f3f1f5.jpg",
+      "sha256": "0b3b200b0eba0bece14f00745a3c118a3fc0663d26e842ab7864c9cf50f3f1f5",
+      "photo_id": "upload-0b3b200b0eba0bec"
+    },
+    {
+      "file": "9a1fc328b545207e2995d73c696079b625b3db405b44c4d4c13c2b3ad1b6ed25.jpg",
+      "sha256": "9a1fc328b545207e2995d73c696079b625b3db405b44c4d4c13c2b3ad1b6ed25",
+      "photo_id": "upload-9a1fc328b545207e"
+    },
+    {
+      "file": "019ca9c1950d43ee027abb2141fc9633085867fd9480907eeaeb0f284242fb8a.jpg",
+      "sha256": "019ca9c1950d43ee027abb2141fc9633085867fd9480907eeaeb0f284242fb8a",
+      "photo_id": "upload-019ca9c1950d43ee"
+    },
+    {
+      "file": "1a837a72719a5157e9a479b9c44506a703417126c1f8d3b803e07b021ac61e10.jpg",
+      "sha256": "1a837a72719a5157e9a479b9c44506a703417126c1f8d3b803e07b021ac61e10",
+      "photo_id": "upload-1a837a72719a5157"
+    },
+    {
+      "file": "c3ef25f26fd0a34372cd2d2a5a60d679fdae9c236ad9d133762a4f5d105e6803.jpg",
+      "sha256": "c3ef25f26fd0a34372cd2d2a5a60d679fdae9c236ad9d133762a4f5d105e6803",
+      "photo_id": "upload-c3ef25f26fd0a343"
+    },
+    {
+      "file": "544ab170f2ef345c34dd40c061a137bd1ce3a65f02737e9b181d327c011cdd4f.jpg",
+      "sha256": "544ab170f2ef345c34dd40c061a137bd1ce3a65f02737e9b181d327c011cdd4f",
+      "photo_id": "upload-544ab170f2ef345c"
+    },
+    {
+      "file": "e43088ba7f256095cc22be89f27b372551bdffc9255b9aba4a7e78f05f551602.jpg",
+      "sha256": "e43088ba7f256095cc22be89f27b372551bdffc9255b9aba4a7e78f05f551602",
+      "photo_id": "upload-e43088ba7f256095"
+    },
+    {
+      "file": "a7612f67892b3eab786e1c6e0db3bb6b18bca776c741039da47d890f2ed10871.jpg",
+      "sha256": "a7612f67892b3eab786e1c6e0db3bb6b18bca776c741039da47d890f2ed10871",
+      "photo_id": "upload-a7612f67892b3eab"
+    },
+    {
+      "file": "9df05175dd5c9421e3d56b08db561990825023c26612f8bba53f2987040bd958.jpg",
+      "sha256": "9df05175dd5c9421e3d56b08db561990825023c26612f8bba53f2987040bd958",
+      "photo_id": "upload-9df05175dd5c9421"
+    },
+    {
+      "file": "37843b18e95115fc2e8baca0760e301a3b25091ea31df998d4b1baafaeb82c61.jpg",
+      "sha256": "37843b18e95115fc2e8baca0760e301a3b25091ea31df998d4b1baafaeb82c61",
+      "photo_id": "upload-37843b18e95115fc"
+    },
+    {
+      "file": "f67efce37f48d4671d7885cd780a771a1c483f9a670c6b065a4760ff0e3a892e.jpg",
+      "sha256": "f67efce37f48d4671d7885cd780a771a1c483f9a670c6b065a4760ff0e3a892e",
+      "photo_id": "upload-f67efce37f48d467"
+    },
+    {
+      "file": "1d09b59aef55ac63b5bf5a22d27360da91c245d55a9d837b27083aecbef40ea5.jpg",
+      "sha256": "1d09b59aef55ac63b5bf5a22d27360da91c245d55a9d837b27083aecbef40ea5",
+      "photo_id": "upload-1d09b59aef55ac63"
+    },
+    {
+      "file": "0f34e66b197d46ef37589a27e85578c58dea3340c6fe50daef9bf15d18b8c994.jpg",
+      "sha256": "0f34e66b197d46ef37589a27e85578c58dea3340c6fe50daef9bf15d18b8c994",
+      "photo_id": "upload-0f34e66b197d46ef"
+    },
+    {
+      "file": "fce0d16d57a5ff3f006f3e2789bfdc67e17d3c8066c4455c564e39e4a3d500cd.jpg",
+      "sha256": "fce0d16d57a5ff3f006f3e2789bfdc67e17d3c8066c4455c564e39e4a3d500cd",
+      "photo_id": "upload-fce0d16d57a5ff3f"
+    }
+  ],
+  "input_camera_assumption": "all images from one camera; focal length self-calibrated",
+  "coordinate_frame": "COLMAP arbitrary reconstruction frame",
+  "scale": {
+    "status": "unknown",
+    "unit": "arbitrary"
+  },
+  "timing_seconds": {
+    "feature_extraction": 3.1738946449477226,
+    "matching": 0.7074652630835772,
+    "mapping": 0.18194610893260688,
+    "total": 4.063306016963907
+  },
+  "registered_cameras": [
+    {
+      "name": "0e9d358c51bc56ab9b25944df60e00b8fae6e93a7271b9a7cf1e6408d7160eb1.jpg",
+      "center": [
+        1.1258284083940575,
+        1.2262117931948298,
+        -4.18955756203784
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.989416554946788,
+          -0.036612361255995686,
+          0.14040803324771003
+        ],
+        [
+          0.01906190816188802,
+          0.9920539349818146,
+          0.1243609011881358
+        ],
+        [
+          -0.1438454881268694,
+          -0.12036828938868406,
+          0.9822524881389635
+        ]
+      ],
+      "photo_id": "upload-0e9d358c51bc56ab"
+    },
+    {
+      "name": "544ab170f2ef345c34dd40c061a137bd1ce3a65f02737e9b181d327c011cdd4f.jpg",
+      "center": [
+        0.12435027860047866,
+        -0.514723365751459,
+        2.1992453119897726
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9896134714590483,
+          -0.03795504147546017,
+          0.13865277470489923
+        ],
+        [
+          0.02887143762451052,
+          0.9973386895309472,
+          0.06694757989790862
+        ],
+        [
+          -0.1408247747957207,
+          -0.062249122012193535,
+          0.9880756193796331
+        ]
+      ],
+      "photo_id": "upload-544ab170f2ef345c"
+    },
+    {
+      "name": "8d45a7f36fb4a1b3678a430520de574b71df2c524b3bc35e7b7eda1c742521cb.jpg",
+      "center": [
+        0.5432795826583494,
+        0.562523800720884,
+        -1.597642744151974
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9907344124152014,
+          -0.03457340459016644,
+          0.13133926964678241
+        ],
+        [
+          0.020461060403752698,
+          0.9940142528249606,
+          0.1073173340518175
+        ],
+        [
+          -0.13426343159423396,
+          -0.10363563516416573,
+          0.9855115352245556
+        ]
+      ],
+      "photo_id": "upload-8d45a7f36fb4a1b3"
+    },
+    {
+      "name": "a7612f67892b3eab786e1c6e0db3bb6b18bca776c741039da47d890f2ed10871.jpg",
+      "center": [
+        -2.13430209444851,
+        -1.7479912188075712,
+        4.784051831502268
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9994710261176681,
+          -0.03245507793198702,
+          0.0020822746514691575
+        ],
+        [
+          0.03248459489761587,
+          0.9993410371926,
+          -0.01619390246840385
+        ],
+        [
+          -0.0015553281432840035,
+          0.016252978165463585,
+          0.9998667019433739
+        ]
+      ],
+      "photo_id": "upload-a7612f67892b3eab"
+    },
+    {
+      "name": "b5aeb707686bd3b9154aead99ce87a3dc53261dc30a92e2552ffc30384f13860.jpg",
+      "center": [
+        0.3408438247956245,
+        0.47397899064331694,
+        -1.196096837302227
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9917329244883683,
+          -0.03417153526398356,
+          0.123685539427416
+        ],
+        [
+          0.021173928370205205,
+          0.9942558423549741,
+          0.10491417778534194
+        ],
+        [
+          -0.12656014871641852,
+          -0.10142793560308346,
+          0.986759799868324
+        ]
+      ],
+      "photo_id": "upload-b5aeb707686bd3b9"
+    }
+  ],
+  "sparse_points": 134,
+  "limitations": [
+    "no independent metric scale or ground truth",
+    "self-calibration and sparse geometry unverified",
+    "not a BIM or wall-instance reconstruction"
+  ],
+  "mean_reprojection_error_px": 0.8145469562817526,
+  "point_cloud_file": "points.ply",
+  "camera_parameters": [
+    {
+      "model": "CameraModelId.SIMPLE_PINHOLE",
+      "width": 743,
+      "height": 1126,
+      "params": [
+        82827.70245310038,
+        371.5,
+        563.0
+      ]
+    }
+  ],
+  "id": "geometry-9843d158c1a84ca282edc64fc25157e1",
+  "created_at": "2026-11-14T02:40:50.770488+00:00"
+}

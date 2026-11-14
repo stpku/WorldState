@@ -233,6 +233,7 @@ class Handler(BaseHTTPRequestHandler):
             with self.server.lock:
                 if path=="/api/upload":self.upload(body);return
                 if path=="/api/project":self.create_project(body);return
+                if path=="/api/geometry/reconstruct":self.reconstruct_photos(body);return
                 if path=="/api/vision/analyze":self.analyze_photo(body);return
                 if path=="/api/vision/decision":self.decide_candidate(body);return
                 if path=="/api/vision/accept-segments":self.accept_segments(body);return
@@ -280,6 +281,51 @@ class Handler(BaseHTTPRequestHandler):
                              "annotations":[],"layout":{},"reference":{},"events":[],"current_revision":None}
         self.server.record("project_created")
         self.send_json(201,self.server.project)
+
+    def reconstruct_photos(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        if body.get("confirmed_same_camera") is not True:
+            raise ValueError("请确认选择的照片来自同一相机，且没有包含留出评测照片")
+        uploads=self.server.uploaded
+        if not 4<=len(uploads)<=32:raise ValueError("多视图恢复需要 4 至 32 张已上传照片")
+        if len({(p["width"],p["height"]) for p in uploads})!=1:
+            raise ValueError("同一相机的照片需具有相同尺寸；请先检查裁剪或设备")
+        for photo in uploads:
+            filename=photo["sha256"]+photo["extension"];source=self.server.uploads/filename
+            if source.is_symlink() or not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest()!=photo["sha256"]:
+                raise ValueError("照片不可用或哈希不符")
+        if len(project.get("geometry_runs",[]))>=20:raise ValueError("多视图实验次数已达工作区上限")
+        directory=self.server.workspace/"geometry"
+        if directory.is_symlink():raise ValueError("几何结果目录不能是符号链接")
+        directory.mkdir(mode=0o700,exist_ok=True)
+        ident="geometry-"+uuid.uuid4().hex;target=directory/ident
+        target.mkdir(mode=0o700);input_dir=target/"input";input_dir.mkdir(mode=0o700)
+        import shutil
+        names=[];photo_by_name={}
+        for i,photo in enumerate(uploads):
+            # Preserve explicit upload order: COLMAP's initialization is sensitive
+            # to image ordering. The content hash still identifies the evidence.
+            filename=f"{i:04d}-"+photo["sha256"]+photo["extension"]
+            shutil.copyfile(self.server.uploads/(photo["sha256"]+photo["extension"]),input_dir/filename)
+            names.append(filename);photo_by_name[filename]=photo["id"]
+        try:
+            from .colmap_provider import reconstruct_uncalibrated_images
+            result=reconstruct_uncalibrated_images(input_dir,names,target)
+        except ImportError as exc:
+            raise ValueError("缺少 pycolmap；请安装 benchmarks/ws_geometry/requirements-round2-cpu.txt") from exc
+        except (ValueError,RuntimeError,OSError) as exc:
+            self.server.record("geometry_failed",geometry_run_id=ident,reason=str(exc)[:300])
+            raise
+        result["id"]=ident;result["created_at"]=datetime.now(timezone.utc).isoformat()
+        for camera in result["registered_cameras"]:camera["photo_id"]=photo_by_name[camera["name"]]
+        for entry in result["inputs"]:entry["photo_id"]=photo_by_name[entry["file"]]
+        _write_json(target/"geometry-candidate.json",result)
+        project.setdefault("geometry_runs",[]).append(result)
+        self.server.record("geometry_reconstructed",geometry_run_id=ident,status=result["status"],
+                           registered=len(result["registered_cameras"]),photos=len(uploads),
+                           elapsed_seconds=result["timing_seconds"]["total"])
+        self.send_json(201,result)
 
     def analyze_photo(self, body: dict) -> None:
         project=self.server.project
@@ -444,8 +490,12 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("请先确认已检查照片标注、尺度和假设，再生成候选 IFC")
         if self.server.model is not None and body.get("confirm_regeneration") is not True:
             raise ValueError("重新生成会用当前标注和草图替换编辑后的几何，请先确认")
+        layout=project.get("layout") or {}
+        run_id=(layout.get("camera") or {}).get("geometry_run_id") if layout.get("mode") in {"photo_floor","photo_floor_segments"} else None
+        run=next((r for r in project.get("geometry_runs",[]) if r.get("id")==run_id),None)
+        geometry_photo_ids={x.get("photo_id") for x in (run or {}).get("inputs",[])}
         for photo in self.server.uploaded:
-            if any(a.get("photo_id")==photo["id"] for a in project["annotations"]):
+            if photo["id"] in geometry_photo_ids or any(a.get("photo_id")==photo["id"] for a in project["annotations"]):
                 path=self.server.uploads/(photo["sha256"]+photo["extension"])
                 if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=photo["sha256"]:
                     raise ValueError("照片证据缺失或哈希已变化，请重新上传")

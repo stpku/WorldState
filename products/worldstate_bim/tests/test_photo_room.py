@@ -166,3 +166,29 @@ def test_vision_segment_grouping_suppresses_near_duplicate_lines():
     assert [x['line']['id'] for x in result]==['l1','l3','l4']
     assert all(len(x['endpoints'])==2 for x in result)
     assert all(x['line']['status']=='proposed' for x in result)
+
+
+def test_multiview_camera_evidence_is_linked_and_modified_calibration_is_rejected():
+    project,uploads=fixture()
+    project['annotations']=[a for a in project['annotations'] if a['kind'] not in {'window','scale'}]
+    uploads.extend({'id':'upload-'+c*16,'sha256':c*64,'width':640,'height':480} for c in 'cd')
+    run_id='geometry-'+'d'*32
+    project['layout']={'mode':'photo_floor_segments','photo_id':uploads[0]['id'],'closed':False,
+        'confirmed_camera_assumptions':True,'camera':{'fx':525,'fy':525,'cx':319,'cy':239,
+        'pitch_down_deg':20,'description':'SfM calibration; pitch assumed','geometry_run_id':run_id}}
+    for i,point in enumerate(([80,350],[180,350],[250,350],[350,350],[420,350],[520,350]),1):
+        project['annotations'].append({'id':'ann-'+f'{i+4:x}'*32,'photo_id':uploads[0]['id'],
+            'kind':'corner','wall_id':f'wall-{(i+1)//2}','object_id':f'node-{i}','points':[list(point)]})
+    project['geometry_runs']=[{'id':run_id,'status':'UNVERIFIED_RESEARCH_CANDIDATE',
+        'registered_cameras':[{'photo_id':uploads[0]['id']}],
+        'camera_parameters':[{'params':[525,319,239]}],
+        'inputs':[{'photo_id':x['id'],'sha256':x['sha256']} for x in uploads],
+        'provider':'test','provider_version':'0','scale':{'status':'unknown'},'limitations':[]}]
+    project['scale_binding']=bind_scale(project,uploads,confirmed=True)
+    model=build_photo_room(project,uploads)
+    evidence=next(x for x in model['evidence'] if x['id']==run_id)
+    assert len(evidence['inputs'])==4 and run_id in model['nodes'][0]['evidence_refs']
+    assert {x['id'] for x in model['evidence'] if x['kind']=='image'}=={x['id'] for x in uploads}
+    project['layout']['camera']['fx']=530
+    with pytest.raises(ValueError,match='相机参数已改变'):
+        build_photo_room(project,uploads)

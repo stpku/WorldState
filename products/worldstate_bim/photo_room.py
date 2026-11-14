@@ -107,6 +107,27 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
         raw_points=[list(p) for p in points]
     else:
         raise ValueError("不支持的几何求解路径")
+    geometry_run=None;geometry_input_ids:set[str]=set()
+    run_id=(layout.get("camera") or {}).get("geometry_run_id") if camera_evidence else None
+    if run_id is not None:
+        if not isinstance(run_id,str) or not re.fullmatch(r"geometry-[0-9a-f]{32}",run_id):
+            raise ValueError("多视图相机来源无效")
+        geometry_run=next((r for r in project.get("geometry_runs",[]) if r.get("id")==run_id),None)
+        if not geometry_run or geometry_run.get("status")!="UNVERIFIED_RESEARCH_CANDIDATE" or not any(c.get("photo_id")==layout.get("photo_id") for c in geometry_run.get("registered_cameras",[])):
+            raise ValueError("当前照片没有可用的多视图相机估计")
+        parameters=geometry_run.get("camera_parameters",[])
+        if len(parameters)!=1 or len(parameters[0].get("params",[]))!=3:
+            raise ValueError("多视图相机模型不受支持")
+        f,cx,cy=parameters[0]["params"]
+        for name,expected in (("fx",f),("fy",f),("cx",cx),("cy",cy)):
+            if not math.isclose(camera_evidence[name],expected,rel_tol=1e-9,abs_tol=1e-9):
+                raise ValueError("相机参数已改变，请重新选择多视图估计或标记为人工参数")
+        for entry in geometry_run.get("inputs",[]):
+            photo=photos.get(entry.get("photo_id"))
+            if photo is None or photo["sha256"]!=entry.get("sha256"):
+                raise ValueError("多视图输入证据缺失或哈希不符")
+            geometry_input_ids.add(photo["id"])
+        if not 4<=len(geometry_input_ids)<=32:raise ValueError("多视图输入数量无效")
     if len(set(points)) != len(points):
         raise ValueError("草图墙角不能重复；关闭房间请使用闭合选项")
     closed = layout.get("closed") is True
@@ -155,7 +176,7 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
     by_wall: dict[str, list[dict[str, Any]]] = {}
     opening_groups: dict[str, list[dict[str, Any]]] = {}
     evidence: list[dict[str, Any]] = []
-    used_photos: set[str] = set()
+    used_photos: set[str] = set(geometry_input_ids)
     for ann in annotations:
         if not isinstance(ann, dict) or not re.fullmatch(r"ann-[0-9a-f]{32}", str(ann.get("id", ""))):
             raise ValueError("照片标注标识无效")
@@ -217,6 +238,15 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
     if camera_evidence:
         layout_evidence["photo_ref"]=camera_evidence["photo_id"]
         layout_evidence["corner_refs"]=camera_evidence["corner_refs"]
+        if geometry_run:
+            camera_evidence["geometry_run_ref"]=geometry_run["id"]
+            evidence.append({"id":geometry_run["id"],"kind":"multiview_camera_estimate",
+                "provider":geometry_run["provider"],"provider_version":geometry_run["provider_version"],
+                "inputs":[{"photo_ref":x["photo_id"],"sha256":x["sha256"]} for x in geometry_run["inputs"]],
+                "registered_photo_refs":[x["photo_id"] for x in geometry_run["registered_cameras"]],
+                "camera_parameters":geometry_run["camera_parameters"],"scale":geometry_run["scale"],
+                "mean_reprojection_error_px":geometry_run.get("mean_reprojection_error_px"),
+                "status":"inferred_unverified","limitations":geometry_run["limitations"]})
         evidence.append({"id":"camera-1","kind":"user_camera_calibration",**camera_evidence,"status":"user_supplied_unverified"})
     evidence.extend([
         layout_evidence,
@@ -233,7 +263,7 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
     for i, (x, y) in enumerate(points):
         linked = [annotation["id"] for k, edge in enumerate(edges, 1) if i in edge
                   for annotation in by_wall.get(f"wall-{k}", [])]
-        refs = list(dict.fromkeys(["layout-1", "scale-1"] + (["camera-1"] if camera_evidence else []) + linked))
+        refs = list(dict.fromkeys(["layout-1", "scale-1"] + (["camera-1"] if camera_evidence else []) + ([geometry_run["id"]] if geometry_run else []) + linked))
         nodes.append({"id": f"node-{i+1}", "x": (x - points[0][0]) * scale,
                       "y": (y - points[0][1]) * scale * (-1 if mode=="manual_schematic" else 1), "status": "inferred", "evidence_refs": refs})
     walls = []

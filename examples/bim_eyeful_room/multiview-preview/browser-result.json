@@ -1,0 +1,18 @@
+{
+  "operator": "automation",
+  "photos": 32,
+  "registered": 28,
+  "sparse_points": 456,
+  "reprojection_px": 0.7685125626254891,
+  "geometry_status": "UNVERIFIED_RESEARCH_CANDIDATE",
+  "photo_sha256": "9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2",
+  "target_photo_registered": true,
+  "camera_focal_px": 373.52066558038905,
+  "ai_wall_segment_candidates": 2,
+  "method": "COLMAP focal estimate and single-photo floor backprojection; wall corners not triangulated",
+  "scale": "ASSUMED 1 m, not independently measured",
+  "camera_pitch_roll_height": "ASSUMED",
+  "independent_accuracy": "NOT_MEASURED",
+  "human_labor": "NOT_MEASURED",
+  "revision_after_edit": 2
+}
