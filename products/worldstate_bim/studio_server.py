@@ -205,6 +205,9 @@ class Handler(BaseHTTPRequestHandler):
                     ident=path.rsplit("/",1)[-1]
                     result=self.read_fusion(ident)
                     self.send_json(200,result)
+                elif path.startswith("/api/structure/"):
+                    ident=path.rsplit("/",1)[-1]
+                    self.send_json(200,self.read_structure(ident))
                 elif path.startswith("/api/vision/overlay/"):
                     ident=path.rsplit("/",1)[-1]
                     if not re.fullmatch(r"vision-[0-9a-f]{32}",ident):raise ValueError("视觉结果编号无效")
@@ -241,6 +244,8 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/fusion/reconstruct":self.reconstruct_fusion(body);return
                 if path=="/api/fusion/scale":self.solve_fusion_scale(body);return
                 if path=="/api/fusion/generate":self.generate_fusion_room(body);return
+                if path=="/api/structure/reconstruct":self.reconstruct_structure(body);return
+                if path=="/api/structure/generate":self.generate_structure_room(body);return
                 if path=="/api/vision/analyze":self.analyze_photo(body);return
                 if path=="/api/vision/decision":self.decide_candidate(body);return
                 if path=="/api/vision/accept-segments":self.accept_segments(body);return
@@ -363,6 +368,82 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError('相机结果已更新，请重新进行多视图融合')
         if project.get('fusion_camera_input_changed'):
             raise ValueError('相机输入已改变，请重新恢复相机并进行多视图融合')
+
+    def corner_annotation_digest(self) -> str:
+        annotations=[x for x in (self.server.project or {}).get('annotations',[]) if x.get('kind')=='corner']
+        raw=json.dumps(annotations,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()
+        return hashlib.sha256(raw).hexdigest()
+
+    def read_structure(self, ident: str) -> dict:
+        if not isinstance(ident,str) or not re.fullmatch(r'structure-[0-9a-f]{32}',ident):raise ValueError('结构结果编号无效')
+        run=next((x for x in (self.server.project or {}).get('structure_runs',[]) if x.get('id')==ident),None)
+        directory=self.server.workspace/'structure'/ident;path=directory/'structure.json'
+        if not run or directory.is_symlink() or path.is_symlink() or not path.is_file():raise ValueError('结构结果不可用')
+        if hashlib.sha256(path.read_bytes()).hexdigest()!=run.get('sha256'):raise ValueError('结构结果哈希不符')
+        return json.loads(path.read_text())
+
+    def reconstruct_structure(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError('请先创建房间项目')
+        fusion=self.read_fusion(body.get('fusion_id'));self.require_current_fusion(fusion)
+        if len(project.get('structure_runs',[]))>=10:raise ValueError('结构实验次数已达工作区上限')
+        gid=fusion['geometry_run_id'];fid=fusion['id']
+        if not re.fullmatch(r'geometry-[0-9a-f]{32}',gid):raise ValueError('几何结果编号无效')
+        geometry=self.server.workspace/'geometry'/gid;fdir=self.server.workspace/'fusion'/fid
+        sparse=geometry/'sparse'/'0';images=geometry/'input';masks=fdir/'masks'
+        if any(p.is_symlink() for p in (geometry,fdir,sparse,images,masks)):
+            raise ValueError('结构来源目录不能是符号链接')
+        from .structure_from_lines import extract_lines,solve_lines,triangulate_annotated_corners
+        lines=extract_lines(fusion,sparse,images,masks);result=solve_lines(fusion,lines)
+        result['annotated_corners']=triangulate_annotated_corners(fusion,project['annotations'],self.server.uploaded)
+        result['corner_annotation_sha256']=self.corner_annotation_digest();result['fusion_id']=fid
+        parent=self.server.workspace/'structure'
+        if parent.is_symlink():raise ValueError('结构目录不能是符号链接')
+        parent.mkdir(mode=0o700,exist_ok=True);ident='structure-'+uuid.uuid4().hex;target=parent/ident;target.mkdir(mode=0o700)
+        result['id']=ident;_write_json(target/'structure.json',result);_write_json(target/'detected-lines.json',lines)
+        summary={'id':ident,'fusion_id':fid,'sha256':hashlib.sha256((target/'structure.json').read_bytes()).hexdigest(),
+                 'image_line_proposals':len(lines['lines']),'line_hypotheses':len(result['groups']),
+                 'corner_candidates':len(result['corner_candidates']),
+                 'annotated_corners':len(result['annotated_corners']['accepted']),
+                 'status':'UNVERIFIED_DEVELOPMENT_CANDIDATE'}
+        project.setdefault('structure_runs',[]).append(summary)
+        self.server.record('multiview_structure_reconstructed',structure_id=ident,
+                           **{k:v for k,v in summary.items() if k not in {'id','sha256'}})
+        self.send_json(201,summary)
+
+    def generate_structure_room(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError('请先创建房间项目')
+        structure=self.read_structure(body.get('structure_id'))
+        fusion=self.read_fusion(structure.get('fusion_id'));self.require_current_fusion(fusion)
+        if structure.get('corner_annotation_sha256')!=self.corner_annotation_digest():
+            raise ValueError('照片角点标注已变化，请重新求解结构')
+        photos={p['sha256']:p for p in self.server.uploaded}
+        for camera in fusion['cameras']:
+            photo=photos.get(camera['sha256']);path=self.server.uploads/(photo['sha256']+photo['extension']) if photo else None
+            if not photo or path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=camera['sha256']:
+                raise ValueError('结构来源照片丢失或哈希不符')
+        stored=project.get('fusion_scale') or {}
+        if stored.get('fusion_id')!=fusion['id']:raise ValueError('请先求解当前融合结果的多视图尺度')
+        if self.server.model is not None and body.get('confirm_regeneration') is not True:
+            raise ValueError('重新生成会替换当前几何，请先确认；旧版本会保留')
+        anchor=self.fusion_anchor(fusion,project.get('reference') or {},confirmed=True);reference=project.get('reference') or {}
+        from .structure_from_lines import build_structure_room
+        model=build_structure_room(fusion,structure,anchor,stored.get('solution') or {},body.get('line_ids'),
+            project_id=project['id'],height_m=reference.get('height_m'),height_basis=reference.get('height_basis'),
+            height_description=reference.get('height_description'),height_uncertainty_m=reference.get('height_uncertainty_m'),
+            thickness_m=reference.get('thickness_m'),confirmed_candidates=body.get('confirmed_candidates'),
+            allow_assumed_scale=body.get('allow_assumed_scale') is True,operator_kind=project.get('operator_kind','user'))
+        before=self.server.model
+        if before:
+            model['revision']=before['revision']+1
+            model['history']=before.get('history',[])+[{'revision':model['revision'],'action':'regenerated_from_multiview_lines',
+                'warning':'candidate identity is tied to source observations and must be re-associated after a new solve'}]
+        target=self.server.workspace/f"revision-{model['revision']:03}";save_version(model,target)
+        self.server.model,self.server.model_dir=model,target;project['current_revision']=model['revision']
+        self.server.record('multiview_line_candidate_generated',structure_id=structure['id'],revision=model['revision'],
+                           line_ids=body['line_ids'],operator=project.get('operator_kind','user'))
+        self.send_json(201,{'revision':model['revision'],'model':model,'validation':model['validation']})
 
     def fusion_anchor(self, fusion: dict, reference: dict, *, confirmed: bool) -> dict:
         project=self.server.project

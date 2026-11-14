@@ -1,0 +1,48 @@
+{
+  "operator": "automation",
+  "source": "previous real Eyeful development project, cached photos and registered cameras",
+  "registered_photos": 28,
+  "input_track_count": 476,
+  "groups": [
+    {
+      "id": "structure-line-eed8b11b857e9f01",
+      "views": 28,
+      "floor": "CONSISTENT_WITH_SPARSE_FLOOR_NOT_ACCURACY",
+      "holdout": "CONSISTENT_UNVERIFIED",
+      "selected": true
+    },
+    {
+      "id": "structure-line-ec287fc69baafd3b",
+      "views": 13,
+      "floor": "CONFLICT_WITH_SPARSE_FLOOR",
+      "holdout": "CONSISTENT_UNVERIFIED",
+      "selected": false
+    },
+    {
+      "id": "structure-line-3c35844869f4d0b4",
+      "views": 4,
+      "floor": "CONSISTENT_WITH_SPARSE_FLOOR_NOT_ACCURACY",
+      "holdout": "CONFLICT_OR_INSUFFICIENT",
+      "selected": false
+    },
+    {
+      "id": "structure-line-9ec2418cad3dd5f9",
+      "views": 3,
+      "floor": "CONFLICT_WITH_SPARSE_FLOOR",
+      "holdout": "CONSISTENT_UNVERIFIED",
+      "selected": false
+    }
+  ],
+  "corner_candidates": 3,
+  "scripted_annotated_corners": 1,
+  "stale_corner_annotations_rejected": "照片角点标注已变化，请重新求解结构",
+  "selected_walls": 1,
+  "rejected_candidates": 3,
+  "scale": "assumed, correlated, not measured",
+  "height": "assumed, not measured",
+  "revision_before": 8,
+  "revision_after": 10,
+  "independent_accuracy": "NOT_MEASURED",
+  "human_labor": "NOT_MEASURED",
+  "status": "PARTIAL_OPEN_NOT_RELEASE_READY"
+}
