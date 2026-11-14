@@ -6983,7 +6983,7 @@
     "image-line-2c75dee62ad303da"
   ],
   "rejected": [],
-  "runtime_seconds": 5.701,
+  "runtime_seconds": 5.68,
   "limitations": [
     "associations use a sparse semantic floor as a shared prior; this is a hybrid route",
     "2D boundaries and physical wall instances are not independently verified",
@@ -7031,7 +7031,7 @@
               156,
               712
             ],
-            "annotation_id": "ann-1e11457dd6614297b0a081ff1ee1a7be",
+            "annotation_id": "ann-d07e8ac8b3b84879b91a84c510764555",
             "operator_kind": "automation",
             "origin": "manual_annotation"
           },
@@ -7042,7 +7042,7 @@
               283,
               712
             ],
-            "annotation_id": "ann-52fe88bc327a4efab98021fa9d960094",
+            "annotation_id": "ann-5b23478ee3a74dd0b5b000f52dde72db",
             "operator_kind": "automation",
             "origin": "manual_annotation"
           }
@@ -7055,7 +7055,7 @@
     "rejected": [],
     "warning": "Same-ID clicks are triangulated and checked but are not automatically snapped to walls."
   },
-  "corner_annotation_sha256": "8e05bfaca834516c1204a275a7ff472f3310871771da3842881b85d416d323f3",
+  "corner_annotation_sha256": "556a8d98b7772fa41d33168b78b8e02772f6164b6011d87e3ca6a58849a14ad0",
   "fusion_id": "fusion-c6bf0a08168f4cc1942851735e673db5",
-  "id": "structure-d943e19fcd68433ab8450791d0f4b2ce"
+  "id": "structure-82a6121d0ae3472aa9eb3fe0baab19ab"
 }
