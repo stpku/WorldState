@@ -81,13 +81,14 @@ def reconstruct_images(image_dir: Path, names: list[str], output_dir: Path) -> d
     return result
 
 
-def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_dir: Path, *, threads: int = 4, calibration: dict | None = None) -> dict[str, Any]:
+def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_dir: Path, *, threads: int = 4, calibration: dict | None = None, max_image_size: int = 1200) -> dict[str, Any]:
     """Run CPU SfM on 4–32 images declared to share one undistorted camera.
 
     Focal length and poses are estimates unless an explicitly sourced, fixed
     camera calibration is supplied; the output coordinate frame has no physical scale. The caller must verify that the images are from the same
     camera and raster dimensions, and must not treat reprojection error as
-    reconstruction accuracy.
+    reconstruction accuracy. The optional SIFT maximum image dimension is a
+    resource/quality tradeoff; higher resolutions do not guarantee registration.
     """
     if not 4 <= len(names) <= 32 or len(set(names)) != len(names):
         raise ValueError("多视图求解需要 4 至 32 张不同照片")
@@ -95,6 +96,8 @@ def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_di
         raise ValueError("照片必须是证据目录中的普通文件")
     if isinstance(threads, bool) or not isinstance(threads, int) or not 1 <= threads <= 16:
         raise ValueError("线程数无效")
+    if isinstance(max_image_size, bool) or not isinstance(max_image_size, int) or not 640 <= max_image_size <= 4096:
+        raise ValueError("特征提取图像尺寸须为 640 至 4096 像素")
     from PIL import Image
     dimensions=set()
     for name in names:
@@ -121,7 +124,7 @@ def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_di
         if sha is not None and (not isinstance(sha,str) or len(sha)!=64 or any(c not in '0123456789abcdef' for c in sha)):
             raise ValueError('相机标定来源哈希无效')
         reader=pycolmap.ImageReaderOptions(camera_model='PINHOLE',camera_params=','.join(str(v) for v in values))
-    extraction=pycolmap.FeatureExtractionOptions(num_threads=threads,use_gpu=False,max_image_size=1200)
+    extraction=pycolmap.FeatureExtractionOptions(num_threads=threads,use_gpu=False,max_image_size=max_image_size)
     extraction.sift.first_octave=0
     matching=pycolmap.FeatureMatchingOptions(num_threads=threads,use_gpu=False)
     mapper=pycolmap.IncrementalPipelineOptions(num_threads=threads,random_seed=0,multiple_models=False,min_model_size=3)
@@ -144,6 +147,7 @@ def reconstruct_uncalibrated_images(image_dir: Path, names: list[str], output_di
     result={'schema':'worldstate-bim-geometry-candidate/0.1','provider':'COLMAP/pycolmap',
         'provider_version':pycolmap.__version__,'status':'RECONSTRUCTION_FAILED','inputs':hashes,
         'input_camera_assumption':'all images from one camera; '+('focal length self-calibrated' if calibration is None else 'user-declared fixed calibration'),
+        'feature_extraction_max_image_size_px':max_image_size,
         'supplied_calibration':calibration,
         'coordinate_frame':'COLMAP arbitrary reconstruction frame','scale':{'status':'unknown','unit':'arbitrary'},
         'timing_seconds':{'feature_extraction':after_features-started,'matching':after_matching-after_features,
