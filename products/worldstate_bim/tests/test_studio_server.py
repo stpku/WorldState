@@ -166,6 +166,42 @@ def test_point_cloud_requires_explicit_finite_xyz_and_marks_alignment_unknown(tm
     finally:instance.server_close()
 
 
+def test_local_wall_projection_and_corner_correction_create_traced_revision(tmp_path):
+    """Synthetic browser API contract; scripted edits are not human input."""
+    import hashlib
+    from products.worldstate_bim.model_first import build_local_wall_ir, solve_local_wall
+    from products.worldstate_bim.room_cli import save_version
+    from products.worldstate_bim.tests.test_model_first import scene
+    data,pix=scene()
+    photo=io.BytesIO();Image.new('RGB',(640,480),'white').save(photo,format='PNG');raw=photo.getvalue()
+    digest=hashlib.sha256(raw).hexdigest();data['cameras'][0]['sha256']=digest
+    for observations in data['corners'].values():observations[0]['photo_sha256']=digest
+    data['ceiling_lines'][0]['photo_sha256']=digest
+    solution=solve_local_wall(data,pix)
+    model=build_local_wall_ir(data,solution,project_id='studio-local',assumed_scale=1.,assumed_thickness_m=.1,allow_assumed=True)
+    model_dir=tmp_path/'start';save_version(model,model_dir)
+    instance=StudioServer(0,model_dir,tmp_path/'local-work')
+    instance.project={'schema':'worldstate-photo-project/0.1','id':'studio-local','operator_kind':'automation','events':[]}
+    thread=threading.Thread(target=instance.serve_forever,daemon=True);thread.start()
+    try:
+        status,uploaded=api(instance,'/api/upload',{'data_base64':base64.b64encode(raw).decode()});assert status==201
+        status,projections=api(instance,'/api/model/projections');assert status==200
+        assert projections['views'][0]['upload_id']==uploaded['id']
+        old=data['corners']['left_top'][0]['pixel_xy']
+        request={'revision':1,'image_id':1,'corner':'left_top','pixel_xy':[old[0]+.5,old[1]]}
+        status,result=api(instance,'/api/model/reoptimize',request)
+        assert status==200 and result['model']['revision']==2 and result['diff']['operator']=='automation'
+        assert result['model']['history'][-1]['pixel_after']==request['pixel_xy']
+        assert result['model']['scale']['status']=='assumed'
+        assert result['before_projection']['views'][0]['polygon_px']!=result['after_projection']['views'][0]['polygon_px']
+        assert api(instance,'/api/model/reoptimize',request)[0]==409
+        request.update(revision=2,pixel_xy=[old[0]+80,old[1]+80])
+        assert api(instance,'/api/model/reoptimize',request)[0]==400
+        assert api(instance,'/api/model')[1]['revision']==2
+    finally:
+        instance.shutdown();instance.server_close();thread.join()
+
+
 def test_vision_candidate_decisions_preserve_source_in_ifc_evidence(tmp_path):
     """Fake provider tests API wiring only; real inference is a separate browser run."""
     import hashlib

@@ -202,6 +202,15 @@ class Handler(BaseHTTPRequestHandler):
                             versions.append(int(match.group(1)))
                     self.send_json(200,{"revisions":versions,"current":self.server.model["revision"] if self.server.model else None})
                 elif path=="/api/model":self.send_json(200,self.server.model)
+                elif path=="/api/model/projections":
+                    projected=None
+                    if self.server.model and any(e.get('kind')=='multiview_opening_and_ceiling_pixels' for e in self.server.model.get('evidence',[])):
+                        from .model_first import project_local_wall_ir
+                        projected=project_local_wall_ir(self.server.model)
+                    if projected is not None:
+                        uploads={item['sha256']:item['id'] for item in self.server.uploaded}
+                        for view in projected['views']:view['upload_id']=uploads.get(view['photo_sha256'])
+                    self.send_json(200,projected)
                 elif path=="/api/mesh":self.send_json(200,mesh_data(self.server.model,self.server.model_dir/"model.ifc") if self.server.model else {"objects":[],"failures":[]})
                 elif path=="/api/evidence":self.send_json(200,{"model":self.server.model["evidence"] if self.server.model else [],"uploads":self.server.uploaded,
                     "point_cloud":({k:v for k,v in self.server.cloud.items() if k!="points"} if self.server.cloud else None)})
@@ -285,6 +294,11 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/layout":self.save_layout(body);return
                 if path=="/api/scale/bind":self.bind_scale(body);return
                 if path=="/api/generate":self.generate(body);return
+                if path=="/api/model/reoptimize":
+                    if self.server.model is None:raise ValueError("请先打开局部墙面模型")
+                    if body.get("revision")!=self.server.model["revision"]:
+                        self.send_json(409,{"error":"模型已更新，请重新加载后再修改"});return
+                    self.reoptimize_local_wall(body);return
                 if path not in {"/api/revise","/api/command","/api/sync-ifc","/api/restore"}:self.send_data(404,b"not found","text/plain");return
                 if self.server.model is None:raise ValueError("请先生成或打开模型")
                 if body.get("revision")!=self.server.model["revision"]:
@@ -310,6 +324,55 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(200,{"model":revised,"diff":diff,"comparison":comparison})
         except (KeyError,TypeError,ValueError,OSError,RuntimeError,json.JSONDecodeError,binascii.Error) as exc:
             self.send_json(400,{"error":str(exc)[:400]})
+
+    def reoptimize_local_wall(self, body: dict) -> None:
+        """Revise one source corner and solve a new partial-wall revision."""
+        from .model_first import build_local_wall_ir, project_local_wall_ir, solve_local_wall
+        before=self.server.model
+        if len(before['elements'])!=1 or before['elements'][0].get('id')!='wall-above-opening':
+            raise ValueError('当前模型不是受支持的单个局部墙面')
+        evidence={e['id']:e for e in before['evidence']};observed=evidence.get('observations');camera=evidence.get('camera')
+        if not observed or not camera or before.get('scale',{}).get('status')!='assumed':
+            raise ValueError('缺少局部照片证据或明确的假设尺度')
+        thickness=before['elements'][0]['parameters']['thickness']
+        if thickness['status']!='assumed':raise ValueError('墙厚已独立修订；请先保留其来源后再重新优化')
+        corner=body.get('corner');image_id=body.get('image_id')
+        if corner not in {'left_top','right_top','right_bottom'} or isinstance(image_id,bool) or not isinstance(image_id,int):
+            raise ValueError('请选择已观测角点和照片')
+        data={'schema':'worldstate-local-wall-observations/0.1',
+              'operator':'studio_correction','camera_mode':camera['camera_mode'],
+              'source_reconstruction':camera['source_reconstruction'],'cameras':copy.deepcopy(camera['cameras']),
+              'corners':copy.deepcopy(observed['corners']),'ceiling_lines':copy.deepcopy(observed['ceiling_lines']),
+              'semantic_views':copy.deepcopy(observed.get('semantic_views',[]))}
+        matches=[o for o in data['corners'].get(corner,[]) if o['image_id']==image_id]
+        if len(matches)!=1:raise ValueError('该照片没有可修订的角点观察')
+        obs=matches[0];photo=next((p for p in self.server.uploaded if p['sha256']==obs['photo_sha256']),None)
+        path=self.server.uploads/(photo['sha256']+photo['extension']) if photo else None
+        if not photo or path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=photo['sha256']:
+            raise ValueError('请先上传与源证据哈希一致的原始照片')
+        operator='automation' if self.server.project and self.server.project.get('operator_kind')=='automation' else 'user'
+        original=copy.deepcopy(obs['pixel_xy']);obs['pixel_xy']=body.get('pixel_xy')
+        obs['operator_kind']=operator;obs['origin']='studio_observation_correction'
+        solution=solve_local_wall(data)
+        revised=build_local_wall_ir(data,solution,project_id=before['project_id'],
+            assumed_scale=before['coordinate_system']['source_to_metres_assumed'],
+            assumed_thickness_m=thickness['value'],allow_assumed=True)
+        revised['revision']=before['revision']+1
+        existing_ids={x['id'] for x in revised['evidence']}
+        revised['evidence'] += [copy.deepcopy(x) for x in before['evidence'] if x['id'] not in existing_ids]
+        event={'previous_revision':before['revision'],'revision':revised['revision'],'element_id':'wall-above-opening',
+               'operator':operator,'action':'correct_source_corner_and_reoptimize','photo_sha256':obs['photo_sha256'],
+               'corner':corner,'pixel_before':original,'pixel_after':obs['pixel_xy'],
+               'fit_rms_px':solution['after']['rms_px'],'warning':'New draft requires review; scale and thickness remain assumed.'}
+        revised['history']=copy.deepcopy(before.get('history',[]))+[event]
+        before_projection=project_local_wall_ir(before);after_projection=project_local_wall_ir(revised)
+        target=self.server.workspace/f"revision-{revised['revision']:03}"
+        save_version(revised,target,diff=event)
+        self.server.model,self.server.model_dir=revised,target
+        if self.server.project:
+            self.server.project['current_revision']=revised['revision']
+            self.server.record('reoptimize_local_wall',element_id='wall-above-opening',corner=corner,operator=operator)
+        self.send_json(200,{'model':revised,'diff':event,'before_projection':before_projection,'after_projection':after_projection})
 
     def create_project(self, body: dict) -> None:
         if self.server.project is not None or self.server.model is not None:
