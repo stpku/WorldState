@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/dev/WorldState/benchmarks/ws_geometry/run_multiview_room_example.py", line 80, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/home/dev/WorldState/benchmarks/ws_geometry/run_multiview_room_example.py", line 59, in main
+    model=build_multiview_room(fusion,anchor,solution,ids,**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dev/WorldState/products/worldstate_bim/multiview_fusion.py", line 515, in build_multiview_room
+    require_distinct_floor_support(fusion)
+  File "/home/dev/WorldState/products/worldstate_bim/multiview_fusion.py", line 255, in require_distinct_floor_support
+    raise ValueError('去重后地面支持不足，请补充证据并重新融合')
+ValueError: 去重后地面支持不足，请补充证据并重新融合

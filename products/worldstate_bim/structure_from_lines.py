@@ -22,7 +22,7 @@ from scipy.optimize import least_squares
 
 from .multiview_fusion import (
     _camera_matrix, _read_semantic_masks, _sha, apply_multiview_scale,
-    triangulate_observations,
+    require_distinct_floor_support, triangulate_observations,
 )
 
 
@@ -74,6 +74,7 @@ def extract_lines(fusion: dict, sparse: Path, images: Path, masks: Path) -> dict
     cameras = {c['image_id']: c for c in fusion['cameras']}
     if set(records) != set(cameras):
         raise ValueError('已注册相机与融合结果不一致')
+    require_distinct_floor_support(fusion)
     origin, ex, ey, normal, offset = _floor_basis(fusion)
     lines = []; rejected = defaultdict(int)
     for image_id in sorted(records):
@@ -286,6 +287,7 @@ def solve_lines(fusion: dict, detections: dict) -> dict:
         detections.get('source_reconstruction') != fusion.get('source_reconstruction') or
         detections.get('semantic_manifest_sha256') != fusion.get('semantic_manifest_sha256')):
         raise ValueError('二维线与三维融合输入不一致')
+    require_distinct_floor_support(fusion)
     basis = _floor_basis(fusion); origin, ex, ey, normal, offset = basis
     cameras = {c['image_id']: c for c in fusion['cameras']}
     lines = detections['lines']
@@ -490,6 +492,7 @@ def build_structure_room(fusion: dict, structure: dict, anchor: dict, solution: 
     if any(set(pair['line_ids']) <= set(selected_line_ids) and pair['status'].startswith('POSSIBLE_DUPLICATE')
            for pair in structure['parallel_pairs_requiring_review']):
         raise ValueError('所选线可能重复或属于相近墙体，请先区分')
+    require_distinct_floor_support(fusion)
     scaled = apply_multiview_scale(fusion,anchor,solution)
     factor = float(solution['metres_per_sfm_unit'])
     frame = structure['floor_basis'];origin = np.asarray(frame['origin'])*factor

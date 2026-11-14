@@ -166,3 +166,56 @@ def test_scripted_candidate_confirmation_is_assisted_not_automatic_modeling():
         allow_assumed_scale=True,operator_kind='automation')
     assert model['mode']=='assisted'
     assert model['evidence'][0]['status']=='scripted_selection_not_human'
+
+
+def test_floor_support_counts_exact_multiview_duplicate_pixels_once():
+    """Two different 3D IDs must not turn the same two pixels into two votes."""
+    from products.worldstate_bim.multiview_fusion import _deduplicate_floor_tracks
+    def track(ident, first, second):
+        return {'id': ident, 'observations': [
+            {'image_id': 1, 'photo_sha256': 'a'*64, 'pixel_xy': first, 'usable': True},
+            {'image_id': 2, 'photo_sha256': 'b'*64, 'pixel_xy': second, 'usable': True}]}
+    tracks = [track(1,[1.,2.],[3.,4.]), track(2,[1.,2.],[3.,4.]),
+              track(3,[1.,2.],[3.,4.001])]
+    distinct, groups = _deduplicate_floor_tracks(tracks)
+    assert [t['id'] for t in distinct] == [1,3]
+    assert groups[0]['retained_track_id'] == 1 and groups[0]['redundant_track_ids'] == [2]
+    assert len(groups[0]['pair_evidence'][0]['shared_observations']) == 2
+
+
+def test_real_meeting_room_duplicate_floor_evidence_is_rejected_without_relaxing_minimum():
+    """Real development evidence, with no claim about independent geometry."""
+    import json
+    from pathlib import Path
+    from products.worldstate_bim.multiview_fusion import (
+        _deduplicate_floor_tracks, _plane_fit, require_distinct_floor_support,
+    )
+    root=Path(__file__).resolve().parents[3]/'examples/bim_eyeful_room/round7/meeting_room_dev'
+    fusion=json.loads((root/'fusion-original.json').read_text())
+    floor_tracks=[t for t in fusion['tracks'] if t['status']=='SUPPORTED' and t['semantic_class']==3]
+    distinct,groups=_deduplicate_floor_tracks(floor_tracks)
+    assert len(floor_tracks)==10 and len(distinct)==8
+    assert [(g['retained_track_id'],g['redundant_track_ids']) for g in groups] == [(104,[105]),(314,[315])]
+    planes,_=_plane_fit(distinct,8,31)
+    assert not planes
+    with pytest.raises(ValueError,match='去重后地面支持不足'):
+        require_distinct_floor_support(fusion)
+    from products.worldstate_bim.multiview_fusion import build_multiview_room
+    anchor=json.loads((root/'route-a-ifc/anchor-assumed.json').read_text())
+    selection=json.loads((root/'route-a-ifc/run-summary.json').read_text())['selected_surface_ids']
+    with pytest.raises(ValueError,match='去重后地面支持不足'):
+        build_multiview_room(fusion,anchor,solve_multiview_scale(fusion,anchor),selection,
+            project_id='test-duplicate-floor',assumed_thickness_m=.12,confirmed_candidates=True,
+            allow_assumed_scale=True,operator_kind='automation')
+    earlier=json.loads((root.parent.parent/'round6/fusion.json').read_text())
+    require_distinct_floor_support(earlier)
+    prior_id=earlier['floor_planes'][0]['support_point_ids'][0]
+    invalid=copy.deepcopy(earlier)
+    floor_track=next(t for t in invalid['tracks'] if t['id']==prior_id)
+    next(o for o in floor_track['observations'] if o['usable'] and o['semantic_class']==3)['photo_sha256']='0'*64
+    with pytest.raises(ValueError,match='缺少匹配的照片观测'):
+        require_distinct_floor_support(invalid)
+    duplicate=copy.deepcopy(next(t for t in earlier['tracks'] if t['id']==prior_id));duplicate['id']=9999999
+    earlier['tracks'].append(duplicate);earlier['floor_planes'][0]['support_point_ids'].append(duplicate['id'])
+    with pytest.raises(ValueError,match='含重复像素证据'):
+        require_distinct_floor_support(earlier)

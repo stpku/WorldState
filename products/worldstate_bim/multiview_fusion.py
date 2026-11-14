@@ -6,6 +6,7 @@ recorded physical scale is applied. Semantic labels and planes are hypotheses.
 from __future__ import annotations
 
 import hashlib
+import itertools
 import json
 import math
 import time
@@ -195,6 +196,82 @@ def plane_intersection(a: dict, b: dict) -> dict | None:
     return {'point':point.tolist(),'direction':direction.tolist(),'condition_number':float(np.linalg.cond(matrix))}
 
 
+def _deduplicate_floor_tracks(tracks: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Count identical two-view pixel evidence once, retaining the ambiguity.
+
+    Different COLMAP keypoint orientations can create multiple 3D tracks from
+    exactly the same image pixels. Such tracks must not count as independent
+    floor support. This does not merge merely nearby or parallel geometry.
+    """
+    from collections import defaultdict
+    by_id = {t['id']: t for t in tracks}
+    if len(by_id) != len(tracks):raise ValueError('地面轨迹 ID 重复')
+    parent = {track_id: track_id for track_id in by_id}
+    def root(track_id):
+        while parent[track_id] != track_id:
+            parent[track_id] = parent[parent[track_id]];track_id = parent[track_id]
+        return track_id
+    buckets = defaultdict(set)
+    for track in tracks:
+        for obs in track.get('observations', []):
+            xy = obs.get('pixel_xy')
+            if (not obs.get('usable') or not isinstance(xy, list) or len(xy) != 2
+                    or not isinstance(obs.get('photo_sha256'), str)):
+                continue
+            x, y = map(float, xy)
+            if not math.isfinite(x) or not math.isfinite(y):continue
+            buckets[(obs['image_id'], obs['photo_sha256'], x, y)].add(track['id'])
+    shared = defaultdict(list)
+    for key, owners in buckets.items():
+        if len(owners) > 100:raise ValueError('地面轨迹共享像素过多，无法可靠求解')
+        for pair in itertools.combinations(sorted(owners), 2):shared[pair].append(key)
+    pairs = []
+    for (left, right), evidence in sorted(shared.items()):
+        if len({entry[0] for entry in evidence}) < 2:continue
+        a, b = root(left), root(right)
+        if a != b:parent[max(a, b)] = min(a, b)
+        pairs.append({'track_ids':[left, right], 'shared_observations':[
+            {'image_id': image_id, 'photo_sha256': sha, 'pixel_xy':[x,y]}
+            for image_id, sha, x, y in sorted(evidence)]})
+    groups = defaultdict(list)
+    for track_id in sorted(by_id):groups[root(track_id)].append(track_id)
+    duplicates = [{'retained_track_id': ids[0], 'redundant_track_ids': ids[1:],
+                   'pair_evidence': [p for p in pairs if set(p['track_ids']) <= set(ids)]}
+                  for ids in groups.values() if len(ids) > 1]
+    return [by_id[ids[0]] for ids in groups.values()], duplicates
+
+
+def require_distinct_floor_support(fusion: dict) -> None:
+    """Reject old cached floor candidates that rely on duplicated evidence."""
+    if not fusion.get('floor_planes'):raise ValueError('地面支持不足，请补充证据并重新融合')
+    ids = fusion['floor_planes'][0].get('support_point_ids')
+    if not isinstance(ids, list) or len(set(ids)) != len(ids):
+        raise ValueError('地面支持轨迹缺失或重复，请重新融合')
+    tracks = {t['id']:t for t in fusion.get('tracks', []) if 'id' in t}
+    if any(i not in tracks or tracks[i].get('status') != 'SUPPORTED' or tracks[i].get('semantic_class') != 3 for i in ids):
+        raise ValueError('地面支持轨迹与语义证据不一致，请重新融合')
+    cameras = {c['image_id']:c for c in fusion.get('cameras', [])}
+    for track_id in ids:
+        views = set()
+        for obs in tracks[track_id].get('observations', []):
+            if not obs.get('usable') or obs.get('semantic_class') != 3:continue
+            camera = cameras.get(obs.get('image_id'));xy = obs.get('pixel_xy')
+            if (camera is None or camera.get('sha256') != obs.get('photo_sha256')
+                    or not isinstance(xy,list) or len(xy) != 2):
+                raise ValueError('地面轨迹缺少匹配的照片观测，请重新融合')
+            x,y=map(float,xy)
+            if (not math.isfinite(x) or not math.isfinite(y)
+                    or not (0 <= x < camera['width_px'] and 0 <= y < camera['height_px'])):
+                raise ValueError('地面轨迹像素坐标无效，请重新融合')
+            views.add(obs['image_id'])
+        if len(views)<2:raise ValueError('地面轨迹缺少至少两个照片观测，请重新融合')
+    distinct, duplicates = _deduplicate_floor_tracks([tracks[i] for i in ids])
+    if len(distinct) < 8:
+        raise ValueError('去重后地面支持不足，请补充证据并重新融合')
+    if duplicates:
+        raise ValueError('地面候选含重复像素证据，请重新融合')
+
+
 def fuse_multiview(sparse: Path, images: Path, mask_dir: Path) -> dict[str, Any]:
     """Fuse registered tracks, segment labels and planes without inventing dimensions."""
     start=time.monotonic();reconstruction=pycolmap.Reconstruction(str(sparse));records,masks=_read_semantic_masks(reconstruction,images,mask_dir)
@@ -220,7 +297,9 @@ def fuse_multiview(sparse: Path, images: Path, mask_dir: Path) -> dict[str, Any]
         tracks.append({'id':int(pid),'xyz':p.xyz.tolist(),'mean_reprojection_error_px':float(p.error),
                        'semantic_class':label,'semantic_agreement':ratio,'status':status,'observations':obs})
     supported=[t for t in tracks if t['status']=='SUPPORTED'];by_id={t['id']:t for t in supported}
-    floors,floor_threshold=_plane_fit([t for t in supported if t['semantic_class']==3],8,31)
+    floor_tracks = [t for t in supported if t['semantic_class']==3]
+    distinct_floor_tracks, floor_duplicates = _deduplicate_floor_tracks(floor_tracks)
+    floors,floor_threshold=_plane_fit(distinct_floor_tracks,8,31)
     ceilings,_=_plane_fit([t for t in supported if t['semantic_class']==5],10,53)
     up=None;floor=floors[0] if floors else None
     if floor:
@@ -281,6 +360,8 @@ def fuse_multiview(sparse: Path, images: Path, mask_dir: Path) -> dict[str, Any]
       'model_sha256':UperNetOnnxProvider.MODEL_SHA256,
       'source_reconstruction':[{"file":x.name,"sha256":_sha(x)} for x in sorted(sparse.glob('*.bin'))],
       'semantic_manifest_sha256':_sha(mask_dir/'manifest.json'),'cameras':cameras,'tracks':tracks,'track_status_counts':dict(status_counts),
+      'floor_track_deduplication':{'method':'exact matching pixels in at least two distinct registered images',
+          'input_tracks':len(floor_tracks),'distinct_tracks':len(distinct_floor_tracks),'duplicate_groups':floor_duplicates},
       'floor_planes':floors,'ceiling_planes':ceilings,'raw_wall_planes':raw_walls,'wall_surfaces':surfaces,
       'floor_wall_intersections':lines,'wall_junctions':junctions,'ambiguous_surface_pairs':ambiguous,'floor_up':up.tolist() if up is not None else None,
       'runtime_seconds':round(time.monotonic()-start,3),
@@ -448,6 +529,7 @@ def build_multiview_room(fusion: dict, anchor: dict, solution: dict, selected_su
         raise ValueError('未知墙厚必须给出明确的正数假设')
     if not isinstance(selected_surface_ids,list) or not selected_surface_ids or len(set(selected_surface_ids))!=len(selected_surface_ids):
         raise ValueError('请选择不重复的墙面候选')
+    require_distinct_floor_support(fusion)
     scaled=apply_multiview_scale(fusion,anchor,solution)
     surfaces={s['id']:s for s in scaled['wall_surfaces']}
     if any(i not in surfaces or not surfaces[i].get('visible_candidate') for i in selected_surface_ids):

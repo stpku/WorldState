@@ -1,0 +1,21 @@
+{
+  "before": {
+    "schema": "IFC4",
+    "walls": 1,
+    "geometry_generated": 1,
+    "schema_issues": 0,
+    "guids": [
+      "1Fi70qJq5M2RjfHHG80Ja4"
+    ]
+  },
+  "after": {
+    "schema": "IFC4",
+    "walls": 1,
+    "geometry_generated": 1,
+    "schema_issues": 0,
+    "guids": [
+      "1Fi70qJq5M2RjfHHG80Ja4"
+    ]
+  },
+  "guid_preserved": true
+}

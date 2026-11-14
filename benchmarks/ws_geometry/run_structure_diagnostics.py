@@ -32,8 +32,18 @@ def main() -> None:
     fusion = fuse_multiview(a.sparse, a.images, a.masks)
     route_a_s = time.monotonic()-started
     started = time.monotonic()
-    lines = extract_lines(fusion, a.sparse, a.images, a.masks)
-    structure = solve_lines(fusion, lines)
+    if fusion['floor_planes']:
+        lines = extract_lines(fusion, a.sparse, a.images, a.masks)
+        structure = solve_lines(fusion, lines)
+        route_b_status = 'COMPLETED_UNVERIFIED'
+    else:
+        # The line solver uses the shared floor as a prior; don't fabricate a
+        # zero-candidate comparison when floor evidence is insufficient.
+        lines = {'schema':'worldstate-image-structure-lines/0.1', 'lines':[],
+                 'status':'NOT_RUN_INSUFFICIENT_FLOOR'}
+        structure = {'schema':'worldstate-multiview-structure/0.1', 'groups':[],
+                     'corner_candidates':[], 'status':'NOT_RUN_INSUFFICIENT_FLOOR'}
+        route_b_status = 'NOT_RUN_INSUFFICIENT_FLOOR'
     route_b_s = time.monotonic()-started
     a.output.mkdir(parents=True)
     save(a.output/'fusion.json', fusion)
@@ -49,6 +59,7 @@ def main() -> None:
                   'source_reconstruction': fusion['source_reconstruction'],
                   'semantic_manifest_sha256': fusion['semantic_manifest_sha256']},
         'route_a': {'method': 'semantic sparse tracks and plane fitting', 'runtime_seconds': route_a_s,
+            'floor_track_deduplication': fusion['floor_track_deduplication'],
             'floor_planes': [{'id': x['id'], 'support_points': x['support_count'],
                               'support_views': len(x['support_views']), 'fit_rms_source_units': x['fit_rms_arbitrary']}
                              for x in fusion['floor_planes']],
@@ -56,7 +67,7 @@ def main() -> None:
                 'support_views': x['support_view_count'], 'fit_rms_source_units': x['fit_rms_arbitrary'],
                 'visible_candidate': bool(x.get('visible_candidate'))} for x in fusion['wall_surfaces']]},
         'route_b': {'method': 'multiview image boundary lines with shared route-A sparse-floor prior',
-            'runtime_seconds': route_b_s, 'image_line_proposals': len(lines['lines']),
+            'status': route_b_status, 'runtime_seconds': route_b_s, 'image_line_proposals': len(lines['lines']),
             'line_hypotheses': [{'id': x['id'], 'support_views': x['support_view_count'],
                 'floor_consistency': x['floor_consistency'],
                 'floor_signed_distances_at_support_ends_source_units': x['floor_signed_distances_at_support_ends_relative'],

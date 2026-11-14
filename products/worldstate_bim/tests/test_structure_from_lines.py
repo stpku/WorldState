@@ -85,6 +85,13 @@ def test_real_development_scene_reports_instability_and_exports_only_consistent_
         build_structure_room(fusion,structure,anchor,solution,[groups[2]['id']],**kwargs)
     model=build_structure_room(fusion,structure,anchor,solution,[x['id'] for x in groups[:2]],**kwargs)
     assert model['mode']=='assisted' and model['validation']['scope']=='PARTIAL_OPEN'
+    cached=copy.deepcopy(fusion);source_id=cached['floor_planes'][0]['support_point_ids'][0]
+    duplicate=copy.deepcopy(next(t for t in cached['tracks'] if t['id']==source_id));duplicate['id']=9999999
+    cached['tracks'].append(duplicate);cached['floor_planes'][0]['support_point_ids'].append(duplicate['id'])
+    with pytest.raises(ValueError,match='含重复像素证据'):
+        solve_lines(cached,detections)
+    with pytest.raises(ValueError,match='含重复像素证据'):
+        build_structure_room(cached,structure,anchor,solution,[x['id'] for x in groups[:2]],**kwargs)
     assert model['scale']['independence']=='assumed' and all(e['parameters']['height']['status']=='assumed' for e in model['elements'])
     assert len(model['nodes'])==4 and not model['constraints']
     path=tmp_path/'model.ifc';export_room(model,path);file=ifcopenshell.open(path)

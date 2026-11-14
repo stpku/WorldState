@@ -1,0 +1,134 @@
+{
+  "schema": "worldstate-structure-diagnostics/0.1",
+  "input": {
+    "registered_or_supplied_cameras": 32,
+    "tracks": 450,
+    "source_reconstruction": [
+      {
+        "file": "cameras.bin",
+        "sha256": "a8f37fd6fbf1748fa98f22d272f61ec562b94a2b3bc43d1deb3af5526cbf4399"
+      },
+      {
+        "file": "frames.bin",
+        "sha256": "2dadb2d4befa5b6956d07f66ff77deb4920645d6d26726a7360a98a6bff7261f"
+      },
+      {
+        "file": "images.bin",
+        "sha256": "e35e7063310c54e93ca29a30622522dbf575a8ec4064bddb1075a19a60e372c8"
+      },
+      {
+        "file": "points3D.bin",
+        "sha256": "354fc81144d3684260c3827978ac545b5623744615237549e90b807d5da4baac"
+      },
+      {
+        "file": "rigs.bin",
+        "sha256": "73e4d5f0da0a84a5711b46ae716a149f1532832f95bb09b4b01e73cf2c5afbe9"
+      }
+    ],
+    "semantic_manifest_sha256": "532e68b161572280f8fa5a47b9c9945962b1e1906d8ee52fd08c1d8d6f6e9c41"
+  },
+  "route_a": {
+    "method": "semantic sparse tracks and plane fitting",
+    "runtime_seconds": 1.7866332939593121,
+    "floor_track_deduplication": {
+      "method": "exact matching pixels in at least two distinct registered images",
+      "input_tracks": 10,
+      "distinct_tracks": 8,
+      "duplicate_groups": [
+        {
+          "retained_track_id": 104,
+          "redundant_track_ids": [
+            105
+          ],
+          "pair_evidence": [
+            {
+              "track_ids": [
+                104,
+                105
+              ],
+              "shared_observations": [
+                {
+                  "image_id": 7,
+                  "photo_sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6",
+                  "pixel_xy": [
+                    916.4806518554688,
+                    753.85986328125
+                  ]
+                },
+                {
+                  "image_id": 10,
+                  "photo_sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8",
+                  "pixel_xy": [
+                    870.1452026367188,
+                    701.4354248046875
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "retained_track_id": 314,
+          "redundant_track_ids": [
+            315
+          ],
+          "pair_evidence": [
+            {
+              "track_ids": [
+                314,
+                315
+              ],
+              "shared_observations": [
+                {
+                  "image_id": 23,
+                  "photo_sha256": "0ec6406d45fbe0cc15070261234058c6282e9e0857283dc8b57cbd9548f18604",
+                  "pixel_xy": [
+                    915.8593139648438,
+                    747.2208862304688
+                  ]
+                },
+                {
+                  "image_id": 27,
+                  "photo_sha256": "8cde02a9c0ebbea4c5a39eabb5a521e8887464240be63b817d6b538196cf9c07",
+                  "pixel_xy": [
+                    901.9288940429688,
+                    657.4880981445312
+                  ]
+                },
+                {
+                  "image_id": 29,
+                  "photo_sha256": "e06bc214011842cb054fe3597b6c22347e266742a67dda21bed398e217971c05",
+                  "pixel_xy": [
+                    941.0630493164062,
+                    686.735595703125
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "floor_planes": [],
+    "wall_surface_hypotheses": []
+  },
+  "route_b": {
+    "method": "multiview image boundary lines with shared route-A sparse-floor prior",
+    "status": "NOT_RUN_INSUFFICIENT_FLOOR",
+    "runtime_seconds": 2.3150350898504257e-06,
+    "image_line_proposals": 0,
+    "line_hypotheses": [],
+    "eligible_count": 0,
+    "corner_candidates": 0
+  },
+  "overlays": [],
+  "independent_dimensions": "NOT_MEASURED",
+  "independent_wall_instances": "NOT_MEASURED",
+  "human_time": "NOT_MEASURED",
+  "caveats": [
+    "Both routes use identical inputs and route B shares route A floor prior.",
+    "Source pose inputs and physical scale must be evaluated separately; this tool does not establish them.",
+    "Candidate count, fit residual and leave-one-view-out reprojection are not independent accuracy.",
+    "Leave-one-view-out excludes a view during line fitting only; associations, cameras and floor use all views."
+  ]
+}
