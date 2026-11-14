@@ -2,6 +2,9 @@
 
 ## Unreleased — 2026-11-14
 
+- Add optional local CPU semantic vision proposals, overlay inspection, explicit accept/reject and model provenance; a real-photo scripted preview generates three disconnected editable IFC wall-segment candidates with **assumed** scale and height. Multi-view SfM and semantic surface hypotheses remain research and are not integrated into Studio geometry.
+- Bind scale to source photo, physical endpoint observations, selected wall, measurement and camera; changed inputs require explicit rechecking and rebinding. Historical unbound photo projects must bind before regeneration.
+
 - Add local photo-project creation, image annotation, explicit camera-floor backprojection or manually drawn floor-layout geometry, scale application, versioned IFC generation, and browser IFC readback. The real-photo result is a partial, unverified wall; scripted annotations are marked simulated.
 - Exercise Bonsai wall-height and window/opening edits on the real CRASLAB development model. Preserve a failed opening edit, and accept alternative triangulation only after strict vertex, plane, surface and topology checks.
 - Add frozen-candidate, reference-isolation and paired-cost evaluation tools. They do not independently establish authoring-tool acceptance or release readiness.

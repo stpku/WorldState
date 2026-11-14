@@ -2,7 +2,9 @@
 
 **Status: experimental assisted Photo/Scan-to-BIM and local Studio; V0.2 is NOT release-ready.**
 
-**Round 4:** Studio can create a local photo project, record image annotations, and generate editable room candidates using either a user-drawn metric sketch or pinhole backprojection of manually marked ground points with explicitly supplied camera assumptions. A [real TUM photo partial-wall workflow](../../examples/bim_real_photo_tum/round4/README.md) and external Bonsai readback were run. It is not automatic visual recognition, multiview triangulation, or a validated three-wall room.
+**Round 5:** local CPU semantic inference proposes image regions and boundaries that can be reviewed in Studio; a [real-photo three-segment IFC draft](../../examples/bim_eyeful_room/README.md) was generated and edited. Its scale, height and camera attitude are assumptions, not measurements. Separate CPU SfM remains experimental and is not integrated into the Studio geometry path. No independently measured three-wall room or labor-savings acceptance is claimed.
+
+**Round 4:** Studio can create a local photo project, record image annotations, and generate editable room candidates using either a user-drawn metric sketch or pinhole backprojection of manually marked ground points with explicitly supplied camera assumptions. A [real TUM photo partial-wall workflow](../../examples/bim_real_photo_tum/round4/README.md) and external Bonsai readback were run. That Round 4 workflow did not include automatic recognition, multiview triangulation, or a validated three-wall room.
 
 **Round 3:** the [real CRASLAB multi-object example](../../examples/bim_real_scan_craslab/room_round3/README.md) has eight inferred walls, one slab and five windows/openings; four conflicting source objects are quarantined. The multi-wall IR, constraints, IFC export, Bonsai edit and restricted readback run locally. No independent real-room accuracy or labor-savings acceptance is claimed.
 
@@ -40,10 +42,10 @@ Install the Python 3.12 product dependencies as described in [Benchmark setup](.
 
 ```bash
 OPENBLAS_NUM_THREADS=1 PYTHONPATH=. /tmp/ws-bim-venv/bin/python -m products.worldstate_bim.studio_server \
-  --workspace /tmp/worldstate-photo-room-NEW --port 8766
+  --workspace /tmp/worldstate-photo-room-NEW --port 8766 --vision-model /path/to/verified-upernet.onnx
 ```
 
-Open `http://127.0.0.1:8766/`, create a project, upload photos, annotate a visible wall boundary for each candidate wall, and select a geometry path. The schematic path uses user-drawn proportions; the camera path requires ordered ground-corner annotations in one photo, explicit pinhole intrinsics and pitch, a level-floor/zero-roll assumption and a metric reference. It does not triangulate multiple photographs or compensate lens distortion. Both paths require a user-provided height, an explicit thickness assumption and confirmation that the inputs have been reviewed; the result remains an unverified draft. Door/window dimensions must be supplied separately. Sources, assumptions, unknowns and interaction timestamps are recorded; automated runs are marked simulated and do not measure human labor.
+Open `http://127.0.0.1:8766/`, create a project, upload photos and select AI analysis; review and accept or reject the proposed lines and endpoints, and correct them where needed. Specify the supported local model at startup, or omit `--vision-model` for manual operation. Bind the actual physical scale endpoints and select a geometry path. See the [reproduction record](../../docs/reports/worldstate-bim-round5-2026-11-14.md). The schematic path uses user-drawn proportions; the camera paths require ordered ground-corner or separate segment-endpoint annotations in one photo, explicit pinhole intrinsics and pitch, a level-floor/zero-roll assumption and a metric reference. It does not triangulate multiple photographs or compensate lens distortion. Both paths require a user-provided height, an explicit thickness assumption and confirmation that the inputs have been reviewed; the result remains an unverified draft. Door/window dimensions must be supplied separately. Sources, assumptions, unknowns and interaction timestamps are recorded; automated runs are marked simulated and do not measure human labor.
 
 To inspect the existing real scan instead, specify its model directory:
 
