@@ -33,10 +33,13 @@ Linux x86-64、Python 3.12、CPU、pycolmap 4.2.1、ONNX Runtime 1.20.1、IfcOpe
 | kicker / Photo-only，29 图 | COLMAP CPU 4 线程 | 注册 26/29，2722 点，平均重投影 1.096 px，40.82 s；UPerNet 26 图 81.37 s。13 条地面轨迹去重为 10 条，出现 1 个使用 8 点的拟合面和 3 个墙面候选；墙地线有 2 条二维提议，但无可导出的三维线或角。 |
 | kicker / Known-pose，29 图 | 固定 29 个官方姿态 | 2654 点、平均重投影 1.211 px；固定姿态与归一化后的官方姿态矩阵最大差约 `4.44e-16`。不得与 Photo-only 按输入相同直接排名。 |
 | kicker / 相同 8 图、相同 Known-pose | 两条路线及同一 UPerNet 权重 | 稀疏路线 846 点、0 地面支持、0 墙面；PixCuboid 在 CPU 上 25.43 s 返回闭合长方体候选。8 图中有 8 图的部分地面语义像素落在其一个先验面，其他面也有冲突支持；没有自动确认地面。 |
+| kicker / 相同 8 图、相同 Known-pose，扫描摘要已查看后追加 | Depth Anything V2 Small + 同图稀疏点标定 + UPerNet | 8 图推理共 12.18 s（不含加载与图像处理）；6 图的拟合通过预设的同源稀疏诊断门槛，2 图没有可用稀疏点。6 图的地面语义像素融合产生一个未确认平面；它不是独立公制重建或可交付地面。 |
 
 `kicker` 的初次 PixCuboid 运行因 480×721 输入触发上游 U-Net 上采样形状断言而失败，日志保留在缓存。第二次只在右边/底边补零至 16 的倍数，沿用经缩放的相机尺寸和内参，成功产生候选；补零可能影响预测，必须算作该实验的预处理。模型没有输出 IFC，长方体闭合和 Manhattan 假设不能证明被遮挡墙面存在。office 16 图 PixCuboid 进程以 137 退出，原因未确认；8 图进程记录峰值约 4.43 GiB。不同图数、预处理和输入条件下的结果不作精度排名。
 
 `kicker` 照片复核定位轨迹 `1134` 在家具支架上，轨迹 `1135` 与它在至少两个视图使用相同像素。按原有规则一并排除这组观测后，10 条独立地面轨迹变为 9 条、地面拟合从 1 个变为 0 个；最小支持数始终为 8。裁剪图和源照片哈希由 `render_floor_review.py` 可复现。该复核是分析者的开发诊断，不是独立真值或真人效率试验。
+
+补充的相对深度路线使用 [Depth Anything V2 Small 的固定社区 ONNX 导出](https://huggingface.co/onnx-community/depth-anything-v2-small)（模型卡标注 Apache-2.0；权重预训练与本场景是否重叠未知）。该路线不读取参考扫描，也不把相对深度直接当作公制深度：每图使用同一照片集三角化得到的稀疏点拟合逆深度的尺度及偏移，再以固定已知位姿融合。23 个有重叠的**有向**视图对产生 1107 个地面语义像素比较，预测深度相对不一致的中位数为 3.48%、P90 为 15.83%；受共享相机、拟合数据、语义误分类及遮挡影响，这不是独立精度。1536 个采样像素中 1150 个支持一个 6 图候选平面，拟合阈值约 0.0936 源坐标单位、残差约 0.0474；邻近模型像素高度相关，1150 不是独立测量点，残差不是地面误差。照片与像素坐标保存在缓存的 `samples.npz`。此方法在查看过该场景扫描摘要之后提出，**未纳入先前冻结批次，也不能当作盲测**；没有据此生成或验证 IFC。
 
 ## 扫描诊断
 
@@ -54,7 +57,8 @@ Linux x86-64、Python 3.12、CPU、pycolmap 4.2.1、ONNX Runtime 1.20.1、IfcOpe
 - [PixCuboid](https://github.com/ghanning/PixCuboid) 上游 `ff26dafd4aa608bfdff0e68e404f6fbe74a817ce`，代码 Apache-2.0。官方 ScanNet++ 训练 checkpoint 使用 CPU 安全权重加载，权重 SHA-256 `ff6ee1d09a98e73b372c5c9b0cc11284daf69fd69646c34b10af7890ed1212ac`；权重单独使用范围和训练数据限制需在商用前确认。
 - [MultiViewRoomLayout](https://github.com/ghanning/MultiViewRoomLayout) 上游 `cb45ace442b6f988216f9607a67f7ab2b8608968`，代码 MIT。实际执行了其 Cuboid 转换和 3D IoU：office 的 5 图及 8 图两个**预测之间** IoU 为 0.2982。这两个输入不同且均非参考真值，数值只说明这两次预测的一致性，不能叫布局准确率或方法排名。IoU 所用 [MeshLib SDK](https://meshlib.io/documentation/License.html) 另有许可：非商业/教育免费，商用需要商业许可；仅在隔离研究环境使用。
 - [PolyLayout](https://github.com/ghanning/PolyLayout) 上游 `e4220b702fa01181802f001a28fb7ff8631fd0da` 已检查：基于带姿态的 PINHOLE 图像，针对 Manhattan 多房间，公开代码及约 298 MiB checkpoint；本轮未下载权重或运行，标记 **NOT_TESTED**，CPU 时间、内存和权重使用许可不能推断。
-- [ScanNet++](https://scannetpp.mlsg.cit.tum.de/scannetpp/) 的图像和扫描需账号申请与获批的下载权限，本轮没有取得该数据；MultiViewRoomLayout 提供布局标注及评测代码，并不等于已经下载完整 ScanNet++ 场景。稠密深度路线和真实布局 IoU 均 **NOT_TESTED / NOT_MEASURED**。
+- [ScanNet++](https://scannetpp.mlsg.cit.tum.de/scannetpp/) 的图像和扫描需账号申请与获批的下载权限，本轮没有取得该数据；MultiViewRoomLayout 提供布局标注及评测代码，并不等于已经下载完整 ScanNet++ 场景。独立深度精度与真实布局 IoU 均 **NOT_MEASURED**。
+- [BIMNet](https://github.com/LydJason/BIMNet) 已实际克隆并检查 `61c3c2621074d708f23f2db6cc76eb7e276ded04`：当前仓库只有许可证、说明和图片，没有可运行的重建或评测代码，也不包含 IFC 或点云。作者提供的[数据组织说明](https://github.com/LydJason/BIMNet/blob/main/data_organization.md)列出 25 个单层扫描、14 类点云语义、对应 Revit/IFC 和点云到 OBJ 的配准矩阵；这些是潜在 Scan-to-BIM 评测资产，而不是已实测结果。作者要求先取得 Matterport3D 的书面许可，再向 BIMNet 作者申请访问；仓库 MIT 许可不能替代上游数据授权。本机常见数据目录未发现已授权副本，故实际数据、IFC 读取及官方指标为 **NOT_TESTED**。本轮未代表用户发送邮件、签署协议或绕过授权。
 - 新的 `cuboid-semantic-ray` 地面候选提供 6 个来源清晰的先验面和照片像素支持，显式保持 `UNCONFIRMED_NO_AUTOMATIC_FLOOR_SELECTION`；不把相邻分割像素当成独立三维点。它依赖 PixCuboid 输出，尚未成为 Studio 内自动可选的地面约束，也未替代稀疏求解器。
 - Studio 显示去重、地面不足及语义冲突，允许查看原始照片像素、记录/撤回疑点；疑点会阻止使用包含相同像素的旧或新融合结果。识别、人工复核及事件分开保存；同一物理点若跨运行像素不完全相同，当前不会自动关联。补充点云/人工约束的自动求解尚未接入。为避免 ETH3D 高分辨率照片导致浏览器崩溃，服务端提供哈希核验后的 1600 像素预览，标注和证据仍以原图坐标保存；原始照片文件不被修改。上传上限调整为 16 MB，图像像素上限仍为 3000 万。
 - 用已运行的真实 office 融合结果作为 Studio 测试夹具，浏览器实际定位轨迹 `399`、记录疑点并收到 HTTP 400 阻断；原图 6221×4146 在 1600×1066 画布点击时，记录坐标与原图映射一致。另一独立浏览器工作区实际上传 10929589 字节的 ETH3D `DSC_0219.JPG` 并核验源哈希及预览尺寸。脚本操作者标记为 `automation`，这不是一次完整重建或真人操作时间。
@@ -97,12 +101,17 @@ $WS_PY benchmarks/ws_geometry/evaluate_eth3d_kicker.py \
 $WS_PY benchmarks/ws_geometry/render_floor_review.py \
   --review "$WS_K/runs/floor-review-1134.json" --images "$WS_K/isolated-dev/input/photos" \
   --output "$WS_K/runs/floor-review-repeat"
+$WS_PY benchmarks/ws_geometry/run_relative_depth_multiview.py \
+  --sparse "$WS_K/runs/known-pose-8-sfm" --source-known-pose "$WS_K/runs/known-pose-sfm-corrected" \
+  --images "$WS_K/isolated-dev/input/photos" --masks "$WS_K/runs/known-pose-masks" \
+  --selection "$WS_K/runs/pixcuboid-8-padded.json" \
+  --model /path/to/depth-anything-v2-small.onnx --output "$WS_K/runs/relative-depth-repeat"
 $WS_PY -m pytest tests products/worldstate_bim/tests
 ```
 
 `freeze_eth3d_kicker.py` 接收 `--artifact NAME=PATH` 和 `--code PATH`，需在访问参考扫描前冻结输入清单、Photo-only 几何/语义/结构、两组 Known-pose、PixCuboid 成功和失败记录、人工复核及地面候选；具体必填名称见该脚本。Kicker 的 Photo-only 已运行后，场景入口脚本只补充了 Known-pose 子命令及文本修正，照片求解调用本身未改变；冻结记录的是当时最终代码快照，不是对运行时原始脚本哈希的独立证明。
 
-测试：Core 与产品 **224 passed，50 条第三方弃用警告**。DSH 授权仍为外部阻断，本轮未重试匿名访问；真人配对效率、独立 IFC 参考、正式验收、V0.2 发布均未完成。下一步应优先增加不依赖单一稀疏地面的可验证约束，并在独立标注的扫描墙面和物理尺度上评估后，再导出只覆盖有证据区域的参数化 IFC。
+测试：Core 与产品 **226 passed，50 条第三方弃用警告**。DSH 授权仍为外部阻断，本轮未重试匿名访问；真人配对效率、独立 IFC 参考、正式验收、V0.2 发布均未完成。下一步应优先增加不依赖单一稀疏地面的可验证约束，并在独立标注的扫描墙面和物理尺度上评估后，再导出只覆盖有证据区域的参数化 IFC。
 
 浏览器复核夹具和真实上传可分别复现；夹具复制的是已实际运行的融合结果，只用于 UI 复核，不重新运行建模。Playwright 和 Chromium 路径应指向本机安装：
 
