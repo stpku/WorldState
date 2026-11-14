@@ -1,0 +1,18 @@
+reviewed floor track 102 (1/8): NO_CROP_DISAGREEMENT_NOT_VERIFIED
+reviewed floor track 104 (2/8): NO_CROP_DISAGREEMENT_NOT_VERIFIED
+reviewed floor track 120 (3/8): MULTIVIEW_CROP_DISAGREEMENT_REVIEW_REQUIRED
+reviewed floor track 314 (4/8): PARTIAL_CROP_DISAGREEMENT_REVIEW_REQUIRED
+reviewed floor track 349 (5/8): NO_CROP_DISAGREEMENT_NOT_VERIFIED
+reviewed floor track 452 (6/8): MULTIVIEW_CROP_DISAGREEMENT_REVIEW_REQUIRED
+reviewed floor track 489 (7/8): NO_CROP_DISAGREEMENT_NOT_VERIFIED
+reviewed floor track 491 (8/8): NO_CROP_DISAGREEMENT_NOT_VERIFIED
+{
+  "reviewed_tracks": 8,
+  "disputed_tracks": [
+    120,
+    314,
+    452
+  ],
+  "counterfactual_floor_planes": 0,
+  "runtime_seconds": 44.471
+}

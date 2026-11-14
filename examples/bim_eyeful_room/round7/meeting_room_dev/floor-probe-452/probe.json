@@ -1,0 +1,125 @@
+{
+  "schema": "worldstate-floor-track-probe/0.1",
+  "status": "DEVELOPMENT_VISUAL_INSPECTION_NOT_GROUND_TRUTH",
+  "excluded_track_id": 452,
+  "inspection": "Visual inspection: corresponding pixels fall on a chair leg in both photos; this track was not in the previously fitted floor.",
+  "inspection_source": "analyst viewed original pixels; not automatic recognition or a human time study",
+  "original_supported_floor_tracks": 10,
+  "after_exclusion_supported_floor_tracks": 9,
+  "unchanged_minimum_floor_support_points": 8,
+  "original_fit_threshold_source_units": 0.041461756908884116,
+  "after_exclusion_fit_threshold_source_units": 0.03960757049290836,
+  "original_floor_hypotheses": [
+    {
+      "id": "raw-plane-31-1",
+      "normal": [
+        0.020943234702817337,
+        0.9992577837974903,
+        0.03233051871390846
+      ],
+      "offset": -0.07173231679005884,
+      "centroid": [
+        0.32479746765659245,
+        0.018681917328188413,
+        1.4309067014038008
+      ],
+      "support_point_ids": [
+        102,
+        104,
+        105,
+        120,
+        314,
+        315,
+        349,
+        489
+      ],
+      "support_views": [
+        7,
+        8,
+        10,
+        11,
+        23,
+        27,
+        29,
+        30,
+        31,
+        32
+      ],
+      "support_count": 8,
+      "fit_rms_arbitrary": 0.02139180950820764,
+      "fit_threshold_arbitrary": 0.041461756908884116,
+      "in_plane_rank_ratio": 0.6258270724293775,
+      "status": "UNVERIFIED_SURFACE_HYPOTHESIS"
+    }
+  ],
+  "after_exclusion_floor_hypotheses": [
+    {
+      "id": "raw-plane-31-1",
+      "normal": [
+        0.020943234702817337,
+        0.9992577837974903,
+        0.03233051871390846
+      ],
+      "offset": -0.07173231679005884,
+      "centroid": [
+        0.32479746765659245,
+        0.018681917328188413,
+        1.4309067014038008
+      ],
+      "support_point_ids": [
+        102,
+        104,
+        105,
+        120,
+        314,
+        315,
+        349,
+        489
+      ],
+      "support_views": [
+        7,
+        8,
+        10,
+        11,
+        23,
+        27,
+        29,
+        30,
+        31,
+        32
+      ],
+      "support_count": 8,
+      "fit_rms_arbitrary": 0.02139180950820764,
+      "fit_threshold_arbitrary": 0.03960757049290836,
+      "in_plane_rank_ratio": 0.6258270724293775,
+      "status": "UNVERIFIED_SURFACE_HYPOTHESIS"
+    }
+  ],
+  "source_observations": [
+    {
+      "photo": "44_DSC1247_461.jpg",
+      "sha256": "02816ff0bbeb4a375db0a32ce11d88f2b9b62b28317916aa3b11e0e42faabcf9",
+      "pixel_xy": [
+        839.7686157226562,
+        736.5440063476562
+      ],
+      "crop": "track-452-view-1.jpg",
+      "model_score_uncalibrated": 0.84814453125
+    },
+    {
+      "photo": "44_DSC1163_455.jpg",
+      "sha256": "a9c8220de19f6d64d616a304749b195d20543233d9b5308f43c93cf1fefdcd7c",
+      "pixel_xy": [
+        783.1693725585938,
+        768.9154052734375
+      ],
+      "crop": "track-452-view-2.jpg",
+      "model_score_uncalibrated": 0.83349609375
+    }
+  ],
+  "limitations": [
+    "This is a targeted diagnostic, not an independent ground truth label.",
+    "Other tracks, candidate walls and source camera poses remain unverified.",
+    "No thresholds were relaxed and no IFC was generated from the modified diagnostic."
+  ]
+}

@@ -4,7 +4,7 @@
 
 **Round 7:** [real multiview wall-floor lines](../../examples/bim_eyeful_room/round7/README.md) and the sparse-plane route were compared on the same development data. Studio can inspect the line candidates, triangulate attributed corner clicks and export a partial IFC; conflicting candidates remain excluded. Independent room accuracy, measured metric scale and human-cost savings are not measured.
 
-In a [second public development room](../../examples/bim_eyeful_room/round7/meeting_room_dev/README.md), automatic registration remained insufficient, and a floor-class track was visibly a chair leg. The resulting partial IFC is quarantined as untrusted; this is not independent room acceptance.
+In a [second public development room](../../examples/bim_eyeful_room/round7/meeting_room_dev/README.md), automatic registration remained insufficient, a floor-class track was visibly a chair leg, and two pairs of 3D tracks reused the same image pixels. Floor fitting now counts such duplicates once and rejects stale exports based on duplicate evidence. An optional local crop review flags semantic disagreements for inspection; it does not automatically correct a model. The resulting historical partial IFC is quarantined as untrusted; this is not independent room acceptance.
 
 **Round 6:** [real multiview semantic tracks and 3D plane intersections](../../examples/bim_eyeful_room/round6/README.md) now drive two partial editable IFC wall candidates in a common frame. Studio supports registered-view fusion and triangulated scale endpoints. The example uses a correlated, assumed scale; a third wall, real-room accuracy and human-cost acceptance remain unverified.
 

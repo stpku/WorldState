@@ -35,6 +35,8 @@
 
 [浏览器记录](studio/browser-result.json)和[本地录屏](studio/demo.webm)使用的是另一批第六轮真实开发重建：28 张注册照片、**476 条轨迹**。该批地面候选不同，只有一条线通过当前诊断；[Studio IFC](studio/revised.ifc)因此只有一墙。脚本根据实际 AI 像素候选模拟两次标点、触发旧结果失效、重新求解并修改墙高，记录为 `automation`，不是人类标注或耗时；与上面的 446 轨迹对照不混算。两次 Studio 导出的 IFC 均独立解析并保持相同 GUID。
 
+地面轨迹去重修复后，使用该 **476 轨迹**旧开发项目重新完成[浏览器生成、编辑与导出](studio-floor-fix/browser-result.json)：一条候选通过，IFC 修改前后独立几何生成成功且 GUID 保持。该运行仍是脚本操作和假设尺度，不是新房间验收或人工成本数据。
+
 ## 复现
 
 依照 [Round 6 说明](../round6/README.md) 安装固定 CPU 依赖并下载公开照片；原图和模型权重不在仓库中。数据及模型的许可记录见 [Eyeful Tower MIT 许可](../LICENSE.eyeful.txt)和 [UPerNet 导出许可](../../../benchmarks/ws_structure/LICENSE.upernet-export.txt)。以下命令的 `--images` 指向已核验的公开照片目录；输出目录须不存在：

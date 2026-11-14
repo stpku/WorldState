@@ -2,6 +2,8 @@
 
 ## Unreleased — 2026-11-14
 
+- Count floor tracks sharing identical source pixels in two or more views only once, and reject cached exports whose floor support contains such duplicates. Add an opt-in local crop review that flags cross-scale semantic disagreements without changing the model; on one real development scene it identified a chair-leg conflict and the deduplicated floor was insufficient.
+
 - Add an explicitly bounded CPU SIFT resolution option for development runs. On a different public meeting-room scene, higher resolution still registered only 10/32 photos and logged a native BLAS warning; the default remains unchanged. A separate known-pose diagnostic exposed a chair-leg point incorrectly used as floor, so that scene's partial IFC is untrusted and not a deliverable.
 
 - Add experimental multiview wall-floor line fitting, attributed corner triangulation and Studio inspection using the shared semantic floor. Compare both routes on the same real development input; reject an unstable third wall candidate. New-room accuracy, independent scale and human savings remain unmeasured.

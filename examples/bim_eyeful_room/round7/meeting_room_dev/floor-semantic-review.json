@@ -1,0 +1,650 @@
+{
+  "schema": "worldstate-floor-semantic-review/0.1",
+  "status": "DEVELOPMENT_REVIEW_NOT_GROUND_TRUTH",
+  "source_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e",
+  "semantic_manifest_sha256": "532e68b161572280f8fa5a47b9c9945962b1e1906d8ee52fd08c1d8d6f6e9c41",
+  "source_reconstruction": [
+    {
+      "file": "cameras.bin",
+      "sha256": "a8f37fd6fbf1748fa98f22d272f61ec562b94a2b3bc43d1deb3af5526cbf4399"
+    },
+    {
+      "file": "frames.bin",
+      "sha256": "2dadb2d4befa5b6956d07f66ff77deb4920645d6d26726a7360a98a6bff7261f"
+    },
+    {
+      "file": "images.bin",
+      "sha256": "e35e7063310c54e93ca29a30622522dbf575a8ec4064bddb1075a19a60e372c8"
+    },
+    {
+      "file": "points3D.bin",
+      "sha256": "354fc81144d3684260c3827978ac545b5623744615237549e90b807d5da4baac"
+    },
+    {
+      "file": "rigs.bin",
+      "sha256": "73e4d5f0da0a84a5711b46ae716a149f1532832f95bb09b4b01e73cf2c5afbe9"
+    }
+  ],
+  "method": "Compare full-image floor prediction with the same model on a 35%-of-short-side local crop, up to two distinct source views.",
+  "review_scope": "SUPPORTED_FLOOR_TRACKS_WITHOUT_A_FITTED_PLANE",
+  "review_scope_track_count": 10,
+  "distinct_review_scope_track_count": 8,
+  "support_duplicate_groups": [
+    {
+      "retained_track_id": 104,
+      "redundant_track_ids": [
+        105
+      ],
+      "pair_evidence": [
+        {
+          "track_ids": [
+            104,
+            105
+          ],
+          "shared_observations": [
+            {
+              "image_id": 7,
+              "photo_sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6",
+              "pixel_xy": [
+                916.4806518554688,
+                753.85986328125
+              ]
+            },
+            {
+              "image_id": 10,
+              "photo_sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8",
+              "pixel_xy": [
+                870.1452026367188,
+                701.4354248046875
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "retained_track_id": 314,
+      "redundant_track_ids": [
+        315
+      ],
+      "pair_evidence": [
+        {
+          "track_ids": [
+            314,
+            315
+          ],
+          "shared_observations": [
+            {
+              "image_id": 23,
+              "photo_sha256": "0ec6406d45fbe0cc15070261234058c6282e9e0857283dc8b57cbd9548f18604",
+              "pixel_xy": [
+                915.8593139648438,
+                747.2208862304688
+              ]
+            },
+            {
+              "image_id": 27,
+              "photo_sha256": "8cde02a9c0ebbea4c5a39eabb5a521e8887464240be63b817d6b538196cf9c07",
+              "pixel_xy": [
+                901.9288940429688,
+                657.4880981445312
+              ]
+            },
+            {
+              "image_id": 29,
+              "photo_sha256": "e06bc214011842cb054fe3597b6c22347e266742a67dda21bed398e217971c05",
+              "pixel_xy": [
+                941.0630493164062,
+                686.735595703125
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reviewed_track_count": 8,
+  "unreviewed_support_track_ids": [],
+  "disputed_track_ids": [
+    120,
+    314,
+    452
+  ],
+  "quarantined_track_ids_including_duplicates": [
+    120,
+    314,
+    315,
+    452
+  ],
+  "track_reviews": [
+    {
+      "track_id": 102,
+      "status": "NO_CROP_DISAGREEMENT_NOT_VERIFIED",
+      "observations": [
+        {
+          "image_id": 10,
+          "photo": "44_DSC0295_393.jpg",
+          "photo_sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8",
+          "pixel_xy": [
+            618.2421264648438,
+            664.223388671875
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.9912109375,
+          "local_crop": {
+            "crop_bbox_px": [
+              458,
+              504,
+              778,
+              824
+            ],
+            "mask_xy": [
+              64,
+              64
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9994623064994812,
+            "floor_score_uncalibrated": 0.9994623064994812
+          }
+        },
+        {
+          "image_id": 7,
+          "photo": "44_DSC0337_396.jpg",
+          "photo_sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6",
+          "pixel_xy": [
+            593.14599609375,
+            697.587158203125
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.9990234375,
+          "local_crop": {
+            "crop_bbox_px": [
+              433,
+              538,
+              753,
+              858
+            ],
+            "mask_xy": [
+              64,
+              63
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9991496801376343,
+            "floor_score_uncalibrated": 0.9991496801376343
+          }
+        }
+      ]
+    },
+    {
+      "track_id": 104,
+      "status": "NO_CROP_DISAGREEMENT_NOT_VERIFIED",
+      "observations": [
+        {
+          "image_id": 10,
+          "photo": "44_DSC0295_393.jpg",
+          "photo_sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8",
+          "pixel_xy": [
+            870.1452026367188,
+            701.4354248046875
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.998046875,
+          "local_crop": {
+            "crop_bbox_px": [
+              710,
+              541,
+              1030,
+              861
+            ],
+            "mask_xy": [
+              64,
+              64
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9994319081306458,
+            "floor_score_uncalibrated": 0.9994319081306458
+          }
+        },
+        {
+          "image_id": 7,
+          "photo": "44_DSC0337_396.jpg",
+          "photo_sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6",
+          "pixel_xy": [
+            916.4806518554688,
+            753.85986328125
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.99853515625,
+          "local_crop": {
+            "crop_bbox_px": [
+              756,
+              594,
+              1076,
+              914
+            ],
+            "mask_xy": [
+              64,
+              63
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9996715784072876,
+            "floor_score_uncalibrated": 0.9996715784072876
+          }
+        }
+      ]
+    },
+    {
+      "track_id": 120,
+      "status": "MULTIVIEW_CROP_DISAGREEMENT_REVIEW_REQUIRED",
+      "observations": [
+        {
+          "image_id": 10,
+          "photo": "44_DSC0295_393.jpg",
+          "photo_sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8",
+          "pixel_xy": [
+            971.768798828125,
+            800.6859741210938
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.6416015625,
+          "local_crop": {
+            "crop_bbox_px": [
+              812,
+              595,
+              1132,
+              915
+            ],
+            "mask_xy": [
+              63,
+              82
+            ],
+            "class_id": 75,
+            "class_name": "swivel chair",
+            "model_score_uncalibrated": 0.7200677990913391,
+            "floor_score_uncalibrated": 0.2508223056793213
+          }
+        },
+        {
+          "image_id": 8,
+          "photo": "44_DSC0253_390.jpg",
+          "photo_sha256": "6e97ff6c7c25e591ae5a2da71546bbca84925dbdae999df2540a1a0cd46299e7",
+          "pixel_xy": [
+            1022.7462768554688,
+            771.224853515625
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.495849609375,
+          "local_crop": {
+            "crop_bbox_px": [
+              863,
+              595,
+              1183,
+              915
+            ],
+            "mask_xy": [
+              63,
+              70
+            ],
+            "class_id": 75,
+            "class_name": "swivel chair",
+            "model_score_uncalibrated": 0.7148338556289673,
+            "floor_score_uncalibrated": 0.26015031337738037
+          }
+        }
+      ]
+    },
+    {
+      "track_id": 314,
+      "status": "PARTIAL_CROP_DISAGREEMENT_REVIEW_REQUIRED",
+      "observations": [
+        {
+          "image_id": 27,
+          "photo": "44_DSC1121_452.jpg",
+          "photo_sha256": "8cde02a9c0ebbea4c5a39eabb5a521e8887464240be63b817d6b538196cf9c07",
+          "pixel_xy": [
+            901.9288940429688,
+            657.4880981445312
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.34130859375,
+          "local_crop": {
+            "crop_bbox_px": [
+              742,
+              497,
+              1062,
+              817
+            ],
+            "mask_xy": [
+              63,
+              64
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.3157225549221039,
+            "floor_score_uncalibrated": 0.3157225549221039
+          }
+        },
+        {
+          "image_id": 29,
+          "photo": "44_DSC1079_449.jpg",
+          "photo_sha256": "e06bc214011842cb054fe3597b6c22347e266742a67dda21bed398e217971c05",
+          "pixel_xy": [
+            941.0630493164062,
+            686.735595703125
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.74853515625,
+          "local_crop": {
+            "crop_bbox_px": [
+              781,
+              527,
+              1101,
+              847
+            ],
+            "mask_xy": [
+              64,
+              63
+            ],
+            "class_id": 7,
+            "class_name": "ADE20K class 7",
+            "model_score_uncalibrated": 0.2476983517408371,
+            "floor_score_uncalibrated": 0.1562763899564743
+          }
+        }
+      ]
+    },
+    {
+      "track_id": 349,
+      "status": "NO_CROP_DISAGREEMENT_NOT_VERIFIED",
+      "observations": [
+        {
+          "image_id": 29,
+          "photo": "44_DSC1079_449.jpg",
+          "photo_sha256": "e06bc214011842cb054fe3597b6c22347e266742a67dda21bed398e217971c05",
+          "pixel_xy": [
+            857.5765380859375,
+            675.8648681640625
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.8583984375,
+          "local_crop": {
+            "crop_bbox_px": [
+              698,
+              516,
+              1018,
+              836
+            ],
+            "mask_xy": [
+              63,
+              63
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9971076846122742,
+            "floor_score_uncalibrated": 0.9971076846122742
+          }
+        },
+        {
+          "image_id": 23,
+          "photo": "44_DSC0995_443.jpg",
+          "photo_sha256": "0ec6406d45fbe0cc15070261234058c6282e9e0857283dc8b57cbd9548f18604",
+          "pixel_xy": [
+            804.7598266601562,
+            720.91455078125
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.97900390625,
+          "local_crop": {
+            "crop_bbox_px": [
+              645,
+              561,
+              965,
+              881
+            ],
+            "mask_xy": [
+              63,
+              63
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9997381567955017,
+            "floor_score_uncalibrated": 0.9997381567955017
+          }
+        }
+      ]
+    },
+    {
+      "track_id": 452,
+      "status": "MULTIVIEW_CROP_DISAGREEMENT_REVIEW_REQUIRED",
+      "observations": [
+        {
+          "image_id": 31,
+          "photo": "44_DSC1247_461.jpg",
+          "photo_sha256": "02816ff0bbeb4a375db0a32ce11d88f2b9b62b28317916aa3b11e0e42faabcf9",
+          "pixel_xy": [
+            839.7686157226562,
+            736.5440063476562
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.84814453125,
+          "local_crop": {
+            "crop_bbox_px": [
+              680,
+              577,
+              1000,
+              897
+            ],
+            "mask_xy": [
+              63,
+              63
+            ],
+            "class_id": 75,
+            "class_name": "swivel chair",
+            "model_score_uncalibrated": 0.8919748663902283,
+            "floor_score_uncalibrated": 0.07349231839179993
+          }
+        },
+        {
+          "image_id": 28,
+          "photo": "44_DSC1163_455.jpg",
+          "photo_sha256": "a9c8220de19f6d64d616a304749b195d20543233d9b5308f43c93cf1fefdcd7c",
+          "pixel_xy": [
+            783.1693725585938,
+            768.9154052734375
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.83349609375,
+          "local_crop": {
+            "crop_bbox_px": [
+              623,
+              595,
+              943,
+              915
+            ],
+            "mask_xy": [
+              64,
+              69
+            ],
+            "class_id": 75,
+            "class_name": "swivel chair",
+            "model_score_uncalibrated": 0.9239881038665771,
+            "floor_score_uncalibrated": 0.04822531342506409
+          }
+        }
+      ]
+    },
+    {
+      "track_id": 489,
+      "status": "NO_CROP_DISAGREEMENT_NOT_VERIFIED",
+      "observations": [
+        {
+          "image_id": 31,
+          "photo": "44_DSC1247_461.jpg",
+          "photo_sha256": "02816ff0bbeb4a375db0a32ce11d88f2b9b62b28317916aa3b11e0e42faabcf9",
+          "pixel_xy": [
+            982.57763671875,
+            698.5966796875
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.92822265625,
+          "local_crop": {
+            "crop_bbox_px": [
+              823,
+              539,
+              1143,
+              859
+            ],
+            "mask_xy": [
+              63,
+              63
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9986351132392883,
+            "floor_score_uncalibrated": 0.9986351132392883
+          }
+        },
+        {
+          "image_id": 32,
+          "photo": "44_DSC1289_464.jpg",
+          "photo_sha256": "9bd7513bad67d6c392eeac33b79a09c232c77ba3ca05b7cf960ff4d2ffdf3864",
+          "pixel_xy": [
+            1037.9935302734375,
+            689.7265625
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.7421875,
+          "local_crop": {
+            "crop_bbox_px": [
+              878,
+              530,
+              1198,
+              850
+            ],
+            "mask_xy": [
+              63,
+              63
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9981250166893005,
+            "floor_score_uncalibrated": 0.9981250166893005
+          }
+        }
+      ]
+    },
+    {
+      "track_id": 491,
+      "status": "NO_CROP_DISAGREEMENT_NOT_VERIFIED",
+      "observations": [
+        {
+          "image_id": 31,
+          "photo": "44_DSC1247_461.jpg",
+          "photo_sha256": "02816ff0bbeb4a375db0a32ce11d88f2b9b62b28317916aa3b11e0e42faabcf9",
+          "pixel_xy": [
+            969.0217895507812,
+            753.4423828125
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.998046875,
+          "local_crop": {
+            "crop_bbox_px": [
+              809,
+              593,
+              1129,
+              913
+            ],
+            "mask_xy": [
+              64,
+              64
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9998782873153687,
+            "floor_score_uncalibrated": 0.9998782873153687
+          }
+        },
+        {
+          "image_id": 32,
+          "photo": "44_DSC1289_464.jpg",
+          "photo_sha256": "9bd7513bad67d6c392eeac33b79a09c232c77ba3ca05b7cf960ff4d2ffdf3864",
+          "pixel_xy": [
+            1032.865234375,
+            736.7163696289062
+          ],
+          "full_image_class_id": 3,
+          "full_image_score_uncalibrated": 0.97607421875,
+          "local_crop": {
+            "crop_bbox_px": [
+              873,
+              577,
+              1193,
+              897
+            ],
+            "mask_xy": [
+              63,
+              63
+            ],
+            "class_id": 3,
+            "class_name": "floor",
+            "model_score_uncalibrated": 0.9798048734664917,
+            "floor_score_uncalibrated": 0.9798048734664917
+          }
+        }
+      ]
+    }
+  ],
+  "counterfactual_excluding_disputed_tracks": {
+    "status": "HYPOTHETICAL_NOT_A_CONFIRMED_CORRECTION",
+    "minimum_support_points": 8,
+    "fit_threshold_source_units": 0.0,
+    "floor_planes": [],
+    "distinct_tracks_after_quarantine": 5,
+    "duplicate_groups": [
+      {
+        "retained_track_id": 104,
+        "redundant_track_ids": [
+          105
+        ],
+        "pair_evidence": [
+          {
+            "track_ids": [
+              104,
+              105
+            ],
+            "shared_observations": [
+              {
+                "image_id": 7,
+                "photo_sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6",
+                "pixel_xy": [
+                  916.4806518554688,
+                  753.85986328125
+                ]
+              },
+              {
+                "image_id": 10,
+                "photo_sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8",
+                "pixel_xy": [
+                  870.1452026367188,
+                  701.4354248046875
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "unreviewed_floor_track_ids": []
+  },
+  "runtime_seconds": 44.471,
+  "limitations": [
+    "Local and full-image predictions use the same model and are correlated.",
+    "A disagreement requests review; agreement and model scores do not establish truth.",
+    "This diagnostic does not modify the input fusion, automatically correct the model, or export IFC.",
+    "Floor fitting and camera poses remain unverified; no independent room accuracy is measured."
+  ]
+}
