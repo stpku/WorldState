@@ -62,6 +62,17 @@ def test_upload_is_validated_and_explicitly_unassociated(server):
     assert api(server,"/api/upload",{"data_base64":base64.b64encode(b"invalid").decode()})[0]==400
 
 
+def test_large_photo_preview_is_bounded_without_changing_source_dimensions(server):
+    """Previewing a large photo must not change evidence coordinates."""
+    image=Image.new('RGB',(3200,1600),'white');buffer=io.BytesIO();image.save(buffer,format='JPEG')
+    status,item=api(server,'/api/upload',{'data_base64':base64.b64encode(buffer.getvalue()).decode()})
+    assert status==201 and (item['width'],item['height'])==(3200,1600)
+    status,preview=api(server,'/api/photo-preview/'+item['id']);assert status==200
+    with Image.open(io.BytesIO(preview)) as small:assert small.size==(1600,800)
+    status,original=api(server,'/api/photo/'+item['id']);assert status==200
+    with Image.open(io.BytesIO(original)) as source:assert source.size==(3200,1600)
+
+
 def test_local_rule_is_explicit_and_bounded(server):
     model=server.model;wall=next(e for e in model["elements"] if e["ifc_type"]=="IfcWall")
     ident,attr,value=parse_local_command(model,"把 "+wall["id"]+" 的高度改为 3.6 米")
@@ -160,12 +171,13 @@ def test_vision_candidate_decisions_preserve_source_in_ifc_evidence(tmp_path):
     import hashlib
     model_path=tmp_path/'fake-weights.onnx';model_path.write_bytes(b'not a model')
     instance=StudioServer(0,None,tmp_path/'vision-work',vision_model=model_path)
+    overlay=io.BytesIO();Image.new('RGB',(640,480),'white').save(overlay,format='PNG');overlay=overlay.getvalue()
     class FakeProvider:
         def analyze(self,path):
             return ({'image_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
                      'provider':'FAKE_TEST_ONLY','model_sha256':'f'*64,'runtime_seconds':0,
                      'candidates':[{'id':'line-1','kind':'wall_floor_line','points_px':[[10,20],[100,20]],'status':'proposed'},
-                                   {'id':'line-2','kind':'wall_floor_line','points_px':[[100,20],[130,60]],'status':'proposed'}]},b'test overlay')
+                                   {'id':'line-2','kind':'wall_floor_line','points_px':[[100,20],[130,60]],'status':'proposed'}]},overlay)
     instance.vision_provider=FakeProvider()
     thread=threading.Thread(target=instance.serve_forever,daemon=True);thread.start()
     try:
@@ -173,7 +185,9 @@ def test_vision_candidate_decisions_preserve_source_in_ifc_evidence(tmp_path):
         image=Image.new('RGB',(640,480),'white');buffer=io.BytesIO();image.save(buffer,format='PNG')
         photo=api(instance,'/api/upload',{'data_base64':base64.b64encode(buffer.getvalue()).decode()})[1]
         status,run=api(instance,'/api/vision/analyze',{'photo_id':photo['id']});assert status==201
-        assert api(instance,'/api/vision/overlay/'+run['id'])[1]==b'test overlay'
+        assert api(instance,'/api/vision/overlay/'+run['id'])[1]==overlay
+        status,preview=api(instance,'/api/vision/overlay-preview/'+run['id']);assert status==200
+        with Image.open(io.BytesIO(preview)) as image:assert image.size==(640,480)
         status,ann=api(instance,'/api/vision/decision',{'run_id':run['id'],'candidate_id':'line-1',
                           'decision':'accepted','wall_id':'wall-1'})
         assert status==201 and ann['origin']=='vision_candidate'
@@ -224,3 +238,36 @@ def test_multiview_endpoint_requires_consent_and_maps_photo_provenance(tmp_path,
         assert api(instance,'/api/project')[1]['project']['events'][-1]['action']=='geometry_reconstructed'
     finally:
         instance.shutdown();instance.server_close();thread.join()
+
+
+def test_floor_review_is_auditable_and_blocks_old_fusion(server):
+    """A review is new evidence, not a silent rewrite of semantic predictions."""
+    import hashlib
+    server.model=None;server.model_dir=None
+    assert api(server,'/api/project',{'name':'Floor review','operator_kind':'user'})[0]==201
+    gid='geometry-'+'a'*32;fid='fusion-'+'b'*32
+    server.project['geometry_runs']=[{'id':gid}]
+    directory=server.workspace/'fusion'/fid;directory.mkdir(parents=True)
+    fusion={'id':fid,'geometry_run_id':gid,'tracks':[{'id':7,'observations':[
+        {'semantic_class':3,'photo_sha256':'c'*64,'pixel_xy':[123,456]}]}]}
+    raw=json.dumps(fusion).encode();(directory/'fusion.json').write_bytes(raw)
+    server.project['fusion_runs']=[{'id':fid,'sha256':hashlib.sha256(raw).hexdigest()}]
+    assert api(server,'/api/fusion/floor-review',{'fusion_id':fid,'track_id':8,'decision':'suspect','reason':'chair'})[0]==400
+    status,review=api(server,'/api/fusion/floor-review',{'fusion_id':fid,'track_id':7,'decision':'suspect','reason':'可能是椅腿'})
+    assert status==201 and review['observations'][0]['photo_sha256']=='c'*64
+    status,error=api(server,'/api/fusion/scale',{'fusion_id':fid,'confirmed_endpoints':True})
+    assert status==400 and '人工疑点' in error['error']
+    assert json.loads((directory/'fusion.json').read_bytes())==fusion
+    # Re-running with the same image pixels and a different track ID must not
+    # silently discard the review; old cached fusion is rejected as well.
+    fid2='fusion-'+'d'*32;newdir=server.workspace/'fusion'/fid2;newdir.mkdir(parents=True)
+    newfusion={'id':fid2,'geometry_run_id':gid,'tracks':[{'id':9,'observations':fusion['tracks'][0]['observations']}]}
+    newraw=json.dumps(newfusion).encode();(newdir/'fusion.json').write_bytes(newraw)
+    server.project['fusion_runs'].append({'id':fid2,'sha256':hashlib.sha256(newraw).hexdigest()})
+    status,error=api(server,'/api/fusion/scale',{'fusion_id':fid,'confirmed_endpoints':True})
+    assert status==400 and '最新结果' in error['error']
+    status,error=api(server,'/api/fusion/scale',{'fusion_id':fid2,'confirmed_endpoints':True})
+    assert status==400 and '人工疑点' in error['error']
+    assert api(server,'/api/fusion/floor-review',{'fusion_id':fid2,'track_id':9,'decision':'retract','reason':'误报'})[0]==201
+    assert len(server.project['floor_reviews'])==2
+    assert api(server,'/api/fusion/scale',{'fusion_id':fid2,'confirmed_endpoints':True})[1]['error'].find('人工疑点')==-1

@@ -43,6 +43,17 @@ def _write_json(path: Path, value: dict) -> None:
         temporary.unlink(missing_ok=True)
 
 
+def _photo_preview(path: Path, width: int, height: int) -> bytes:
+    """Create a bounded local preview while preserving original pixel metadata."""
+    from PIL import Image
+    with Image.open(path) as image:
+        if image.size != (width,height):raise ValueError('照片尺寸与原始记录不一致')
+        image.draft('RGB',(1600,1600))
+        image.thumbnail((1600,1600),Image.Resampling.LANCZOS)
+        output=io.BytesIO();image.convert('RGB').save(output,format='JPEG',quality=85)
+        return output.getvalue()
+
+
 class StudioServer(ThreadingHTTPServer):
     """Serve an explicitly selected room project on loopback only."""
     def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None, vision_model: Path | None = None):
@@ -208,6 +219,15 @@ class Handler(BaseHTTPRequestHandler):
                 elif path.startswith("/api/structure/"):
                     ident=path.rsplit("/",1)[-1]
                     self.send_json(200,self.read_structure(ident))
+                elif path.startswith("/api/vision/overlay-preview/"):
+                    ident=path.rsplit("/",1)[-1]
+                    if not re.fullmatch(r"vision-[0-9a-f]{32}",ident):raise ValueError("视觉结果编号无效")
+                    run=next((x for x in (self.server.project or {}).get("vision_runs",[]) if x.get("id")==ident),None)
+                    photo=next((x for x in self.server.uploaded if x.get('id')==(run or {}).get('photo_id')),None)
+                    filename=self.server.workspace/"vision"/(ident+".png")
+                    if not run or not photo or filename.is_symlink() or not filename.is_file():raise ValueError("视觉叠加图不可用")
+                    if hashlib.sha256(filename.read_bytes()).hexdigest()!=run.get("overlay_sha256"):raise ValueError("视觉叠加图哈希不符")
+                    self.send_data(200,_photo_preview(filename,photo['width'],photo['height']),"image/jpeg")
                 elif path.startswith("/api/vision/overlay/"):
                     ident=path.rsplit("/",1)[-1]
                     if not re.fullmatch(r"vision-[0-9a-f]{32}",ident):raise ValueError("视觉结果编号无效")
@@ -218,6 +238,14 @@ class Handler(BaseHTTPRequestHandler):
                     raw=filename.read_bytes()
                     if hashlib.sha256(raw).hexdigest()!=run.get("overlay_sha256"):raise ValueError("视觉叠加图哈希不符")
                     self.send_data(200,raw,"image/png")
+                elif path.startswith("/api/photo-preview/"):
+                    ident=path.rsplit("/",1)[-1]
+                    item=next((x for x in self.server.uploaded if x["id"]==ident),None)
+                    if not item:self.send_data(404,b"not found","text/plain");return
+                    filename=self.server.uploads/(item["sha256"]+item["extension"])
+                    if filename.is_symlink() or not filename.is_file() or hashlib.sha256(filename.read_bytes()).hexdigest()!=item["sha256"]:
+                        self.send_data(404,b"evidence unavailable","text/plain");return
+                    self.send_data(200,_photo_preview(filename,item['width'],item['height']),"image/jpeg")
                 elif path.startswith("/api/photo/"):
                     ident=path.rsplit("/",1)[-1]
                     item=next((x for x in self.server.uploaded if x["id"]==ident),None)
@@ -235,13 +263,16 @@ class Handler(BaseHTTPRequestHandler):
             self.send_data(403,b"local origin and session token required","text/plain");return
         try:
             size=int(self.headers.get("Content-Length","0"))
-            if size<=0 or size>16_000_000:raise ValueError("请求大小无效")
+            # A 16 MB JPEG expands by 4/3 in a JSON/base64 upload. Other
+            # endpoints still apply their own smaller content limits.
+            if size<=0 or size>22_000_000:raise ValueError("请求大小无效")
             body=json.loads(self.rfile.read(size))
             with self.server.lock:
                 if path=="/api/upload":self.upload(body);return
                 if path=="/api/project":self.create_project(body);return
                 if path=="/api/geometry/reconstruct":self.reconstruct_photos(body);return
                 if path=="/api/fusion/reconstruct":self.reconstruct_fusion(body);return
+                if path=="/api/fusion/floor-review":self.review_floor_track(body);return
                 if path=="/api/fusion/scale":self.solve_fusion_scale(body);return
                 if path=="/api/fusion/generate":self.generate_fusion_room(body);return
                 if path=="/api/structure/reconstruct":self.reconstruct_structure(body);return
@@ -361,13 +392,54 @@ class Handler(BaseHTTPRequestHandler):
         self.server.record('fusion_reconstructed',fusion_id=ident,**{k:v for k,v in summary.items() if k not in {'id','sha256'}})
         self.send_json(201,summary)
 
-    def require_current_fusion(self, fusion: dict) -> None:
+    def require_current_fusion(self, fusion: dict, *, check_reviews: bool = True) -> None:
         project=self.server.project
         geometry_runs=(project or {}).get('geometry_runs',[])
         if not geometry_runs or fusion.get('geometry_run_id')!=geometry_runs[-1].get('id'):
             raise ValueError('相机结果已更新，请重新进行多视图融合')
         if project.get('fusion_camera_input_changed'):
             raise ValueError('相机输入已改变，请重新恢复相机并进行多视图融合')
+        fusion_runs=project.get('fusion_runs',[])
+        if not fusion_runs or fusion_runs[-1].get('id')!=fusion.get('id'):
+            raise ValueError('融合结果已更新，请使用最新结果')
+        if check_reviews:
+            # A rerun must not silently discard a doubt attached to the same
+            # photo pixels, even if COLMAP assigned a different track ID.
+            # Exact matching deliberately avoids asserting that nearby pixels
+            # in another reconstruction are the same physical observation.
+            unresolved=set()
+            for review in project.get('floor_reviews',[]):
+                for observation in review.get('observations',[]):
+                    key=(observation['photo_sha256'],*observation['pixel_xy'])
+                    if review['decision']=='suspect':unresolved.add(key)
+                    elif review['decision']=='retract':unresolved.discard(key)
+            if any((o['photo_sha256'],*o['pixel_xy']) in unresolved
+                   for t in fusion.get('tracks',[]) for o in t.get('observations',[])
+                   if t.get('semantic_class')==3 or o.get('semantic_class')==3):
+                raise ValueError('地面轨迹存在待处理的人工疑点；补充证据并重新融合，或撤回误报')
+
+    def review_floor_track(self, body: dict) -> None:
+        """Record a human review without changing semantic results or old runs."""
+        project=self.server.project
+        if project is None:raise ValueError('请先创建房间项目')
+        fusion=self.read_fusion(body.get('fusion_id'));self.require_current_fusion(fusion,check_reviews=False)
+        track_id=body.get('track_id');decision=body.get('decision');reason=body.get('reason')
+        if isinstance(track_id,bool) or not isinstance(track_id,int) or decision not in ('suspect','retract'):
+            raise ValueError('地面轨迹或复核操作无效')
+        if not isinstance(reason,str) or not 1<=len(reason.strip())<=300:raise ValueError('请填写复核原因')
+        track=next((t for t in fusion.get('tracks',[]) if t.get('id')==track_id),None)
+        observations=(track or {}).get('observations',[])
+        if not any(o.get('semantic_class')==3 for o in observations):raise ValueError('该轨迹没有地面语义观测')
+        reviews=project.setdefault('floor_reviews',[])
+        if len(reviews)>=1000:raise ValueError('复核记录已达上限')
+        entry={'id':'review-'+uuid.uuid4().hex,'fusion_id':fusion['id'],'track_id':track_id,
+               'decision':decision,'reason':reason.strip(),'operator_kind':project.get('operator_kind','user'),
+               'created_at':datetime.now(timezone.utc).isoformat(),
+               'observations':[{'photo_sha256':o['photo_sha256'],'pixel_xy':o['pixel_xy']} for o in observations]}
+        reviews.append(entry)
+        self.server.record('floor_track_reviewed',review_id=entry['id'],fusion_id=fusion['id'],
+                           track_id=track_id,decision=decision)
+        self.send_json(201,entry)
 
     def corner_annotation_digest(self) -> str:
         annotations=[x for x in (self.server.project or {}).get('annotations',[]) if x.get('kind')=='corner']
@@ -821,7 +893,7 @@ class Handler(BaseHTTPRequestHandler):
     def upload(self,body: dict)->None:
         from PIL import Image
         raw=base64.b64decode(body.get("data_base64",""),validate=True)
-        if not raw or len(raw)>10_000_000:raise ValueError("图片大小须在 10 MB 以内")
+        if not raw or len(raw)>16_000_000:raise ValueError("图片大小须在 16 MB 以内")
         try:
             with Image.open(io.BytesIO(raw)) as img:
                 if img.format not in {"PNG","JPEG"} or img.width*img.height>30_000_000:
