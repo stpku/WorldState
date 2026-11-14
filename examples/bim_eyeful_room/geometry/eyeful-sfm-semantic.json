@@ -1,0 +1,149 @@
+{
+  "schema": "worldstate-semantic-sfm-hypotheses/0.1",
+  "status": "UNVERIFIED_RESEARCH_CANDIDATE",
+  "model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e",
+  "registered_images": 28,
+  "source_sfm_points": 446,
+  "semantic_point_counts": {
+    "82": 67,
+    "0": 247,
+    "43": 4,
+    "3": 14,
+    "5": 48,
+    "63": 1,
+    "14": 1,
+    "89": 20,
+    "139": 2
+  },
+  "method": "two or more track observations and 60% semantic majority; sequential 3-point RANSAC",
+  "wall_plane_hypotheses": [
+    {
+      "support_points": 160,
+      "normal": [
+        0.10221796855147457,
+        0.14993377736294072,
+        0.9833978591144532
+      ],
+      "point_on_plane": [
+        -0.48261112574662046,
+        1.2313647390598266,
+        6.727781013710652
+      ],
+      "offset": -6.751377083238534,
+      "mean_fit_residual_arbitrary": 0.06691162314699559,
+      "point_bounds_arbitrary": [
+        [
+          -3.7592573871889092,
+          -2.1702872065811816,
+          5.6788034578616156
+        ],
+        [
+          8.415177340813704,
+          3.2848832928875207,
+          7.559513193729319
+        ]
+      ],
+      "status": "UNVERIFIED_SURFACE_HYPOTHESIS",
+      "parallel_to_previous_hypothesis": false
+    },
+    {
+      "support_points": 40,
+      "normal": [
+        0.09917466295049567,
+        0.11339132521236828,
+        0.9885882831569666
+      ],
+      "point_on_plane": [
+        1.9625275548072216,
+        -0.34440896353812295,
+        6.416343273182949
+      ],
+      "offset": -6.498701800570143,
+      "mean_fit_residual_arbitrary": 0.07993968380934417,
+      "point_bounds_arbitrary": [
+        [
+          -3.8261007116889756,
+          -1.7231690882827126,
+          5.82797191778704
+        ],
+        [
+          8.397422535296796,
+          3.1932412828598977,
+          7.025383700788756
+        ]
+      ],
+      "status": "UNVERIFIED_SURFACE_HYPOTHESIS",
+      "parallel_to_previous_hypothesis": true
+    },
+    {
+      "support_points": 15,
+      "normal": [
+        0.8051030636912696,
+        -0.006137816211974068,
+        -0.5931031816194205
+      ],
+      "point_on_plane": [
+        -2.1545576148464254,
+        -0.3770106551336148,
+        4.625269686990178
+      ],
+      "offset": 4.475589081702782,
+      "mean_fit_residual_arbitrary": 0.06844107656211044,
+      "point_bounds_arbitrary": [
+        [
+          -4.275503816618339,
+          -1.9878652860863257,
+          1.573865707902133
+        ],
+        [
+          -0.16529482448298924,
+          2.361726808457269,
+          7.219021924556622
+        ]
+      ],
+      "status": "UNVERIFIED_SURFACE_HYPOTHESIS",
+      "parallel_to_previous_hypothesis": false
+    }
+  ],
+  "floor_plane_hypotheses": [],
+  "ceiling_plane_hypotheses": [
+    {
+      "support_points": 28,
+      "normal": [
+        0.03648590495916862,
+        0.988963163381445,
+        -0.1435988865342479
+      ],
+      "point_on_plane": [
+        -0.8292556164016098,
+        -2.2125750897019896,
+        4.191409187333014
+      ],
+      "offset": 2.8202930938479875,
+      "mean_fit_residual_arbitrary": 0.06156433207468315,
+      "point_bounds_arbitrary": [
+        [
+          -3.4219911236971186,
+          -2.9074385880838043,
+          -0.7433228077941845
+        ],
+        [
+          7.114363887556784,
+          -1.7482822107150329,
+          7.361744404115971
+        ]
+      ],
+      "status": "UNVERIFIED_SURFACE_HYPOTHESIS",
+      "parallel_to_previous_hypothesis": false
+    }
+  ],
+  "units": "arbitrary",
+  "runtime_seconds": 79.459,
+  "limitations": [
+    "plane hypotheses are not wall instances; parallel fragments can duplicate surfaces",
+    "no independent metric anchor or accuracy ground truth",
+    "sparse features and segmentation may miss or misclassify walls",
+    "plane fitting residual is not reconstruction or wall dimension error",
+    "no automatic conversion to IFC from these planes"
+  ]
+}
