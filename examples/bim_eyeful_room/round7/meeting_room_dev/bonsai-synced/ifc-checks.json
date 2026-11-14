@@ -1,0 +1,33 @@
+{
+  "original": {
+    "schema": "IFC4",
+    "walls": 2,
+    "geometry_generated": 2,
+    "schema_issues": 0,
+    "guids": [
+      "0OC7AEuMDN_uJULA$VFE4k",
+      "3MUCx6lOrV3hAYyHu7MNnL"
+    ]
+  },
+  "bonsai": {
+    "schema": "IFC4",
+    "walls": 2,
+    "geometry_generated": 2,
+    "schema_issues": 0,
+    "guids": [
+      "0OC7AEuMDN_uJULA$VFE4k",
+      "3MUCx6lOrV3hAYyHu7MNnL"
+    ]
+  },
+  "synced": {
+    "schema": "IFC4",
+    "walls": 2,
+    "geometry_generated": 2,
+    "schema_issues": 0,
+    "guids": [
+      "0OC7AEuMDN_uJULA$VFE4k",
+      "3MUCx6lOrV3hAYyHu7MNnL"
+    ]
+  },
+  "guid_sets_preserved": true
+}

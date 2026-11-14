@@ -1,0 +1,13 @@
+{
+  "application": "Blender 5.2.2 LTS + Bonsai 0.9.0.post1",
+  "operation": "native change_extrusion_depth",
+  "guid_before": "0OC7AEuMDN_uJULA$VFE4k",
+  "guid_after": "0OC7AEuMDN_uJULA$VFE4k",
+  "before": [
+    5.5810346603393555,
+    0.11999999731779099,
+    2.711885452270508
+  ],
+  "requested_value_m": 2.5,
+  "warning": "Independent model geometry and supported readback must still be checked."
+}

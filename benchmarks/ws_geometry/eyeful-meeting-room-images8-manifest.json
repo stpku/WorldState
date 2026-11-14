@@ -1,0 +1,231 @@
+{
+  "schema": "worldstate-benchmark-source-manifest/0.1",
+  "dataset": "Eyeful Tower meeting_room; MIT license; public development only",
+  "description": "32 evenly spaced images from same camera; JPEG resolution images_8",
+  "input_photos": [
+    {
+      "filename": "44_DSC0001_372.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0001_372.jpg",
+      "bytes": 167736,
+      "sha256": "c4ee24d779f11ff63ffec390075517104959344e67ec2a9a7db9d8e0ea31599c",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0043_375.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0043_375.jpg",
+      "bytes": 162600,
+      "sha256": "66abdadf69c2db47149d8cf6970182b1e818751555e6ffd79257db8c3dbe71a1",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0085_378.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0085_378.jpg",
+      "bytes": 157800,
+      "sha256": "bf5f4ea299d019070a466071b88430278009b53733fa53fddc2113d86b6f4e6f",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0127_381.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0127_381.jpg",
+      "bytes": 146109,
+      "sha256": "158a5d093cd48076124def713de7d17e4f2eee8be9f3e6c146c09e1ebfdfaf50",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0169_384.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0169_384.jpg",
+      "bytes": 141907,
+      "sha256": "72ceb4ef8c9b3d041d0ecf1d59521a9eec9af7a61a8006907330c01448fe6d5b",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0211_387.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0211_387.jpg",
+      "bytes": 134119,
+      "sha256": "f6ef2605b03f384b0ac954c0924237685f545073f9dca9e0d10d97d75bc3493a",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0253_390.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0253_390.jpg",
+      "bytes": 167973,
+      "sha256": "1e4b17a74f6d36249753f9399c7a217e5e3cd61687fca158f799df1a5f699f9c",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0295_393.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0295_393.jpg",
+      "bytes": 172131,
+      "sha256": "c28bc12a01128a32141cfaed0f68a66e25b60eaa36133d891a5387a0a494c5bf",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0337_396.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0337_396.jpg",
+      "bytes": 165472,
+      "sha256": "34464edba7c004db8d503d81c9dd0455bde72fbb9f78cef2869619afbb72c07e",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0379_399.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0379_399.jpg",
+      "bytes": 167001,
+      "sha256": "000a6f0d15b49af2046956d9c194cd707d9f8f5b3048ba368ea97235759e22dc",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0421_402.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0421_402.jpg",
+      "bytes": 173395,
+      "sha256": "5d9e2c5c14d50d80045d251d7497ed8fc6da13cf02232ede573dea97c148cf1f",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0463_405.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0463_405.jpg",
+      "bytes": 173279,
+      "sha256": "0aad2b349c864f2fdebbb08e797fe8d2435389f7142e4a387feddef754dbd436",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0505_408.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0505_408.jpg",
+      "bytes": 152861,
+      "sha256": "d48f43fb3b9943c20309f13e9cfbeec70d606adcca6c28e1df27c19a529adbdf",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0547_411.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0547_411.jpg",
+      "bytes": 144600,
+      "sha256": "c36276bf78fce719b3d0628aab11937b78e00fc859980ea0bd98c7486abe65be",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0589_414.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0589_414.jpg",
+      "bytes": 163834,
+      "sha256": "37fdcf2be247246778e8b72ba524ac011d92c9840ba96b9f96078b4a32184c7a",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0631_417.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0631_417.jpg",
+      "bytes": 174778,
+      "sha256": "dcafe6abf713c1b63bc072dd4ce6f45c52312239303528a813c94d6671e04142",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0659_419.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0659_419.jpg",
+      "bytes": 131970,
+      "sha256": "0cb4e48993f95e7f54369f79c316cd14e491c13582350c83b5d92617069230b5",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0701_422.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0701_422.jpg",
+      "bytes": 154891,
+      "sha256": "9d284a55cd79859b9ec1d5a546057e006f9f5b20ee1a14c354ef0fc344625e79",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0743_425.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0743_425.jpg",
+      "bytes": 154964,
+      "sha256": "f4faead3d6cc5bdf58c5f0f57c167c41ae9d069b2a5e38d353444573e9b51501",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0785_428.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0785_428.jpg",
+      "bytes": 153907,
+      "sha256": "e60295bd027be446ab520ce4fb825f17630e609c8e504ab3a96b5593bfce10e7",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0827_431.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0827_431.jpg",
+      "bytes": 149635,
+      "sha256": "49b6984ae4593d336705460a189923086ff2443158d94276e23dfb202046d547",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0869_434.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0869_434.jpg",
+      "bytes": 157955,
+      "sha256": "20b88ae03df4c2ae465fcdcf0e0ae442c695c72d070612babbc6f5447b541d23",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0911_437.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0911_437.jpg",
+      "bytes": 165535,
+      "sha256": "caa3221120b4115770b3826499b8010897de99989053a5e28f67d6ba097339bb",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0953_440.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0953_440.jpg",
+      "bytes": 162818,
+      "sha256": "b6cec0657c9f587b866ed4b61d133ba7297ca8610a70eaaa94ab5899ec2641ad",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC0995_443.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC0995_443.jpg",
+      "bytes": 169711,
+      "sha256": "17f555287988ac7a5a4f20238ff5c70af89cc593b43db9cd7f69f29e1076aa44",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC1037_446.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC1037_446.jpg",
+      "bytes": 187189,
+      "sha256": "04f8e4ad167cdc098161f11751f617f9194896b238db1a753f62af9382d77433",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC1079_449.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC1079_449.jpg",
+      "bytes": 190266,
+      "sha256": "1d372365033b5160d93431e825932f06e63f36bdcb900d7da5cafdb5c9f31d57",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC1121_452.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC1121_452.jpg",
+      "bytes": 185367,
+      "sha256": "2170e23b7087526931b70c4dd09172a580c0b6f0a7f13f582213e9f7eb0635dc",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC1163_455.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC1163_455.jpg",
+      "bytes": 196471,
+      "sha256": "3724859287228b0b1febaad789187915e23334b2d193ff15fa2f10a4f3a18b04",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC1205_458.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC1205_458.jpg",
+      "bytes": 194674,
+      "sha256": "945a77d21e273bf40065da79cc6cdcb3c76303ecafae5ea9abedc726a589dcca",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC1247_461.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC1247_461.jpg",
+      "bytes": 180981,
+      "sha256": "27d1ca771cb1759fe1fb578a0305bfad6cad298e11ab8304d726c67402b01230",
+      "usage": "sfm"
+    },
+    {
+      "filename": "44_DSC1289_464.jpg",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/images_8/44_DSC1289_464.jpg",
+      "bytes": 177966,
+      "sha256": "489f26701b4672b84bdf3177f78c41ea18e963c718f2bd5fb0dd0d6ecda6ab10",
+      "usage": "sfm"
+    }
+  ]
+}

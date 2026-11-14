@@ -1,0 +1,24 @@
+{
+  "operator": "automation",
+  "selected_surface_ids": [
+    "surface-50c11897dec3d072",
+    "surface-79455637217b254d"
+  ],
+  "wall_candidates": 2,
+  "selection": "two different plane orientations; NOT independent physical wall verification",
+  "anchor_basis": "assumed from correlated same-photo reconstruction; not a ruler measurement",
+  "anchor_physical_uncertainty": "UNKNOWN",
+  "scale_factor": 1.0,
+  "endpoint_reprojection_px": [
+    0.09545075810168321,
+    0.8027405303687308
+  ],
+  "endpoint_parallax_degrees": [
+    4.9696697786227615,
+    10.442674171143597
+  ],
+  "counterfactual_scale_ratio": 1.2,
+  "changed_anchor_with_old_solution": "\u5c3a\u5ea6\u7aef\u70b9\u3001\u6d4b\u91cf\u6216\u76f8\u673a\u5df2\u6539\u53d8\uff1b\u8bf7\u91cd\u65b0\u6c42\u89e3",
+  "scope": "PARTIAL_OPEN",
+  "real_room_accuracy": "NOT_MEASURED"
+}

@@ -1,0 +1,104 @@
+I20261114 20:44:16.565527 124634878419456 incremental_pipeline.cc:353] Loading database
+I20261114 20:44:16.565635 124634878419456 database_cache.cc:82] Loading rigs...
+I20261114 20:44:16.565662 124634878419456 database_cache.cc:92]  1 in 0.000s
+I20261114 20:44:16.565670 124634878419456 database_cache.cc:100] Loading cameras...
+I20261114 20:44:16.565678 124634878419456 database_cache.cc:118]  1 in 0.000s
+I20261114 20:44:16.565681 124634878419456 database_cache.cc:126] Loading frames...
+I20261114 20:44:16.565721 124634878419456 database_cache.cc:136]  32 in 0.000s
+I20261114 20:44:16.565725 124634878419456 database_cache.cc:144] Loading matches...
+I20261114 20:44:16.565884 124634878419456 database_cache.cc:163]  76 in 0.000s
+I20261114 20:44:16.565888 124634878419456 database_cache.cc:171] Loading images...
+I20261114 20:44:16.566364 124634878419456 database_cache.cc:263]  32 in 0.000s (loaded all 32)
+I20261114 20:44:16.566371 124634878419456 database_cache.cc:282] Loading pose priors...
+I20261114 20:44:16.566376 124634878419456 database_cache.cc:290]  0 in 0.000s
+I20261114 20:44:16.566379 124634878419456 database_cache.cc:298] Building correspondence graph...
+I20261114 20:44:16.567033 124634878419456 database_cache.cc:327]  in 0.001s (ignored 0)
+I20261114 20:44:16.567044 124634878419456 timer.cc:90] Elapsed time: 0.000 [minutes]
+I20261114 20:44:16.567680 124634878419456 incremental_pipeline.cc:862] Iterative triangulation
+I20261114 20:44:16.567700 124634878419456 incremental_pipeline.cc:870] Triangulating image #1 (1)
+I20261114 20:44:16.567707 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 35 points
+I20261114 20:44:16.567726 124634878419456 incremental_pipeline.cc:870] Triangulating image #2 (2)
+I20261114 20:44:16.567729 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 91 points
+I20261114 20:44:16.568578 124634878419456 incremental_pipeline.cc:870] Triangulating image #3 (3)
+I20261114 20:44:16.568594 124634878419456 incremental_pipeline.cc:873] => Image sees 42 / 116 points
+I20261114 20:44:16.568719 124634878419456 incremental_pipeline.cc:870] Triangulating image #4 (4)
+I20261114 20:44:16.568725 124634878419456 incremental_pipeline.cc:873] => Image sees 42 / 84 points
+I20261114 20:44:16.568773 124634878419456 incremental_pipeline.cc:870] Triangulating image #5 (5)
+I20261114 20:44:16.568780 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 0 points
+I20261114 20:44:16.568788 124634878419456 incremental_pipeline.cc:870] Triangulating image #6 (6)
+I20261114 20:44:16.568792 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 35 points
+I20261114 20:44:16.568803 124634878419456 incremental_pipeline.cc:870] Triangulating image #7 (7)
+I20261114 20:44:16.568806 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 89 points
+I20261114 20:44:16.569580 124634878419456 incremental_pipeline.cc:870] Triangulating image #8 (8)
+I20261114 20:44:16.569594 124634878419456 incremental_pipeline.cc:873] => Image sees 22 / 88 points
+I20261114 20:44:16.569705 124634878419456 incremental_pipeline.cc:870] Triangulating image #9 (9)
+I20261114 20:44:16.569708 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 58 points
+I20261114 20:44:16.569880 124634878419456 incremental_pipeline.cc:870] Triangulating image #10 (10)
+I20261114 20:44:16.569883 124634878419456 incremental_pipeline.cc:873] => Image sees 41 / 104 points
+I20261114 20:44:16.569926 124634878419456 incremental_pipeline.cc:870] Triangulating image #11 (11)
+I20261114 20:44:16.569928 124634878419456 incremental_pipeline.cc:873] => Image sees 47 / 105 points
+I20261114 20:44:16.569948 124634878419456 incremental_pipeline.cc:870] Triangulating image #12 (12)
+I20261114 20:44:16.569950 124634878419456 incremental_pipeline.cc:873] => Image sees 40 / 88 points
+I20261114 20:44:16.569969 124634878419456 incremental_pipeline.cc:870] Triangulating image #13 (13)
+I20261114 20:44:16.569971 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 68 points
+I20261114 20:44:16.570065 124634878419456 incremental_pipeline.cc:870] Triangulating image #14 (14)
+I20261114 20:44:16.570078 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 18 points
+I20261114 20:44:16.570136 124634878419456 incremental_pipeline.cc:870] Triangulating image #15 (15)
+I20261114 20:44:16.570138 124634878419456 incremental_pipeline.cc:873] => Image sees 13 / 61 points
+I20261114 20:44:16.570164 124634878419456 incremental_pipeline.cc:870] Triangulating image #16 (16)
+I20261114 20:44:16.570166 124634878419456 incremental_pipeline.cc:873] => Image sees 9 / 64 points
+I20261114 20:44:16.570180 124634878419456 incremental_pipeline.cc:870] Triangulating image #17 (17)
+I20261114 20:44:16.570182 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 87 points
+I20261114 20:44:16.571398 124634878419456 incremental_pipeline.cc:870] Triangulating image #18 (18)
+I20261114 20:44:16.571405 124634878419456 incremental_pipeline.cc:873] => Image sees 37 / 142 points
+I20261114 20:44:16.572100 124634878419456 incremental_pipeline.cc:870] Triangulating image #19 (19)
+I20261114 20:44:16.572107 124634878419456 incremental_pipeline.cc:873] => Image sees 23 / 91 points
+I20261114 20:44:16.572149 124634878419456 incremental_pipeline.cc:870] Triangulating image #20 (20)
+I20261114 20:44:16.572151 124634878419456 incremental_pipeline.cc:873] => Image sees 63 / 135 points
+I20261114 20:44:16.572225 124634878419456 incremental_pipeline.cc:870] Triangulating image #21 (21)
+I20261114 20:44:16.572227 124634878419456 incremental_pipeline.cc:873] => Image sees 79 / 112 points
+I20261114 20:44:16.572260 124634878419456 incremental_pipeline.cc:870] Triangulating image #22 (22)
+I20261114 20:44:16.572262 124634878419456 incremental_pipeline.cc:873] => Image sees 47 / 100 points
+I20261114 20:44:16.572285 124634878419456 incremental_pipeline.cc:870] Triangulating image #23 (23)
+I20261114 20:44:16.572288 124634878419456 incremental_pipeline.cc:873] => Image sees 0 / 235 points
+I20261114 20:44:16.574729 124634878419456 incremental_pipeline.cc:870] Triangulating image #24 (24)
+I20261114 20:44:16.574740 124634878419456 incremental_pipeline.cc:873] => Image sees 30 / 64 points
+I20261114 20:44:16.574864 124634878419456 incremental_pipeline.cc:870] Triangulating image #25 (25)
+I20261114 20:44:16.574866 124634878419456 incremental_pipeline.cc:873] => Image sees 64 / 120 points
+I20261114 20:44:16.574913 124634878419456 incremental_pipeline.cc:870] Triangulating image #26 (26)
+I20261114 20:44:16.574915 124634878419456 incremental_pipeline.cc:873] => Image sees 53 / 319 points
+I20261114 20:44:16.577234 124634878419456 incremental_pipeline.cc:870] Triangulating image #27 (27)
+I20261114 20:44:16.577239 124634878419456 incremental_pipeline.cc:873] => Image sees 45 / 293 points
+I20261114 20:44:16.579956 124634878419456 incremental_pipeline.cc:870] Triangulating image #28 (28)
+I20261114 20:44:16.579961 124634878419456 incremental_pipeline.cc:873] => Image sees 59 / 305 points
+I20261114 20:44:16.582586 124634878419456 incremental_pipeline.cc:870] Triangulating image #29 (29)
+I20261114 20:44:16.582594 124634878419456 incremental_pipeline.cc:873] => Image sees 74 / 304 points
+I20261114 20:44:16.584598 124634878419456 incremental_pipeline.cc:870] Triangulating image #30 (30)
+I20261114 20:44:16.584605 124634878419456 incremental_pipeline.cc:873] => Image sees 62 / 300 points
+I20261114 20:44:16.586852 124634878419456 incremental_pipeline.cc:870] Triangulating image #31 (31)
+I20261114 20:44:16.586859 124634878419456 incremental_pipeline.cc:873] => Image sees 62 / 291 points
+I20261114 20:44:16.588659 124634878419456 incremental_pipeline.cc:870] Triangulating image #32 (32)
+I20261114 20:44:16.588664 124634878419456 incremental_pipeline.cc:873] => Image sees 64 / 242 points
+I20261114 20:44:16.590226 124634878419456 incremental_pipeline.cc:883] Retriangulation and Global bundle adjustment
+I20261114 20:44:16.602487 124634878419456 incremental_pipeline.cc:898] Extracting colors
+{
+  "schema": "worldstate-correlated-pose-triangulation/0.1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_AUTOMATIC_REGISTRATION",
+  "extra_input": "Precomputed poses from the same scene source reconstruction; source poses are correlated and not independent truth",
+  "source_registered_images": 1302,
+  "source_images_sha256": "160d2086a0588d0f77f84cc4015f9643238cc7a874e5af622711729e53c521cb",
+  "source_camera_sha256": "7760049489026d01a053f9f1b6d685052b5130413f7287a52c90c913f1ff6298",
+  "input_images": 32,
+  "registered_poses_supplied": 32,
+  "triangulated_points": 450,
+  "mean_reprojection_error_px": 0.786514257345808,
+  "max_camera_center_change_source_units": 2.5438405243138005e-15,
+  "max_camera_rotation_matrix_change_frobenius": 1.1528591651288684e-15,
+  "triangulation_seconds": 0.27375492895953357,
+  "scale": "SOURCE_FRAME_UNVERIFIED_NOT_INDEPENDENT_MEASUREMENT",
+  "limits": [
+    "Source points were not used; poses, matching and intrinsics are not independent.",
+    "Neither reprojection error nor precomputed source pose establishes physical wall precision.",
+    "This run is development only; no independent room accuracy or human time measured."
+  ]
+}

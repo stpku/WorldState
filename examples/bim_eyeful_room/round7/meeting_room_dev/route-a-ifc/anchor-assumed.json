@@ -1,0 +1,56 @@
+{
+  "schema": "worldstate-multiview-scale-anchor/0.1",
+  "confirmed": true,
+  "basis": "assumed",
+  "distance_m": 5.0113851272008,
+  "measurement_uncertainty_m": null,
+  "description": "DEBUG ONLY: scale assumed from correlated Metashape reconstruction of the same photos; endpoints are tracked features, not independently measured ruler endpoints; uncertainty unknown",
+  "endpoints": [
+    {
+      "id": "debug-feature-a",
+      "source": "automatically selected feature; not a measured ruler endpoint",
+      "track_id": 182,
+      "observations": [
+        {
+          "image_id": 22,
+          "photo_sha256": "ea9ef06075c028bbbeb422793542cc38cb0f7277f3865b7bef7f21febae29f76",
+          "pixel_xy": [
+            371.4363708496094,
+            340.51324462890625
+          ]
+        },
+        {
+          "image_id": 17,
+          "photo_sha256": "5d0da0bb6a8ac02e7594a7ec37c0dc9037658601fa2180011e4e2b48705b66b4",
+          "pixel_xy": [
+            458.9198913574219,
+            359.24017333984375
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debug-feature-b",
+      "source": "automatically selected feature; not a measured ruler endpoint",
+      "track_id": 541,
+      "observations": [
+        {
+          "image_id": 22,
+          "photo_sha256": "ea9ef06075c028bbbeb422793542cc38cb0f7277f3865b7bef7f21febae29f76",
+          "pixel_xy": [
+            868.6812744140625,
+            343.0748596191406
+          ]
+        },
+        {
+          "image_id": 17,
+          "photo_sha256": "5d0da0bb6a8ac02e7594a7ec37c0dc9037658601fa2180011e4e2b48705b66b4",
+          "pixel_xy": [
+            984.82861328125,
+            368.6862487792969
+          ]
+        }
+      ]
+    }
+  ]
+}

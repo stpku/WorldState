@@ -1,0 +1,28 @@
+{
+  "schema": "worldstate-benchmark-source-manifest/0.1",
+  "dataset": "Eyeful Tower meeting_room; MIT license; public development only",
+  "description": "Source sparse reconstruction used solely to bind photos to their same-scene calibration; no independent truth",
+  "input_photos": [
+    {
+      "filename": "cameras.bin",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/sparse/0/cameras.bin",
+      "bytes": 680,
+      "sha256": "7760049489026d01a053f9f1b6d685052b5130413f7287a52c90c913f1ff6298",
+      "usage": "sfm"
+    },
+    {
+      "filename": "images.bin",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/sparse/0/images.bin",
+      "bytes": 16882226,
+      "sha256": "160d2086a0588d0f77f84cc4015f9643238cc7a874e5af622711729e53c521cb",
+      "usage": "sfm"
+    },
+    {
+      "filename": "points3D.bin",
+      "url": "https://fb-baas-f32eacb9-8abb-11eb-b2b8-4857dd089e15.s3.amazonaws.com/EyefulTower/meeting_room/colmap/sparse/0/points3D.bin",
+      "bytes": 40559780,
+      "sha256": "9a6fb3f5627aacd286f14e2a90f56d4460187f5048c4287b9209b511188d3598",
+      "usage": "sfm"
+    }
+  ]
+}

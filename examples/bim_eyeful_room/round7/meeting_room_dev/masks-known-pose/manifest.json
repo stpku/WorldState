@@ -1,0 +1,302 @@
+{
+  "schema": "worldstate-multiview-masks/0.1",
+  "model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e",
+  "model_revision": "a8e2807c3479bc617b37d8ed53e68660b3fa1ebb",
+  "mask_resolution": [
+    128,
+    128
+  ],
+  "coordinate_mapping": "floor(x*128/image_width), floor(y*128/image_height); original image is resized to 512x512 before inference",
+  "score": "softmax score, uncalibrated",
+  "images": [
+    {
+      "image_id": 1,
+      "name": "44_DSC0127_381.jpg",
+      "sha256": "16c0b290b292f47fb847209f0ed9e66385da381d82cab245d04a2ffb8cd0903d",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-1.npz",
+      "mask_sha256": "8944e7a131d2206ecc49800417e7adfbef537fab649127facc905021561baf73"
+    },
+    {
+      "image_id": 2,
+      "name": "44_DSC0001_372.jpg",
+      "sha256": "3b7e64f24839bbf9387fdabe33913b7f9eeca4f925733bb00d5aa8dcdb563bac",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-2.npz",
+      "mask_sha256": "e4560eb865b9e28858d5927c2c2bfbb5e4d1467b1415789244de513ae78314b0"
+    },
+    {
+      "image_id": 3,
+      "name": "44_DSC0043_375.jpg",
+      "sha256": "1a43a9ac15bb80d1d1b1a71d9be0a404e979b86622c67b9bf49d0dfbec53d045",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-3.npz",
+      "mask_sha256": "80b4f2c8641ea3492b0045b5de28f50d8c1afb33c255cb8da6d705f76ab0e5f9"
+    },
+    {
+      "image_id": 4,
+      "name": "44_DSC0085_378.jpg",
+      "sha256": "7f7fb62375b9755d5167159e2b81910815c016ea7e31dbe753a764fbfd409094",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-4.npz",
+      "mask_sha256": "f8e5cd0b41e0e51f7b1f22ea95e252d53c34ab9797fbed0303de7ff8e6dff79c"
+    },
+    {
+      "image_id": 5,
+      "name": "44_DSC0211_387.jpg",
+      "sha256": "6626943a9872f6dc5d137d64f9a901f3560cbe671038c3549c810a51661aac37",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-5.npz",
+      "mask_sha256": "c29937adcb5fa12692ca152f31253b0f7536e543b7b104804d2366c597971020"
+    },
+    {
+      "image_id": 6,
+      "name": "44_DSC0169_384.jpg",
+      "sha256": "2b013c3ee762b5c9548c98a0236105bda166dfa6733838a0a29448e0aa8d76df",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-6.npz",
+      "mask_sha256": "1e360f2e2e7e8577d296a52dda80c39a8b8085e61b5435ce4ec47e9d40cd6888"
+    },
+    {
+      "image_id": 7,
+      "name": "44_DSC0337_396.jpg",
+      "sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-7.npz",
+      "mask_sha256": "e22807265920e5b78f3d11d5e18b91050c6d051033aec23ed2071a907a5cc09d"
+    },
+    {
+      "image_id": 8,
+      "name": "44_DSC0253_390.jpg",
+      "sha256": "6e97ff6c7c25e591ae5a2da71546bbca84925dbdae999df2540a1a0cd46299e7",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-8.npz",
+      "mask_sha256": "d0f326c0157003329569eda61f3c443482d773f6f82ca772485185c3adb3eaeb"
+    },
+    {
+      "image_id": 9,
+      "name": "44_DSC0463_405.jpg",
+      "sha256": "e5c3d619fa7426c380cf9bc9e7cc6e48890458f8c60cc807b1c66ca63daab65c",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-9.npz",
+      "mask_sha256": "7e7c6d84567c710130ef5ebc31bee6d33c7beea68af44115207b2fa38e190a0e"
+    },
+    {
+      "image_id": 10,
+      "name": "44_DSC0295_393.jpg",
+      "sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-10.npz",
+      "mask_sha256": "9b3da966c434e4981c2d541269eb6a2f06506a2d5472fe18b55873fae880be36"
+    },
+    {
+      "image_id": 11,
+      "name": "44_DSC0379_399.jpg",
+      "sha256": "8aa228e072f04d2ead84df7b751ef24053889318de52b18120995aeb54c87058",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-11.npz",
+      "mask_sha256": "36d218d7d27bf5e2dcefa6bae8d7891a5b22281811eb8f39ca4ffa8bfa0cdc10"
+    },
+    {
+      "image_id": 12,
+      "name": "44_DSC0421_402.jpg",
+      "sha256": "3cbe20497188011d75eb24436431e7e990c22587f1c2afc4183dc5cfd229067b",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-12.npz",
+      "mask_sha256": "905ef26448ade6fc633262def8cca65bf967d0eaef07d07f0669c12df08e5efe"
+    },
+    {
+      "image_id": 13,
+      "name": "44_DSC0589_414.jpg",
+      "sha256": "d05e32d41943d11a2dc2d9c5456577f52a7ccc337d67e9f01c018bc88c209f3a",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-13.npz",
+      "mask_sha256": "3ced3056f04486cc69c74c44c856774a4bad5913c07e3ace1c08d83a4edf20ef"
+    },
+    {
+      "image_id": 14,
+      "name": "44_DSC0659_419.jpg",
+      "sha256": "e15e3f7012543899c3587f4532c9709b77f7f2c19451501a7fed727e7a9fd11c",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-14.npz",
+      "mask_sha256": "80963ce5bb95b1b488d41045d0e132e0e261d71fc1238903277b8b6c4c899611"
+    },
+    {
+      "image_id": 15,
+      "name": "44_DSC0505_408.jpg",
+      "sha256": "f8886ec3376ea88c2dc4d9b49e386f2410fa7afced4cce65a7076e7928223c27",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-15.npz",
+      "mask_sha256": "5b81949ebe09596fd20bb330db8b8bc8ec539dde555e705e97e56311c0c310dd"
+    },
+    {
+      "image_id": 16,
+      "name": "44_DSC0547_411.jpg",
+      "sha256": "f79d4d917ac7a0f4b69f5021617eeb5dc637100545be20abb4d58aa21ba6d09b",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-16.npz",
+      "mask_sha256": "b45029a1a43b01ff9660098c6b44e78f4d132cf6098c66c0a5b94888bcf69c20"
+    },
+    {
+      "image_id": 17,
+      "name": "44_DSC0743_425.jpg",
+      "sha256": "5d0da0bb6a8ac02e7594a7ec37c0dc9037658601fa2180011e4e2b48705b66b4",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-17.npz",
+      "mask_sha256": "3e061dab030f56b57579ca97642a336eb4c8e4bf431f1a87d9b80bedd44b2a0c"
+    },
+    {
+      "image_id": 18,
+      "name": "44_DSC0827_431.jpg",
+      "sha256": "8e097c0fb4f675bf3013210471ce366e2a8a2106614c5f3d562636e3086af2b2",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-18.npz",
+      "mask_sha256": "eb7762fbb13c5db8512d0bc712300ce67a9a12748d4ad056430b90d74daba6fa"
+    },
+    {
+      "image_id": 19,
+      "name": "44_DSC0631_417.jpg",
+      "sha256": "e1c64a3677b33d57307350e438c618f8ac1f265b3fa9463dd9f024d5ef95ac23",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-19.npz",
+      "mask_sha256": "09794c944e91469d733b3f8a2b0ad7511fa4b2414fc11a0e224f65e29948a58d"
+    },
+    {
+      "image_id": 20,
+      "name": "44_DSC0869_434.jpg",
+      "sha256": "0b88c68dae9ac717664c612a1106cce33bc72cecba7a53f796cacb83b4e21303",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-20.npz",
+      "mask_sha256": "ebda982d43d11bb256b718d7a3326e16c85b34000e7dc3cca6558cb72410e136"
+    },
+    {
+      "image_id": 21,
+      "name": "44_DSC0785_428.jpg",
+      "sha256": "506ce65267e4d9289823aa3dfd4b2fd0ed9b6dd97a9e5ae656f6cfea54c748ee",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-21.npz",
+      "mask_sha256": "0a1096be9e246bbf131d75e64e85088bd7d3c40a47582a1939ecd86557c2be29"
+    },
+    {
+      "image_id": 22,
+      "name": "44_DSC0701_422.jpg",
+      "sha256": "ea9ef06075c028bbbeb422793542cc38cb0f7277f3865b7bef7f21febae29f76",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-22.npz",
+      "mask_sha256": "40fa6107fbcc78b6d24dacc14d8aae4a829b42f791da639723cef76d40dcd39d"
+    },
+    {
+      "image_id": 23,
+      "name": "44_DSC0995_443.jpg",
+      "sha256": "0ec6406d45fbe0cc15070261234058c6282e9e0857283dc8b57cbd9548f18604",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-23.npz",
+      "mask_sha256": "f79cc5aaef0e371c325c17bb132c39730af94778fe0fe2b0c776adf5a6663645"
+    },
+    {
+      "image_id": 24,
+      "name": "44_DSC0953_440.jpg",
+      "sha256": "58d95b73437d0bde245f452bc6953c4aa72c1b6a03ff764dd233a4d80eac3ad4",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-24.npz",
+      "mask_sha256": "a4b019ad7ea9968ddf1602053296f22b61ebf5dd646ffd2451250874e21da771"
+    },
+    {
+      "image_id": 25,
+      "name": "44_DSC0911_437.jpg",
+      "sha256": "036a44556460b9250de2cda8f846c60ae6ee83e6ef8e112d2d580170c7586ef3",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-25.npz",
+      "mask_sha256": "47f8bafa56813729c8c487b991aecabdca0649c239e3695ed4dbafb051006ffb"
+    },
+    {
+      "image_id": 26,
+      "name": "44_DSC1037_446.jpg",
+      "sha256": "1544ec64ec3377a2014e539aaaeabb0e5dcb9652edd04af942bab261b154ae71",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-26.npz",
+      "mask_sha256": "0988d675dec49ea0f69c818264d4849d51205e4a45f29c941bd38aa62e825ad7"
+    },
+    {
+      "image_id": 27,
+      "name": "44_DSC1121_452.jpg",
+      "sha256": "8cde02a9c0ebbea4c5a39eabb5a521e8887464240be63b817d6b538196cf9c07",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-27.npz",
+      "mask_sha256": "da704930c150422f2de88d231eecdbebe162e368d0df1d0028ac646635240101"
+    },
+    {
+      "image_id": 28,
+      "name": "44_DSC1163_455.jpg",
+      "sha256": "a9c8220de19f6d64d616a304749b195d20543233d9b5308f43c93cf1fefdcd7c",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-28.npz",
+      "mask_sha256": "cd03d06eb8a837bab0e6e1d0eaae49fdb6a884a91f01e07933983e3af7a334c0"
+    },
+    {
+      "image_id": 29,
+      "name": "44_DSC1079_449.jpg",
+      "sha256": "e06bc214011842cb054fe3597b6c22347e266742a67dda21bed398e217971c05",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-29.npz",
+      "mask_sha256": "1e52131f626ff2404a084e7443a3c706d8c1cbb078553d7dd3909397dcd446e0"
+    },
+    {
+      "image_id": 30,
+      "name": "44_DSC1205_458.jpg",
+      "sha256": "101191e7e42aaa28b195978b0d985e8e88b91bd75cdefeb2575bf1688c6ea68e",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-30.npz",
+      "mask_sha256": "ddccb8ed5475f5a83a3621f311ad5f8de3b912fd073e0d566a0d7e61f39faaf3"
+    },
+    {
+      "image_id": 31,
+      "name": "44_DSC1247_461.jpg",
+      "sha256": "02816ff0bbeb4a375db0a32ce11d88f2b9b62b28317916aa3b11e0e42faabcf9",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-31.npz",
+      "mask_sha256": "d635d2fdbc1004880533c470f5fd7f15129c536ee20c9d1ba2861460b1b6890d"
+    },
+    {
+      "image_id": 32,
+      "name": "44_DSC1289_464.jpg",
+      "sha256": "9bd7513bad67d6c392eeac33b79a09c232c77ba3ca05b7cf960ff4d2ffdf3864",
+      "width_px": 1378,
+      "height_px": 915,
+      "mask_file": "image-32.npz",
+      "mask_sha256": "dde8c7ace2be4519f8104f421f6590f72f48e9f1205540dd1b548091d726427e"
+    }
+  ],
+  "runtime_seconds": 88.881
+}

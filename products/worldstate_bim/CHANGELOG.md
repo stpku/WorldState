@@ -2,6 +2,8 @@
 
 ## Unreleased — 2026-11-14
 
+- Add an explicitly bounded CPU SIFT resolution option for development runs. On a different public meeting-room scene, higher resolution still registered only 10/32 photos and logged a native BLAS warning; the default remains unchanged. A separate known-pose diagnostic exposed a chair-leg point incorrectly used as floor, so that scene's partial IFC is untrusted and not a deliverable.
+
 - Add experimental multiview wall-floor line fitting, attributed corner triangulation and Studio inspection using the shared semantic floor. Compare both routes on the same real development input; reject an unstable third wall candidate. New-room accuracy, independent scale and human savings remain unmeasured.
 
 - Fuse real registered multiview semantic tracks into provisional 3D surfaces and plane intersections; bind a triangulated two-view scale to observations and camera poses, preserve evidence, and compile selected partial surfaces to IFC. The real example has two candidates and assumed, non-independent scale; no three-wall or release acceptance is claimed.

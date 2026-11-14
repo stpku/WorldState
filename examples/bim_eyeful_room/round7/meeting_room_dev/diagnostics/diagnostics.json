@@ -1,0 +1,151 @@
+{
+  "schema": "worldstate-structure-diagnostics/0.1",
+  "input": {
+    "registered_or_supplied_cameras": 32,
+    "tracks": 450,
+    "source_reconstruction": [
+      {
+        "file": "cameras.bin",
+        "sha256": "a8f37fd6fbf1748fa98f22d272f61ec562b94a2b3bc43d1deb3af5526cbf4399"
+      },
+      {
+        "file": "frames.bin",
+        "sha256": "2dadb2d4befa5b6956d07f66ff77deb4920645d6d26726a7360a98a6bff7261f"
+      },
+      {
+        "file": "images.bin",
+        "sha256": "e35e7063310c54e93ca29a30622522dbf575a8ec4064bddb1075a19a60e372c8"
+      },
+      {
+        "file": "points3D.bin",
+        "sha256": "354fc81144d3684260c3827978ac545b5623744615237549e90b807d5da4baac"
+      },
+      {
+        "file": "rigs.bin",
+        "sha256": "73e4d5f0da0a84a5711b46ae716a149f1532832f95bb09b4b01e73cf2c5afbe9"
+      }
+    ],
+    "semantic_manifest_sha256": "532e68b161572280f8fa5a47b9c9945962b1e1906d8ee52fd08c1d8d6f6e9c41"
+  },
+  "route_a": {
+    "method": "semantic sparse tracks and plane fitting",
+    "runtime_seconds": 2.837463635019958,
+    "floor_planes": [
+      {
+        "id": "raw-plane-31-1",
+        "support_points": 8,
+        "support_views": 10,
+        "fit_rms_source_units": 0.02139180950820764
+      }
+    ],
+    "wall_surface_hypotheses": [
+      {
+        "id": "surface-50c11897dec3d072",
+        "support_points": 89,
+        "support_views": 27,
+        "fit_rms_source_units": 0.11534161352476317,
+        "visible_candidate": true
+      },
+      {
+        "id": "surface-98cffb83eae19b33",
+        "support_points": 39,
+        "support_views": 19,
+        "fit_rms_source_units": 0.17564860073842423,
+        "visible_candidate": true
+      },
+      {
+        "id": "surface-79455637217b254d",
+        "support_points": 35,
+        "support_views": 18,
+        "fit_rms_source_units": 0.1600843862430942,
+        "visible_candidate": true
+      }
+    ]
+  },
+  "route_b": {
+    "method": "multiview image boundary lines with shared route-A sparse-floor prior",
+    "runtime_seconds": 6.985314282006584,
+    "image_line_proposals": 154,
+    "line_hypotheses": [
+      {
+        "id": "structure-line-a99e3e6f1c21b54c",
+        "support_views": 17,
+        "floor_consistency": "CONFLICT_WITH_SPARSE_FLOOR",
+        "floor_signed_distances_at_support_ends_source_units": [
+          0.04008398190508475,
+          0.02685647609268005,
+          0.0211701966105685,
+          -0.09318617426434886
+        ],
+        "floor_consistency_threshold_source_units": 0.06417542852462292,
+        "floor_joint_holdout_status": "CONSISTENT_UNVERIFIED",
+        "floor_joint_holdout_max_px": 12.88750475998097,
+        "free_line_holdout_max_px": 6.055389973083152,
+        "eligible_for_draft": false
+      },
+      {
+        "id": "structure-line-6e55f60af582bcef",
+        "support_views": 14,
+        "floor_consistency": "CONFLICT_WITH_SPARSE_FLOOR",
+        "floor_signed_distances_at_support_ends_source_units": [
+          0.18921848791327395,
+          0.03286132079197919,
+          0.032270802309746494,
+          -0.04323664897974441
+        ],
+        "floor_consistency_threshold_source_units": 0.06417542852462292,
+        "floor_joint_holdout_status": "CONSISTENT_UNVERIFIED",
+        "floor_joint_holdout_max_px": 13.066512244763487,
+        "free_line_holdout_max_px": 25.490881881709925,
+        "eligible_for_draft": false
+      },
+      {
+        "id": "structure-line-1ea3b9e69780a49e",
+        "support_views": 8,
+        "floor_consistency": "CONFLICT_WITH_SPARSE_FLOOR",
+        "floor_signed_distances_at_support_ends_source_units": [
+          -0.014980832537819205,
+          -0.06963973944593779
+        ],
+        "floor_consistency_threshold_source_units": 0.06417542852462292,
+        "floor_joint_holdout_status": "CONSISTENT_UNVERIFIED",
+        "floor_joint_holdout_max_px": 6.3828646283370745,
+        "free_line_holdout_max_px": 5.130443170689659,
+        "eligible_for_draft": false
+      },
+      {
+        "id": "structure-line-007d1b9b9049114f",
+        "support_views": 3,
+        "floor_consistency": "CONSISTENT_WITH_SPARSE_FLOOR_NOT_ACCURACY",
+        "floor_signed_distances_at_support_ends_source_units": [
+          -0.0057388669618791965,
+          0.001625421648830977
+        ],
+        "floor_consistency_threshold_source_units": 0.06417542852462292,
+        "floor_joint_holdout_status": "CONFLICT_OR_INSUFFICIENT",
+        "floor_joint_holdout_max_px": 36.87378435774394,
+        "free_line_holdout_max_px": 7.310382151150122,
+        "eligible_for_draft": false
+      }
+    ],
+    "eligible_count": 0,
+    "corner_candidates": 0
+  },
+  "overlays": [
+    "44_DSC0827_431-structure.jpg",
+    "44_DSC0295_393-structure.jpg",
+    "44_DSC0785_428-structure.jpg",
+    "44_DSC0869_434-structure.jpg",
+    "44_DSC0995_443-structure.jpg",
+    "44_DSC1079_449-structure.jpg"
+  ],
+  "independent_dimensions": "NOT_MEASURED",
+  "independent_wall_instances": "NOT_MEASURED",
+  "human_time": "NOT_MEASURED",
+  "caveats": [
+    "Both routes use identical inputs and route B shares route A floor prior.",
+    "Source pose inputs and physical scale must be evaluated separately; this tool does not establish them.",
+    "Candidate count, fit residual and leave-one-view-out reprojection are not independent accuracy.",
+    "Leave-one-view-out excludes a view during line fitting only; associations, cameras and floor use all views."
+  ]
+}

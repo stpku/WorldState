@@ -1,0 +1,21 @@
+{
+  "schema": "worldstate-correlated-pose-triangulation/0.1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_AUTOMATIC_REGISTRATION",
+  "extra_input": "Precomputed poses from the same scene source reconstruction; source poses are correlated and not independent truth",
+  "source_registered_images": 1302,
+  "source_images_sha256": "160d2086a0588d0f77f84cc4015f9643238cc7a874e5af622711729e53c521cb",
+  "source_camera_sha256": "7760049489026d01a053f9f1b6d685052b5130413f7287a52c90c913f1ff6298",
+  "input_images": 32,
+  "registered_poses_supplied": 32,
+  "triangulated_points": 450,
+  "mean_reprojection_error_px": 0.786514257345808,
+  "max_camera_center_change_source_units": 2.5438405243138005e-15,
+  "max_camera_rotation_matrix_change_frobenius": 1.1528591651288684e-15,
+  "triangulation_seconds": 0.27375492895953357,
+  "scale": "SOURCE_FRAME_UNVERIFIED_NOT_INDEPENDENT_MEASUREMENT",
+  "limits": [
+    "Source points were not used; poses, matching and intrinsics are not independent.",
+    "Neither reprojection error nor precomputed source pose establishes physical wall precision.",
+    "This run is development only; no independent room accuracy or human time measured."
+  ]
+}

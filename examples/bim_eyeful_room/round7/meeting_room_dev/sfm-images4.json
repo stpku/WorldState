@@ -1,0 +1,397 @@
+{
+  "schema": "worldstate-bim-geometry-candidate/0.1",
+  "provider": "COLMAP/pycolmap",
+  "provider_version": "4.2.1",
+  "status": "INSUFFICIENT_REGISTRATION",
+  "inputs": [
+    {
+      "file": "44_DSC0001_372.jpg",
+      "sha256": "3b7e64f24839bbf9387fdabe33913b7f9eeca4f925733bb00d5aa8dcdb563bac"
+    },
+    {
+      "file": "44_DSC0043_375.jpg",
+      "sha256": "1a43a9ac15bb80d1d1b1a71d9be0a404e979b86622c67b9bf49d0dfbec53d045"
+    },
+    {
+      "file": "44_DSC0085_378.jpg",
+      "sha256": "7f7fb62375b9755d5167159e2b81910815c016ea7e31dbe753a764fbfd409094"
+    },
+    {
+      "file": "44_DSC0127_381.jpg",
+      "sha256": "16c0b290b292f47fb847209f0ed9e66385da381d82cab245d04a2ffb8cd0903d"
+    },
+    {
+      "file": "44_DSC0169_384.jpg",
+      "sha256": "2b013c3ee762b5c9548c98a0236105bda166dfa6733838a0a29448e0aa8d76df"
+    },
+    {
+      "file": "44_DSC0211_387.jpg",
+      "sha256": "6626943a9872f6dc5d137d64f9a901f3560cbe671038c3549c810a51661aac37"
+    },
+    {
+      "file": "44_DSC0253_390.jpg",
+      "sha256": "6e97ff6c7c25e591ae5a2da71546bbca84925dbdae999df2540a1a0cd46299e7"
+    },
+    {
+      "file": "44_DSC0295_393.jpg",
+      "sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8"
+    },
+    {
+      "file": "44_DSC0337_396.jpg",
+      "sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6"
+    },
+    {
+      "file": "44_DSC0379_399.jpg",
+      "sha256": "8aa228e072f04d2ead84df7b751ef24053889318de52b18120995aeb54c87058"
+    },
+    {
+      "file": "44_DSC0421_402.jpg",
+      "sha256": "3cbe20497188011d75eb24436431e7e990c22587f1c2afc4183dc5cfd229067b"
+    },
+    {
+      "file": "44_DSC0463_405.jpg",
+      "sha256": "e5c3d619fa7426c380cf9bc9e7cc6e48890458f8c60cc807b1c66ca63daab65c"
+    },
+    {
+      "file": "44_DSC0505_408.jpg",
+      "sha256": "f8886ec3376ea88c2dc4d9b49e386f2410fa7afced4cce65a7076e7928223c27"
+    },
+    {
+      "file": "44_DSC0547_411.jpg",
+      "sha256": "f79d4d917ac7a0f4b69f5021617eeb5dc637100545be20abb4d58aa21ba6d09b"
+    },
+    {
+      "file": "44_DSC0589_414.jpg",
+      "sha256": "d05e32d41943d11a2dc2d9c5456577f52a7ccc337d67e9f01c018bc88c209f3a"
+    },
+    {
+      "file": "44_DSC0631_417.jpg",
+      "sha256": "e1c64a3677b33d57307350e438c618f8ac1f265b3fa9463dd9f024d5ef95ac23"
+    },
+    {
+      "file": "44_DSC0659_419.jpg",
+      "sha256": "e15e3f7012543899c3587f4532c9709b77f7f2c19451501a7fed727e7a9fd11c"
+    },
+    {
+      "file": "44_DSC0701_422.jpg",
+      "sha256": "ea9ef06075c028bbbeb422793542cc38cb0f7277f3865b7bef7f21febae29f76"
+    },
+    {
+      "file": "44_DSC0743_425.jpg",
+      "sha256": "5d0da0bb6a8ac02e7594a7ec37c0dc9037658601fa2180011e4e2b48705b66b4"
+    },
+    {
+      "file": "44_DSC0785_428.jpg",
+      "sha256": "506ce65267e4d9289823aa3dfd4b2fd0ed9b6dd97a9e5ae656f6cfea54c748ee"
+    },
+    {
+      "file": "44_DSC0827_431.jpg",
+      "sha256": "8e097c0fb4f675bf3013210471ce366e2a8a2106614c5f3d562636e3086af2b2"
+    },
+    {
+      "file": "44_DSC0869_434.jpg",
+      "sha256": "0b88c68dae9ac717664c612a1106cce33bc72cecba7a53f796cacb83b4e21303"
+    },
+    {
+      "file": "44_DSC0911_437.jpg",
+      "sha256": "036a44556460b9250de2cda8f846c60ae6ee83e6ef8e112d2d580170c7586ef3"
+    },
+    {
+      "file": "44_DSC0953_440.jpg",
+      "sha256": "58d95b73437d0bde245f452bc6953c4aa72c1b6a03ff764dd233a4d80eac3ad4"
+    },
+    {
+      "file": "44_DSC0995_443.jpg",
+      "sha256": "0ec6406d45fbe0cc15070261234058c6282e9e0857283dc8b57cbd9548f18604"
+    },
+    {
+      "file": "44_DSC1037_446.jpg",
+      "sha256": "1544ec64ec3377a2014e539aaaeabb0e5dcb9652edd04af942bab261b154ae71"
+    },
+    {
+      "file": "44_DSC1079_449.jpg",
+      "sha256": "e06bc214011842cb054fe3597b6c22347e266742a67dda21bed398e217971c05"
+    },
+    {
+      "file": "44_DSC1121_452.jpg",
+      "sha256": "8cde02a9c0ebbea4c5a39eabb5a521e8887464240be63b817d6b538196cf9c07"
+    },
+    {
+      "file": "44_DSC1163_455.jpg",
+      "sha256": "a9c8220de19f6d64d616a304749b195d20543233d9b5308f43c93cf1fefdcd7c"
+    },
+    {
+      "file": "44_DSC1205_458.jpg",
+      "sha256": "101191e7e42aaa28b195978b0d985e8e88b91bd75cdefeb2575bf1688c6ea68e"
+    },
+    {
+      "file": "44_DSC1247_461.jpg",
+      "sha256": "02816ff0bbeb4a375db0a32ce11d88f2b9b62b28317916aa3b11e0e42faabcf9"
+    },
+    {
+      "file": "44_DSC1289_464.jpg",
+      "sha256": "9bd7513bad67d6c392eeac33b79a09c232c77ba3ca05b7cf960ff4d2ffdf3864"
+    }
+  ],
+  "input_camera_assumption": "all images from one camera; user-declared fixed calibration",
+  "supplied_calibration": {
+    "fx": 361.37699026287487,
+    "fy": 361.24586653636436,
+    "cx": 689.0,
+    "cy": 457.5,
+    "confirmed": true,
+    "source_sha256": "7760049489026d01a053f9f1b6d685052b5130413f7287a52c90c913f1ff6298",
+    "source": "Matching source image/camera mapping and undistorted pinhole calibration, resized to this photo raster; not independent validation"
+  },
+  "coordinate_frame": "COLMAP arbitrary reconstruction frame",
+  "scale": {
+    "status": "unknown",
+    "unit": "arbitrary"
+  },
+  "timing_seconds": {
+    "feature_extraction": 6.463846002006903,
+    "matching": 0.7086869020713493,
+    "mapping": 0.4010767119470984,
+    "total": 7.573609616025351
+  },
+  "registered_cameras": [
+    {
+      "name": "44_DSC0995_443.jpg",
+      "center": [
+        -2.868912006139349,
+        0.2551998869626974,
+        4.135719213847471
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9765148110564856,
+          0.0704065968674858,
+          -0.20362154823312675
+        ],
+        [
+          -0.10892294958180596,
+          0.9767532496748902,
+          -0.18463174240617725
+        ],
+        [
+          0.18588871628400574,
+          0.20247469068276402,
+          0.9614829092559074
+        ]
+      ]
+    },
+    {
+      "name": "44_DSC1037_446.jpg",
+      "center": [
+        -2.6832342587381803,
+        0.49101486143335554,
+        3.413198142549721
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9822175483726219,
+          0.02843988370686472,
+          -0.18557979600057797
+        ],
+        [
+          -0.06099852130073791,
+          0.9831757498723498,
+          -0.17217614603093587
+        ],
+        [
+          0.17756088552380997,
+          0.18043452518208022,
+          0.9674272655111172
+        ]
+      ]
+    },
+    {
+      "name": "44_DSC1079_449.jpg",
+      "center": [
+        -2.246805101331483,
+        0.04766351539225482,
+        2.0259284760168397
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9959232179403443,
+          0.07697184848410746,
+          -0.04703486481631397
+        ],
+        [
+          -0.08396395930396072,
+          0.981601485135611,
+          -0.17148929388613704
+        ],
+        [
+          0.03296964521119618,
+          0.1747394028847033,
+          0.984062570964949
+        ]
+      ]
+    },
+    {
+      "name": "44_DSC1121_452.jpg",
+      "center": [
+        -0.2488972886922266,
+        -0.39233808435103174,
+        -0.5193262211029596
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9823972429664996,
+          0.09662529714512622,
+          0.15987247719178121
+        ],
+        [
+          -0.06941631233993445,
+          0.9833761709021374,
+          -0.16778761004011913
+        ],
+        [
+          -0.1734273121308902,
+          0.15373632769604748,
+          0.972773410899778
+        ]
+      ]
+    },
+    {
+      "name": "44_DSC1163_455.jpg",
+      "center": [
+        -0.2280320157020843,
+        0.06318331370823269,
+        -0.7669680974498133
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.9735722306340248,
+          0.07621523693841821,
+          0.2152866679492951
+        ],
+        [
+          -0.04784655620816192,
+          0.9898200126834973,
+          -0.13404122332424673
+        ],
+        [
+          -0.223311035995332,
+          0.12019808712979652,
+          0.9673079142925635
+        ]
+      ]
+    },
+    {
+      "name": "44_DSC1205_458.jpg",
+      "center": [
+        1.2904014395556453,
+        -0.15933623126790197,
+        -2.2079528761777736
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.8967712254064689,
+          0.12791299664483946,
+          0.4236031569432851
+        ],
+        [
+          -0.07566486818680826,
+          0.987535353740576,
+          -0.13801721934145852
+        ],
+        [
+          -0.43597728955216586,
+          0.09171799388240365,
+          0.8952718093366585
+        ]
+      ]
+    },
+    {
+      "name": "44_DSC1247_461.jpg",
+      "center": [
+        3.225494643447515,
+        -0.7469854191640302,
+        -2.8322075290378352
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.8155062457576752,
+          0.20094849587938743,
+          0.542742356126767
+        ],
+        [
+          -0.11577711234859064,
+          0.9754745354597706,
+          -0.18720334111806486
+        ],
+        [
+          -0.5670495775383704,
+          0.08982835116685901,
+          0.8187708128287178
+        ]
+      ]
+    },
+    {
+      "name": "44_DSC1289_464.jpg",
+      "center": [
+        3.7599845876001625,
+        0.4415981572864234,
+        -3.2483911086456514
+      ],
+      "rotation_camera_from_world": [
+        [
+          0.7623063587863856,
+          0.10704583159481129,
+          0.6383025969648074
+        ],
+        [
+          -0.07177903634260097,
+          0.994126520089832,
+          -0.08099525909464311
+        ],
+        [
+          -0.6432237443499499,
+          0.015926455734283772,
+          0.7655126143390285
+        ]
+      ]
+    }
+  ],
+  "sparse_points": 313,
+  "limitations": [
+    "no independent metric scale or ground truth",
+    "self-calibration and sparse geometry unverified",
+    "not a BIM or wall-instance reconstruction",
+    "registration below 3 images or 50% is marked insufficient; this is not a release criterion",
+    "The same-scene source calibration is an input, not independent truth or physical scale"
+  ],
+  "mean_reprojection_error_px": 1.0577414684721902,
+  "point_cloud_file": "points.ply",
+  "camera_parameters": [
+    {
+      "model": "CameraModelId.PINHOLE",
+      "width": 1378,
+      "height": 915,
+      "params": [
+        361.37699026287487,
+        361.24586653636436,
+        689.0,
+        457.5
+      ]
+    }
+  ],
+  "input_selection": "Exact hash-pinned development image manifest; no hidden evaluation data",
+  "source_image_camera_map_sha256": "160d2086a0588d0f77f84cc4015f9643238cc7a874e5af622711729e53c521cb",
+  "source_camera_original": {
+    "id": 4,
+    "model": "SIMPLE_PINHOLE",
+    "width": 5510,
+    "height": 3660,
+    "params": [
+      1444.9834661454574,
+      2755.0,
+      1830.0
+    ],
+    "resized_width": 1378,
+    "resized_height": 915
+  }
+}

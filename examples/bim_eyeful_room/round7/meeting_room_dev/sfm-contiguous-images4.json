@@ -1,0 +1,182 @@
+{
+  "schema": "worldstate-bim-geometry-candidate/0.1",
+  "provider": "COLMAP/pycolmap",
+  "provider_version": "4.2.1",
+  "status": "RECONSTRUCTION_FAILED",
+  "inputs": [
+    {
+      "file": "44_DSC0001_372.jpg",
+      "sha256": "3b7e64f24839bbf9387fdabe33913b7f9eeca4f925733bb00d5aa8dcdb563bac"
+    },
+    {
+      "file": "44_DSC0015_373.jpg",
+      "sha256": "f7869bb4e0768c4becd6461c13de5da586d9be08cdb0995b32780130afd4b036"
+    },
+    {
+      "file": "44_DSC0029_374.jpg",
+      "sha256": "96de1087bb3fb9d7521390111d11cdd19d3a8e5d65daf49631ddbc6fb2a5956e"
+    },
+    {
+      "file": "44_DSC0043_375.jpg",
+      "sha256": "1a43a9ac15bb80d1d1b1a71d9be0a404e979b86622c67b9bf49d0dfbec53d045"
+    },
+    {
+      "file": "44_DSC0057_376.jpg",
+      "sha256": "728d82e41a1beddd269242283ffe743f53f1f37f34c3c2131b530428e3c287df"
+    },
+    {
+      "file": "44_DSC0071_377.jpg",
+      "sha256": "0fcb3cc48f24dd1e30f1e16ad7d4e33216e7c6819a9924a23e7b03deae0b9eab"
+    },
+    {
+      "file": "44_DSC0085_378.jpg",
+      "sha256": "7f7fb62375b9755d5167159e2b81910815c016ea7e31dbe753a764fbfd409094"
+    },
+    {
+      "file": "44_DSC0099_379.jpg",
+      "sha256": "184492720b94daf3ed3d5f1b1348ed2720c77c1b5c120a21991ffa109dc8cb3d"
+    },
+    {
+      "file": "44_DSC0113_380.jpg",
+      "sha256": "f75ddd36020a0c598427d25c448bad3f201c6689528d038fd6a669633bb705ec"
+    },
+    {
+      "file": "44_DSC0127_381.jpg",
+      "sha256": "16c0b290b292f47fb847209f0ed9e66385da381d82cab245d04a2ffb8cd0903d"
+    },
+    {
+      "file": "44_DSC0141_382.jpg",
+      "sha256": "f1d1d81a7d2a9b9f7b8407a6547efe0bb818a771b3c2bb8c97bb0ada007fc318"
+    },
+    {
+      "file": "44_DSC0155_383.jpg",
+      "sha256": "c25263a842c5b04b32a566f436c51fc4fe9b5507706ac2be03b71a6ea209c96f"
+    },
+    {
+      "file": "44_DSC0169_384.jpg",
+      "sha256": "2b013c3ee762b5c9548c98a0236105bda166dfa6733838a0a29448e0aa8d76df"
+    },
+    {
+      "file": "44_DSC0183_385.jpg",
+      "sha256": "a76cb025eb2cd1f48804cf9820a84ec23dd09c861dd40abb06debec72b5be655"
+    },
+    {
+      "file": "44_DSC0197_386.jpg",
+      "sha256": "6adb0ab022baa59486fd7dc66630a67fb2d3faba9e9ac4bf77b0e256ff3e0158"
+    },
+    {
+      "file": "44_DSC0211_387.jpg",
+      "sha256": "6626943a9872f6dc5d137d64f9a901f3560cbe671038c3549c810a51661aac37"
+    },
+    {
+      "file": "44_DSC0225_388.jpg",
+      "sha256": "26e3d9ceca4b6e2afd7e52133b6c1602b57936c4ff36eb4823025a182ffd02f9"
+    },
+    {
+      "file": "44_DSC0239_389.jpg",
+      "sha256": "a4da7a25eabdd7474f52d27e6cedb2b181efc3353f7b25343a2870469cdcbc9d"
+    },
+    {
+      "file": "44_DSC0253_390.jpg",
+      "sha256": "6e97ff6c7c25e591ae5a2da71546bbca84925dbdae999df2540a1a0cd46299e7"
+    },
+    {
+      "file": "44_DSC0267_391.jpg",
+      "sha256": "3e5a96c359d891f5f22935dc2ebb792f3e77f582b3b5346ca657cf15d917f62f"
+    },
+    {
+      "file": "44_DSC0281_392.jpg",
+      "sha256": "6ab9506f3caaf814542a24eb44de12cf581b317e51caa5156e5168399ae59fd5"
+    },
+    {
+      "file": "44_DSC0295_393.jpg",
+      "sha256": "0446c8e46c511a69e45d0d0f672b23a3bce0b763231a52a316a922e7f03f63e8"
+    },
+    {
+      "file": "44_DSC0309_394.jpg",
+      "sha256": "921b2072159a8c9408c83c9328315b88840106870d2996b42f1c34a7b522001f"
+    },
+    {
+      "file": "44_DSC0323_395.jpg",
+      "sha256": "cbc9f4d29f8cf66b726c0820df1b6ecd70687f7c8dac566414de45cdfc3e154f"
+    },
+    {
+      "file": "44_DSC0337_396.jpg",
+      "sha256": "160fe2873d612b563d24beb4e06ab139fe4b44d59dc4ec12d928e8b5b88b76d6"
+    },
+    {
+      "file": "44_DSC0351_397.jpg",
+      "sha256": "ebf2676f7360642e69f9800586126fa8db1ad69be51a1b7fe8bda594c46d0bb1"
+    },
+    {
+      "file": "44_DSC0365_398.jpg",
+      "sha256": "63e4c9e7390da1ab95e6185bf0ff4aa3330e21e9629f8e07d79d0f3959a6868a"
+    },
+    {
+      "file": "44_DSC0379_399.jpg",
+      "sha256": "8aa228e072f04d2ead84df7b751ef24053889318de52b18120995aeb54c87058"
+    },
+    {
+      "file": "44_DSC0393_400.jpg",
+      "sha256": "d73f18a60d4b1f8e91e7655bd1eb48ec74d6c8244ad4cff17b19996227f3807c"
+    },
+    {
+      "file": "44_DSC0407_401.jpg",
+      "sha256": "b2061f8094038a7412470db79be382f20aca2bda3324b21cdfa9b4dc2e59422a"
+    },
+    {
+      "file": "44_DSC0421_402.jpg",
+      "sha256": "3cbe20497188011d75eb24436431e7e990c22587f1c2afc4183dc5cfd229067b"
+    },
+    {
+      "file": "44_DSC0435_403.jpg",
+      "sha256": "424fb6cabba0da8fb329076054abea14aea2b6e35c7e4d28eecd0204a744abca"
+    }
+  ],
+  "input_camera_assumption": "all images from one camera; user-declared fixed calibration",
+  "feature_extraction_max_image_size_px": 1200,
+  "supplied_calibration": {
+    "fx": 361.37699026287487,
+    "fy": 361.24586653636436,
+    "cx": 689.0,
+    "cy": 457.5,
+    "confirmed": true,
+    "source_sha256": "7760049489026d01a053f9f1b6d685052b5130413f7287a52c90c913f1ff6298",
+    "source": "Matching source image/camera mapping and undistorted pinhole calibration, resized to this photo raster; not independent validation"
+  },
+  "coordinate_frame": "COLMAP arbitrary reconstruction frame",
+  "scale": {
+    "status": "unknown",
+    "unit": "arbitrary"
+  },
+  "timing_seconds": {
+    "feature_extraction": 4.717417186009698,
+    "matching": 0.3029748350381851,
+    "mapping": 0.11612753395456821,
+    "total": 5.136519555002451
+  },
+  "registered_cameras": [],
+  "sparse_points": 0,
+  "limitations": [
+    "no independent metric scale or ground truth",
+    "self-calibration and sparse geometry unverified",
+    "not a BIM or wall-instance reconstruction",
+    "registration below 3 images or 50% is marked insufficient; this is not a release criterion",
+    "The same-scene source calibration is an input, not independent truth or physical scale"
+  ],
+  "input_selection": "Exact hash-pinned development image manifest; no hidden evaluation data",
+  "source_image_camera_map_sha256": "160d2086a0588d0f77f84cc4015f9643238cc7a874e5af622711729e53c521cb",
+  "source_camera_original": {
+    "id": 4,
+    "model": "SIMPLE_PINHOLE",
+    "width": 5510,
+    "height": 3660,
+    "params": [
+      1444.9834661454574,
+      2755.0,
+      1830.0
+    ],
+    "resized_width": 1378,
+    "resized_height": 915
+  }
+}

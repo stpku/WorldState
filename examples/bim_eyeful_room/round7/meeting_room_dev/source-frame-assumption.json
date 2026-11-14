@@ -1,0 +1,7 @@
+{
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_GROUND_TRUTH",
+  "scale_reference_units_per_sfm_unit": 1.0,
+  "reason": "The triangulation used the same public source camera positions and retained their coordinate frame; equality of source units is algebraic. The data provider describes its source world as metres, but this particular reconstruction scale was not independently measured, so treating source units as metres is an explicit unverified assumption, not a physical ruler or accuracy result.",
+  "source": "https://github.com/facebookresearch/EyefulTower",
+  "independent_physical_scale": "NOT_MEASURED"
+}

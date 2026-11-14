@@ -6,6 +6,7 @@ of physical dimensions. The required anchor may explicitly be an assumption.
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 import math
 import time
@@ -53,6 +54,12 @@ def draw_overlays(result: dict, fusion: dict, images: Path, output: Path) -> lis
     for corner in result['corner_candidates']:
         for obs in corner['source_observations']:
             if obs['image_id'] not in selected:selected.append(obs['image_id'])
+    if not selected:
+        # Failure cases often have line candidates but no triangulated corners.
+        # Still expose their real source pixels for review, instead of emitting
+        # an empty overlay directory precisely when diagnosis is most useful.
+        counts=Counter(obs['image_id'] for group in result['groups'] for obs in group['inlier_observations'])
+        selected=sorted(counts,key=lambda image_id:(-counts[image_id],image_id))[:6]
     colors=[(20,170,250),(50,210,80),(255,130,40),(220,70,200)]
     files=[]
     for image_id in selected:
