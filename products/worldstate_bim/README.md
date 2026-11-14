@@ -2,7 +2,7 @@
 
 **Status: experimental assisted Photo/Scan-to-BIM and local Studio; V0.2 is NOT release-ready.**
 
-**Round 5:** local CPU semantic inference proposes image regions and boundaries that can be reviewed in Studio; a [real-photo three-segment IFC draft](../../examples/bim_eyeful_room/README.md) was generated and edited. Its scale, height and camera attitude are assumptions, not measurements. Separate CPU SfM remains experimental and is not integrated into the Studio geometry path. No independently measured three-wall room or labor-savings acceptance is claimed.
+**Round 5:** local CPU semantic inference proposes image regions and boundaries that can be reviewed in Studio; a [real-photo three-segment IFC draft](../../examples/bim_eyeful_room/README.md) was generated and edited. Its scale, height and camera attitude are assumptions, not measurements. Studio can run experimental CPU SfM on uploaded same-camera photos and use a registered focal estimate; wall endpoints still use single-photo backprojection, not multiview triangulation. No independently measured three-wall room or labor-savings acceptance is claimed.
 
 **Round 4:** Studio can create a local photo project, record image annotations, and generate editable room candidates using either a user-drawn metric sketch or pinhole backprojection of manually marked ground points with explicitly supplied camera assumptions. A [real TUM photo partial-wall workflow](../../examples/bim_real_photo_tum/round4/README.md) and external Bonsai readback were run. That Round 4 workflow did not include automatic recognition, multiview triangulation, or a validated three-wall room.
 
