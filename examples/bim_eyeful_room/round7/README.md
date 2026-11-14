@@ -24,6 +24,7 @@
 - 四组线分别得到 28、13、4、3 张图支持。第三组的地面约束逐视图剔除诊断最大误差为 **14.57 px**，高于由掩膜像素分辨率确定的 12 px 容差；自由三维线对应诊断最大误差为 **156.59 px**，因此未导出。第四组的自由线与共享地面方向冲突，也未导出。平行候选根据可见范围内的位置进行区分，但仍不是经过核验的物理墙实例。
 - 系统从真实图片的候选线交点得到三个跨图角点候选。一个最大重投影误差约 2.20 px、相对尺度地面残差约 0.036；另一个虽然重投影误差约 3.37 px，其相对尺度地面残差约 **0.376**，与地面候选冲突；第三个也存在地面冲突。这些点都不是已确认实物角点，IFC 没有自动连接墙体。[照片叠加图](overlays/)保留候选和冲突。
 - 逐视图剔除只在拟合线上暂时去掉该图；最初的线关联、相机和地面仍使用全部开发照片。它是敏感性检查，不是独立留出视角或工程精度。
+- [线段选择对照](line-selection-probe.json)对第三组使用每张图中更长的候选，地面约束诊断最大误差从 14.57 px 降到 8.43 px，但自由三维线的对应误差仍有 **109.11 px**。这表明结果高度依赖共享地面，不能据此宣称第三面墙已经可靠；正式候选和容差均未因这一事后开发实验调整。
 - Bonsai 原生算子将路线 B 一段墙的**假设高度**从 2.3 m 改为 2.5 m，随后[回写 IR 与 IFC](bonsai-synced/)；两个 GUID 保持不变。IfcOpenShell 对原始、Bonsai 修改和回写后的 IFC4 均生成两墙几何，schema 错误为 0。这是脚本操作，不是实测或人工成本实验。
 
 ## Studio 和开发预览
@@ -44,6 +45,9 @@ export OPENBLAS_NUM_THREADS=1 PYTHONPATH=.
   --anchor examples/bim_eyeful_room/round6/ifc/anchor-assumed.json \
   --assumed-height-m 2.3 --assumed-thickness-m 0.12 \
   --output /tmp/ws-r7-comparison-new
+/tmp/ws-bim-venv/bin/python benchmarks/ws_geometry/probe_line_selection.py \
+  --fusion examples/bim_eyeful_room/round6/fusion.json \
+  --structure /tmp/ws-r7-comparison-new/structure.json --output /tmp/ws-r7-line-selection-new.json
 ```
 
 本地 Studio 只监听 `127.0.0.1`；用新的仓库外工作区启动后，可上传授权照片并按界面完成标尺、候选检查与导出：
