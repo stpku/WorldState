@@ -11,7 +11,7 @@ async function main() {
   const [base, photo1, photo2, output] = process.argv.slice(2);
   if (!base || !photo1 || !photo2 || !output) throw Error('usage: node studio_tum_browser.cjs BASE PHOTO1 PHOTO2 NEW_REPORT_DIR');
   fs.mkdirSync(output);
-  const browser=await chromium.launch({headless:true});
+  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
   const page=await browser.newPage({viewport:{width:1500,height:1100}}), errors=[];
   page.on('pageerror',error=>errors.push(String(error)));
   page.on('dialog',dialog=>dialog.accept());
@@ -49,6 +49,8 @@ async function main() {
       'anchor-length':'0.6038487127014679','anchor-description':'同传感器深度帧 deprojection，非独立测量',
       'wall-height':'0.45','wall-thickness':'0.12'})) await page.fill('#'+id,value);
   await page.check('#confirm-camera');await page.check('#confirm-candidate');await page.selectOption('#anchor-basis','same_sensor');await page.selectOption('#height-basis','assumed');
+  await page.check('#confirm-scale');await page.click('#bind-scale');
+  await page.waitForFunction(()=>document.querySelector('#scale-status').textContent.includes('已绑定'));
   await page.screenshot({path:path.join(output,'builder.png'),fullPage:true});
   await page.click('#generate');
   await page.waitForFunction(()=>document.querySelector('#summary')?.textContent.includes('版本 1'),null,{timeout:30000});
@@ -60,6 +62,15 @@ async function main() {
   await page.waitForFunction(()=>document.querySelectorAll('#annotation-list .ann-row').length===2);
   await mark('corner',[[400,155]],'node-2',3);
   await page.check('#confirm-candidate');
+  // The old anchor was measured for a different pixel and MUST fail closed.
+  await page.click('#generate');
+  await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('尺度参照已失效'));
+  // Same-sensor depth for the NEW endpoints, not an independent measurement.
+  // Deproject (255,170) depth 9364 and (400,155) depth 9897, /5000, using the intrinsics above.
+  await page.fill('#anchor-length','0.5487082363018672');
+  await page.fill('#anchor-description','同传感器深度帧对新端点重新反投影，非独立测量');
+  await page.check('#confirm-scale');await page.click('#bind-scale');
+  await page.waitForFunction(()=>document.querySelector('#scale-status').textContent.includes('已绑定'));
   await page.click('#generate');
   await page.waitForFunction(()=>document.querySelector('#summary')?.textContent.includes('版本 2'),null,{timeout:30000});
   const corrected=await getModel();
@@ -77,7 +88,7 @@ async function main() {
     kind:'SCRIPTED_BROWSER_DEVELOPMENT_RUN',photo1_sha256:hash(photo1),photo2_sha256:hash(photo2),
     real_photo:true,automatic_clicks_not_human_labor:true,annotation_classification:original.elements[0].classification.status,
     scope:original.validation.scope,method:original.scale.method,
-    anchor_basis:original.scale.independence,anchor_m:0.6038487127014679,
+    anchor_basis:original.scale.independence,anchor_m:0.6038487127014679,corrected_anchor_m:0.5487082363018672,
     assumptions:'floor level; pitch 30°, roll zero and approximate intrinsics are unverified; wall height 0.45 m and thickness 0.12 m assumed',
     original_node_2:original.nodes[1],corrected_node_2:corrected.nodes[1],
     revised_length_m:revised.history.at(-1).after,ifc_status:exported.status(),report_status:report.status(),errors

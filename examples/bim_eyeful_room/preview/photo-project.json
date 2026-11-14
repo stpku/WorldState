@@ -1,0 +1,860 @@
+{
+  "schema": "worldstate-photo-project/0.1",
+  "id": "photo-room-0e638f8760a54b169b3461ec1f90d3b5",
+  "name": "Eyeful real-photo scripted preview",
+  "operator_kind": "automation",
+  "created_at": "2026-11-13T23:45:35.684911+00:00",
+  "annotations": [
+    {
+      "id": "ann-452119da425d444cafa024eb13fdf4fc",
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "kind": "wall_boundary",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          205,
+          677
+        ],
+        [
+          591,
+          677
+        ]
+      ],
+      "object_id": "",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 107,
+      "created_at": "2026-11-13T23:45:39.725992+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "vision_candidate_id": "ground-line-4",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-86058cbc87a44906b8b6982dbefdb599",
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "kind": "wall_boundary",
+      "wall_id": "wall-2",
+      "points": [
+        [
+          592,
+          680
+        ],
+        [
+          725,
+          747
+        ]
+      ],
+      "object_id": "",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 49,
+      "created_at": "2026-11-13T23:45:39.792476+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "vision_candidate_id": "ground-line-10",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-4a253288c4924025b137610eeb45f4f2",
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "kind": "corner",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          205,
+          677
+        ]
+      ],
+      "object_id": "node-1",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 64,
+      "created_at": "2026-11-13T23:45:39.876120+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "vision_candidate_id": "line-endpoint-5-1",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-0ae5acafee144a339d9170c51dae1d88",
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "kind": "corner",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          591,
+          677
+        ]
+      ],
+      "object_id": "node-2",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 65,
+      "created_at": "2026-11-13T23:45:39.958794+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "vision_candidate_id": "line-endpoint-6-2",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-02db356edf994ca48fb4b15afc39142a",
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "kind": "corner",
+      "wall_id": "wall-2",
+      "points": [
+        [
+          725,
+          747
+        ]
+      ],
+      "object_id": "node-3",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 66,
+      "created_at": "2026-11-13T23:45:40.042617+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "vision_candidate_id": "line-endpoint-12-2",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    }
+  ],
+  "layout": {
+    "mode": "photo_floor",
+    "points": [],
+    "closed": false,
+    "confirmed_schematic": false,
+    "confirmed_camera_assumptions": true,
+    "photo_id": "upload-9bbe04f87acfe1a5",
+    "camera": {
+      "fx": 374.14093111975626,
+      "fy": 374.14093111975626,
+      "cx": 371.5,
+      "cy": 563,
+      "pitch_down_deg": 0,
+      "description": "SfM self-calibrated focal length; pitch zero and roll zero assumed, not independently verified"
+    }
+  },
+  "reference": {
+    "wall_index": 1,
+    "length_m": 1,
+    "basis": "assumed",
+    "description": "EXPLICIT PLACEHOLDER 1 m, not a physical measurement; unknown metric scale",
+    "height_m": 2.5,
+    "height_basis": "assumed",
+    "thickness_m": 0.12
+  },
+  "events": [
+    {
+      "action": "project_created",
+      "at": "2026-11-13T23:45:35.684932+00:00"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-13T23:45:35.792937+00:00",
+      "photo_id": "upload-9bbe04f87acfe1a5"
+    },
+    {
+      "action": "vision_analyzed",
+      "at": "2026-11-13T23:45:39.611137+00:00",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "elapsed_seconds": 2.919,
+      "candidate_count": 25
+    },
+    {
+      "action": "vision_accepted",
+      "at": "2026-11-13T23:45:39.726010+00:00",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "candidate_id": "ground-line-4",
+      "annotation_id": "ann-452119da425d444cafa024eb13fdf4fc"
+    },
+    {
+      "action": "vision_accepted",
+      "at": "2026-11-13T23:45:39.792501+00:00",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "candidate_id": "ground-line-10",
+      "annotation_id": "ann-86058cbc87a44906b8b6982dbefdb599"
+    },
+    {
+      "action": "vision_accepted",
+      "at": "2026-11-13T23:45:39.876148+00:00",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "candidate_id": "line-endpoint-5-1",
+      "annotation_id": "ann-4a253288c4924025b137610eeb45f4f2"
+    },
+    {
+      "action": "vision_accepted",
+      "at": "2026-11-13T23:45:39.958817+00:00",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "candidate_id": "line-endpoint-6-2",
+      "annotation_id": "ann-0ae5acafee144a339d9170c51dae1d88"
+    },
+    {
+      "action": "vision_accepted",
+      "at": "2026-11-13T23:45:40.042637+00:00",
+      "vision_run_id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "candidate_id": "line-endpoint-12-2",
+      "annotation_id": "ann-02db356edf994ca48fb4b15afc39142a"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-13T23:45:40.593819+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "scale_bound",
+      "at": "2026-11-13T23:45:40.606961+00:00",
+      "sha256": "6a3e0caad415fec4043a272c10b5a1410dd6aff8fd3771cd7a2ddf4461898335",
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-13T23:45:40.691693+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "candidate_generated",
+      "at": "2026-11-13T23:45:41.194305+00:00",
+      "revision": 1,
+      "confirmed_by": "automation",
+      "wall_count": 2
+    },
+    {
+      "action": "revise",
+      "at": "2026-11-13T23:45:41.371788+00:00",
+      "element_id": "wall-1",
+      "attribute": "height"
+    },
+    {
+      "action": "external_ifc_synced",
+      "at": "2026-11-13T23:46:53.732930+00:00",
+      "element_id": "wall-1",
+      "attribute": "height"
+    }
+  ],
+  "current_revision": 3,
+  "vision_runs": [
+    {
+      "schema": "worldstate-visual-candidates/0.1",
+      "provider": "upernet-convnext-tiny-ade20k-onnx",
+      "model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e",
+      "model_revision": "a8e2807c3479bc617b37d8ed53e68660b3fa1ebb",
+      "image_sha256": "9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2",
+      "width_px": 743,
+      "height_px": 1126,
+      "runtime_seconds": 2.919,
+      "device": "CPU",
+      "candidates": [
+        {
+          "id": "region-wall-1",
+          "kind": "wall_region",
+          "bbox_px": [
+            0,
+            326,
+            742,
+            747
+          ],
+          "polygon_px": [
+            [
+              742,
+              326
+            ],
+            [
+              586,
+              423
+            ],
+            [
+              99,
+              423
+            ],
+            [
+              93,
+              457
+            ],
+            [
+              117,
+              466
+            ],
+            [
+              93,
+              467
+            ],
+            [
+              98,
+              484
+            ],
+            [
+              81,
+              483
+            ],
+            [
+              81,
+              458
+            ],
+            [
+              64,
+              476
+            ],
+            [
+              63,
+              449
+            ],
+            [
+              40,
+              440
+            ],
+            [
+              34,
+              467
+            ],
+            [
+              12,
+              467
+            ],
+            [
+              0,
+              432
+            ],
+            [
+              0,
+              686
+            ],
+            [
+              592,
+              677
+            ],
+            [
+              742,
+              747
+            ]
+          ],
+          "area_px": 201765,
+          "model_score_mean_uncalibrated": 0.9249977469444275,
+          "status": "proposed",
+          "geometry": "semantic_region_not_instance"
+        },
+        {
+          "id": "region-floor-1",
+          "kind": "floor_region",
+          "bbox_px": [
+            0,
+            678,
+            742,
+            1125
+          ],
+          "polygon_px": [
+            [
+              0,
+              687
+            ],
+            [
+              0,
+              1125
+            ],
+            [
+              742,
+              1125
+            ],
+            [
+              742,
+              748
+            ],
+            [
+              592,
+              678
+            ]
+          ],
+          "area_px": 324862,
+          "model_score_mean_uncalibrated": 0.9997743964195251,
+          "status": "proposed",
+          "geometry": "semantic_region_not_instance"
+        },
+        {
+          "id": "region-ceiling-1",
+          "kind": "ceiling_region",
+          "bbox_px": [
+            0,
+            0,
+            742,
+            448
+          ],
+          "polygon_px": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              369
+            ],
+            [
+              99,
+              379
+            ],
+            [
+              0,
+              388
+            ],
+            [
+              12,
+              448
+            ],
+            [
+              63,
+              448
+            ],
+            [
+              70,
+              413
+            ],
+            [
+              88,
+              414
+            ],
+            [
+              76,
+              439
+            ],
+            [
+              99,
+              422
+            ],
+            [
+              586,
+              422
+            ],
+            [
+              742,
+              325
+            ],
+            [
+              742,
+              141
+            ],
+            [
+              493,
+              140
+            ],
+            [
+              535,
+              8
+            ],
+            [
+              742,
+              17
+            ],
+            [
+              742,
+              0
+            ]
+          ],
+          "area_px": 256837,
+          "model_score_mean_uncalibrated": 0.9690904021263123,
+          "status": "proposed",
+          "geometry": "semantic_region_not_instance"
+        },
+        {
+          "id": "ground-line-4",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              205,
+              677
+            ],
+            [
+              591,
+              677
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated",
+          "annotation_id": "ann-452119da425d444cafa024eb13fdf4fc"
+        },
+        {
+          "id": "line-endpoint-5-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              205,
+              677
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-4a253288c4924025b137610eeb45f4f2"
+        },
+        {
+          "id": "line-endpoint-6-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              591,
+              677
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-0ae5acafee144a339d9170c51dae1d88"
+        },
+        {
+          "id": "ground-line-7",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              0,
+              686
+            ],
+            [
+              203,
+              686
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "line-endpoint-8-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              0,
+              686
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "line-endpoint-9-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              203,
+              686
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "ground-line-10",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              592,
+              680
+            ],
+            [
+              725,
+              747
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated",
+          "annotation_id": "ann-86058cbc87a44906b8b6982dbefdb599"
+        },
+        {
+          "id": "line-endpoint-11-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              592,
+              680
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "line-endpoint-12-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              725,
+              747
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-02db356edf994ca48fb4b15afc39142a"
+        },
+        {
+          "id": "ground-line-13",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              592,
+              678
+            ],
+            [
+              719,
+              743
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "line-endpoint-14-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              592,
+              678
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "line-endpoint-15-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              719,
+              743
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "ground-line-16",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              592,
+              683
+            ],
+            [
+              719,
+              745
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "line-endpoint-17-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              592,
+              683
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "line-endpoint-18-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              719,
+              745
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "ceiling-line-19",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              100,
+              422
+            ],
+            [
+              586,
+              422
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-20",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              586,
+              421
+            ],
+            [
+              728,
+              325
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-21",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              586,
+              419
+            ],
+            [
+              726,
+              325
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-22",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              586,
+              415
+            ],
+            [
+              685,
+              351
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-23",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              637,
+              387
+            ],
+            [
+              733,
+              325
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-24",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              613,
+              404
+            ],
+            [
+              681,
+              351
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-25",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              661,
+              369
+            ],
+            [
+              732,
+              325
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        }
+      ],
+      "cross_photo_association": "NOT_IMPLEMENTED",
+      "occlusion_and_unobserved": "UNKNOWN",
+      "limitations": [
+        "semantic regions do not identify individual walls",
+        "door/window not detected does not establish absence",
+        "scores are uncalibrated",
+        "no camera pose, physical dimensions, or geometry inferred by this provider"
+      ],
+      "id": "vision-f327a7899c6748f9bf47dc5975d39ad4",
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "overlay_sha256": "e64f4364dee2b6792d7355fbd9af6dc28487df294eab1ee47812de2b980bfabf",
+      "created_at": "2026-11-13T23:45:39.611112+00:00"
+    }
+  ],
+  "scale_binding": {
+    "schema": "worldstate-scale-binding/0.1",
+    "snapshot": {
+      "photo_id": "upload-9bbe04f87acfe1a5",
+      "photo_sha256": "9bbe04f87acfe1a5b31828d06f34186e5a2234495aa6713a99f1851038dcb7d2",
+      "observations": [
+        {
+          "annotation_id": "ann-4a253288c4924025b137610eeb45f4f2",
+          "node_id": "node-1",
+          "points_px": [
+            [
+              205,
+              677
+            ]
+          ]
+        },
+        {
+          "annotation_id": "ann-0ae5acafee144a339d9170c51dae1d88",
+          "node_id": "node-2",
+          "points_px": [
+            [
+              591,
+              677
+            ]
+          ]
+        }
+      ],
+      "wall_id": "wall-1",
+      "geometry": {
+        "mode": "photo_floor",
+        "camera": {
+          "fx": 374.14093111975626,
+          "fy": 374.14093111975626,
+          "cx": 371.5,
+          "cy": 563,
+          "pitch_down_deg": 0,
+          "description": "SfM self-calibrated focal length; pitch zero and roll zero assumed, not independently verified"
+        },
+        "photo_id": "upload-9bbe04f87acfe1a5"
+      },
+      "measurement": {
+        "length_m": 1,
+        "basis": "assumed",
+        "description": "EXPLICIT PLACEHOLDER 1 m, not a physical measurement; unknown metric scale"
+      }
+    },
+    "sha256": "6a3e0caad415fec4043a272c10b5a1410dd6aff8fd3771cd7a2ddf4461898335",
+    "status": "user_confirmed_not_independently_verified"
+  }
+}

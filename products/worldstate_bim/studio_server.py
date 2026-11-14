@@ -45,7 +45,7 @@ def _write_json(path: Path, value: dict) -> None:
 
 class StudioServer(ThreadingHTTPServer):
     """Serve an explicitly selected room project on loopback only."""
-    def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None):
+    def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None, vision_model: Path | None = None):
         super().__init__(("127.0.0.1",port),Handler)
         self.workspace=workspace.resolve()
         if self.workspace.is_relative_to(Path(__file__).resolve().parents[2]):
@@ -74,6 +74,8 @@ class StudioServer(ThreadingHTTPServer):
                 expected=Path(temp)/"model.ifc";export_room(self.model,expected)
                 _verify_geometry(ifcopenshell.open(str(expected)),ifcopenshell.open(str(self.model_dir/"model.ifc")))
         self.lock=threading.Lock();self.token=secrets.token_urlsafe(24)
+        self.vision_model=vision_model.resolve(strict=True) if vision_model is not None else None
+        self.vision_provider=None
         self.cloud=None
         if point_cloud is not None:
             import numpy as np
@@ -180,7 +182,7 @@ class Handler(BaseHTTPRequestHandler):
                     page=Path(__file__).with_name(filename).read_text().replace("__WS_TOKEN__",self.server.token)
                     self.send_data(200,page.encode(),"text/html; charset=utf-8")
                 elif path=="/api/project":self.send_json(200,{"project":self.server.project,"uploads":self.server.uploaded,
-                                                               "has_model":self.server.model is not None})
+                                                               "has_model":self.server.model is not None, "vision_configured":self.server.vision_model is not None})
                 elif path=="/api/versions":
                     versions=[]
                     for directory in sorted(self.server.workspace.glob("revision-*")):
@@ -199,6 +201,16 @@ class Handler(BaseHTTPRequestHandler):
                     "photo_project":self.server.project})
                 elif path=="/api/export/model.ifc":self.send_data(200,(self.server.model_dir/"model.ifc").read_bytes(),"application/octet-stream")
                 elif path=="/api/export/model.json":self.send_json(200,self.server.model)
+                elif path.startswith("/api/vision/overlay/"):
+                    ident=path.rsplit("/",1)[-1]
+                    if not re.fullmatch(r"vision-[0-9a-f]{32}",ident):raise ValueError("视觉结果编号无效")
+                    runs=(self.server.project or {}).get("vision_runs",[])
+                    run=next((x for x in runs if x.get("id")==ident),None)
+                    filename=self.server.workspace/"vision"/(ident+".png")
+                    if not run or filename.is_symlink() or not filename.is_file():raise ValueError("视觉叠加图不可用")
+                    raw=filename.read_bytes()
+                    if hashlib.sha256(raw).hexdigest()!=run.get("overlay_sha256"):raise ValueError("视觉叠加图哈希不符")
+                    self.send_data(200,raw,"image/png")
                 elif path.startswith("/api/photo/"):
                     ident=path.rsplit("/",1)[-1]
                     item=next((x for x in self.server.uploaded if x["id"]==ident),None)
@@ -221,6 +233,8 @@ class Handler(BaseHTTPRequestHandler):
             with self.server.lock:
                 if path=="/api/upload":self.upload(body);return
                 if path=="/api/project":self.create_project(body);return
+                if path=="/api/vision/analyze":self.analyze_photo(body);return
+                if path=="/api/vision/decision":self.decide_candidate(body);return
                 if path=="/api/annotation":self.add_annotation(body);return
                 if path=="/api/annotation/delete":self.delete_annotation(body);return
                 if path=="/api/layout":self.save_layout(body);return
@@ -265,6 +279,78 @@ class Handler(BaseHTTPRequestHandler):
                              "annotations":[],"layout":{},"reference":{},"events":[],"current_revision":None}
         self.server.record("project_created")
         self.send_json(201,self.server.project)
+
+    def analyze_photo(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        if self.server.vision_model is None:raise ValueError("视觉模型未配置；请使用 --vision-model 指向已下载的受支持 ONNX 权重")
+        photo=next((p for p in self.server.uploaded if p["id"]==body.get("photo_id")),None)
+        if photo is None:raise ValueError("请选择已上传照片")
+        path=self.server.uploads/(photo["sha256"]+photo["extension"])
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=photo["sha256"]:
+            raise ValueError("照片不可用或哈希不符")
+        if len(project.get("vision_runs",[]))>=100:raise ValueError("视觉分析次数已达工作区上限")
+        try:
+            if self.server.vision_provider is None:
+                from .semantic_vision import UperNetOnnxProvider
+                self.server.vision_provider=UperNetOnnxProvider(self.server.vision_model)
+            result,overlay=self.server.vision_provider.analyze(path)
+        except ImportError as exc:
+            raise ValueError("缺少 CPU 视觉依赖；请安装 benchmarks/bim_real_room/requirements-cpu-py312.txt") from exc
+        if result["image_sha256"]!=photo["sha256"]:raise ValueError("识别结果照片哈希不符")
+        ident="vision-"+uuid.uuid4().hex
+        directory=self.server.workspace/"vision"
+        if directory.is_symlink():raise ValueError("视觉结果目录不能是符号链接")
+        directory.mkdir(exist_ok=True)
+        target=directory/(ident+".png")
+        with target.open("xb") as stream:stream.write(overlay)
+        result.update(id=ident,photo_id=photo["id"],overlay_sha256=hashlib.sha256(overlay).hexdigest(),
+                      created_at=datetime.now(timezone.utc).isoformat())
+        project.setdefault("vision_runs",[]).append(result)
+        self.server.record("vision_analyzed",vision_run_id=ident,photo_id=photo["id"],
+                           elapsed_seconds=result["runtime_seconds"],candidate_count=len(result["candidates"]))
+        self.send_json(201,result)
+
+    def decide_candidate(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        run=next((r for r in project.get("vision_runs",[]) if r.get("id")==body.get("run_id")),None)
+        candidate=next((c for c in (run or {}).get("candidates",[]) if c.get("id")==body.get("candidate_id")),None)
+        if run is None or candidate is None:raise ValueError("未找到视觉候选")
+        if candidate.get("status")!="proposed":raise ValueError("该候选已处理")
+        decision=body.get("decision")
+        if decision=="rejected":
+            candidate["status"]="rejected"
+            self.server.record("vision_rejected",vision_run_id=run["id"],candidate_id=candidate["id"])
+            self.send_json(200,{"status":"rejected"});return
+        if decision!="accepted":raise ValueError("请选择接受或拒绝")
+        wall=body.get("wall_id"); kind=candidate.get("kind")
+        if not isinstance(wall,str) or not re.fullmatch(r"wall-[1-9][0-9]*",wall):raise ValueError("请输入关联墙段编号")
+        mapping={"wall_floor_line":"wall_boundary","wall_ceiling_line":"ceiling_line","line_endpoint":"corner",
+                 "door_region":"door","window_region":"window"}
+        if kind not in mapping:raise ValueError("语义区域不是独立构件；请先确认边界或关联墙段")
+        annotation_kind=mapping[kind]
+        points=candidate.get("points_px")
+        if annotation_kind in {"door","window"}:
+            x1,y1,x2,y2=candidate["bbox_px"];points=[[x1,y1],[x2,y2]]
+            if not isinstance(body.get("dimensions"),dict):raise ValueError("门窗尺寸需另行测量或明确假设")
+        object_id=body.get("object_id")
+        if annotation_kind=="corner" and (not isinstance(object_id,str) or not re.fullmatch(r"node-[1-9][0-9]*",object_id)):
+            raise ValueError("请为角点输入 node-1 等编号；线段端点可能并非真实墙角")
+        if annotation_kind in {"door","window"} and (not isinstance(object_id,str) or not re.fullmatch(annotation_kind+r"-[A-Za-z0-9_-]{1,40}",object_id)):
+            raise ValueError("请指定 door-1 或 window-1 等编号")
+        if len(project["annotations"])>=1000:raise ValueError("标注数量已达上限")
+        elapsed=body.get("elapsed_ms",0)
+        if isinstance(elapsed,bool) or not isinstance(elapsed,int) or not 0<=elapsed<=86_400_000:raise ValueError("操作耗时无效")
+        ann={"id":"ann-"+uuid.uuid4().hex,"photo_id":run["photo_id"],"kind":annotation_kind,"wall_id":wall,
+             "points":points,"object_id":object_id,"dimensions":body.get("dimensions"),
+             "operator_kind":project.get("operator_kind","user"),"elapsed_ms":elapsed,
+             "created_at":datetime.now(timezone.utc).isoformat(),"origin":"vision_candidate",
+             "vision_run_id":run["id"],"vision_candidate_id":candidate["id"],
+             "vision_model_sha256":run["model_sha256"]}
+        project["annotations"].append(ann);candidate["status"]="accepted";candidate["annotation_id"]=ann["id"]
+        self.server.record("vision_accepted",vision_run_id=run["id"],candidate_id=candidate["id"],annotation_id=ann["id"])
+        self.send_json(201,ann)
 
     def add_annotation(self, body: dict) -> None:
         project=self.server.project
@@ -454,8 +540,9 @@ def main()->int:
     parser.add_argument("--model-dir",type=Path,help="Existing IFC/IR directory; omit to create or resume a photo project")
     parser.add_argument("--workspace",type=Path,required=True)
     parser.add_argument("--point-cloud",type=Path,help="Optional explicitly selected metre-coordinate NPY XYZ; alignment is not assumed")
+    parser.add_argument("--vision-model",type=Path,help="Local supported UperNet ONNX model; no download is performed")
     parser.add_argument("--port",type=int,default=8766)
-    args=parser.parse_args();server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud)
+    args=parser.parse_args();server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud,args.vision_model)
     print(f"WorldState Studio: http://127.0.0.1:{server.server_port}/",flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass

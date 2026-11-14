@@ -1,0 +1,20 @@
+{
+  "operator": "automation",
+  "model": "real CPU inference on real photo",
+  "walls": 2,
+  "ai_evidence_count": 5,
+  "selected_candidate_ids": [
+    "ground-line-4",
+    "ground-line-10",
+    "line-endpoint-5-1",
+    "line-endpoint-6-2",
+    "line-endpoint-12-2"
+  ],
+  "metric_scale": "ASSUMED 1m; not measurement",
+  "height": "ASSUMED",
+  "pitch_and_roll": "ASSUMED",
+  "registered_sfm_input": true,
+  "revision_after_edit": 2,
+  "actual_human_time": "NOT_MEASURED",
+  "independent_accuracy": "NOT_MEASURED"
+}

@@ -8,7 +8,7 @@ async function main(){
   const revision=Number(revisionText);
   if(!base||!ifcPath||!elementId||!attribute||!Number.isInteger(revision)||!output||fs.existsSync(output))
     throw Error('usage: BASE EXTERNAL_IFC ELEMENT_ID ATTRIBUTE CURRENT_REVISION NEW_REPORT_JSON');
-  const browser=await chromium.launch({headless:true}),page=await browser.newPage({viewport:{width:1500,height:1000}}),errors=[];
+  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']}),page=await browser.newPage({viewport:{width:1500,height:1000}}),errors=[];
   page.on('pageerror',error=>errors.push(String(error)));
   await page.goto(base+'/',{waitUntil:'networkidle'});
   await page.waitForFunction(n=>document.querySelector('#summary')?.textContent.includes('版本 '+n),revision);

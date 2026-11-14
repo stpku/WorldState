@@ -163,11 +163,25 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
         used_photos.add(photo["id"])
         by_wall.setdefault(wall_id, []).append(ann)
         if ann.get("operator_kind",operator)!=operator:raise ValueError("标注来源与项目不一致")
-        evidence.append({"id": ann["id"], "kind": "manual_photo_annotation" if operator=="user" else "scripted_photo_annotation", "photo_ref": photo["id"],
+        annotation_evidence={"id": ann["id"], "kind": "manual_photo_annotation" if operator=="user" else "scripted_photo_annotation", "photo_ref": photo["id"],
                          "annotation_type": kind, "wall_id": wall_id, "points_px": coords,
                          "object_id": ann.get("object_id"), "operator": operator,
                          "created_at": ann.get("created_at"), "elapsed_ms": ann.get("elapsed_ms"),
-                         "status": "user_supplied_unverified" if operator=="user" else "scripted_test"})
+                         "status": "user_supplied_unverified" if operator=="user" else "scripted_test"}
+        if ann.get("origin")=="vision_candidate":
+            run=next((r for r in project.get("vision_runs",[]) if r.get("id")==ann.get("vision_run_id")),None)
+            candidate=next((c for c in (run or {}).get("candidates",[]) if c.get("id")==ann.get("vision_candidate_id")),None)
+            if not run or not candidate or run.get("image_sha256")!=photo["sha256"] or run.get("photo_id")!=photo["id"] or candidate.get("annotation_id")!=ann["id"] or candidate.get("status")!="accepted" or run.get("model_sha256")!=ann.get("vision_model_sha256"):
+                raise ValueError("视觉候选来源或照片哈希不匹配")
+            expected=candidate.get("points_px")
+            if candidate.get("kind") in {"door_region","window_region"}:
+                x1,y1,x2,y2=candidate["bbox_px"];expected=[[x1,y1],[x2,y2]]
+            if coords!=expected:raise ValueError("视觉候选被修改；请将修改记录为人工标注")
+            annotation_evidence.update(kind="vision_candidate_accepted",vision_run_id=run["id"],
+                vision_candidate_id=candidate["id"],vision_model_sha256=run["model_sha256"],
+                vision_provider=run["provider"],overlay_sha256=run["overlay_sha256"],
+                status="ai_proposed_human_accepted_unverified" if operator=="user" else "ai_proposed_script_accepted")
+        evidence.append(annotation_evidence)
         if kind in {"door", "window"}:
             object_id = ann.get("object_id")
             if not isinstance(object_id, str) or not re.fullmatch(r"(?:door|window)-[a-zA-Z0-9_-]{1,40}", object_id) or not object_id.startswith(kind + "-"):

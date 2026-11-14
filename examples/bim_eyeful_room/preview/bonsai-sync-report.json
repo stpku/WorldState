@@ -1,0 +1,22 @@
+{
+  "type": "SCRIPTED_EXTERNAL_IFC_READBACK",
+  "revision": 3,
+  "diff": {
+    "previous_revision": 2,
+    "revision": 3,
+    "element_id": "wall-1",
+    "attribute": "height",
+    "before": 2.6,
+    "after": 2.700000047683716,
+    "changed_nodes": [],
+    "affected_elements": [
+      "wall-1"
+    ],
+    "reason_ref": "revision-3",
+    "external_ifc_sha256": "5013ed29cb93249b63533ba135d26dbd5018b6d8ab4a60636dcffb7e1572c2c0",
+    "warnings": [
+      "Only the requested geometry attribute is synchronized; IFC metadata outside the checked fields is not imported. Review before using the regenerated IFC."
+    ]
+  },
+  "errors": []
+}

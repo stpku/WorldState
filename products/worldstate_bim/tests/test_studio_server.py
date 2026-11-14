@@ -127,3 +127,45 @@ def test_point_cloud_requires_explicit_finite_xyz_and_marks_alignment_unknown(tm
         assert instance.cloud["source_points"]==2
         assert len(instance.cloud["points"])==2
     finally:instance.server_close()
+
+
+def test_vision_candidate_decisions_preserve_source_in_ifc_evidence(tmp_path):
+    """Fake provider tests API wiring only; real inference is a separate browser run."""
+    import hashlib
+    model_path=tmp_path/'fake-weights.onnx';model_path.write_bytes(b'not a model')
+    instance=StudioServer(0,None,tmp_path/'vision-work',vision_model=model_path)
+    class FakeProvider:
+        def analyze(self,path):
+            return ({'image_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+                     'provider':'FAKE_TEST_ONLY','model_sha256':'f'*64,'runtime_seconds':0,
+                     'candidates':[{'id':'line-1','kind':'wall_floor_line','points_px':[[10,20],[100,20]],'status':'proposed'},
+                                   {'id':'line-2','kind':'wall_floor_line','points_px':[[100,20],[130,60]],'status':'proposed'}]},b'test overlay')
+    instance.vision_provider=FakeProvider()
+    thread=threading.Thread(target=instance.serve_forever,daemon=True);thread.start()
+    try:
+        assert api(instance,'/api/project',{'name':'Provider wiring','operator_kind':'automation'})[0]==201
+        image=Image.new('RGB',(640,480),'white');buffer=io.BytesIO();image.save(buffer,format='PNG')
+        photo=api(instance,'/api/upload',{'data_base64':base64.b64encode(buffer.getvalue()).decode()})[1]
+        status,run=api(instance,'/api/vision/analyze',{'photo_id':photo['id']});assert status==201
+        assert api(instance,'/api/vision/overlay/'+run['id'])[1]==b'test overlay'
+        status,ann=api(instance,'/api/vision/decision',{'run_id':run['id'],'candidate_id':'line-1',
+                          'decision':'accepted','wall_id':'wall-1'})
+        assert status==201 and ann['origin']=='vision_candidate'
+        assert api(instance,'/api/vision/decision',{'run_id':run['id'],'candidate_id':'line-2','decision':'rejected'})[0]==200
+        assert api(instance,'/api/vision/decision',{'run_id':run['id'],'candidate_id':'line-2','decision':'accepted','wall_id':'wall-1'})[0]==400
+        assert api(instance,'/api/annotation',{'photo_id':photo['id'],'kind':'scale','wall_id':'wall-1','points':[[10,20],[100,20]]})[0]==201
+        body={'layout':{'points':[[20,20],[220,20]],'closed':False,'confirmed_schematic':True},
+              'reference':{'wall_index':1,'length_m':4,'basis':'assumed','description':'test assumption',
+                           'height_m':2.8,'height_basis':'assumed','thickness_m':.12}}
+        assert api(instance,'/api/layout',body)[0]==200
+        assert api(instance,'/api/scale/bind',{'confirmed_endpoints':True})[0]==200
+        status,result=api(instance,'/api/generate',{'confirmed_candidate':True});assert status==201
+        ev=next(e for e in result['model']['evidence'] if e['id']==ann['id'])
+        assert ev['kind']=='vision_candidate_accepted' and ev['vision_candidate_id']=='line-1'
+        assert ev['status']=='ai_proposed_script_accepted' and ev['vision_provider']=='FAKE_TEST_ONLY'
+        # Altering a stored accepted annotation cannot silently impersonate the model output.
+        instance.project['annotations'][0]['points']=[[15,20],[100,20]]
+        status,error=api(instance,'/api/generate',{'confirmed_candidate':True,'confirm_regeneration':True})
+        assert status==400 and '视觉候选被修改' in error['error']
+    finally:
+        instance.shutdown();instance.server_close();thread.join()
