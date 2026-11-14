@@ -1,0 +1,23 @@
+{
+  "renders": [
+    {
+      "photo": "19_DSC0253.jpg",
+      "photo_sha256": "d9ec6b965189347a2a3e5175afe0447196c46470560f50015c02053cdc9bae5e",
+      "observations": {
+        "surface-4d70e4bffc47b76b": 30,
+        "surface-67c8391fca7258ec": 8
+      },
+      "overlay_sha256": "893b1f500a804036479743c34e455eda4122d4ea1544b3169e2d5bc7e2f25d0e"
+    },
+    {
+      "photo": "19_DSC0397.jpg",
+      "photo_sha256": "88f979658764b8fce12fc45b65871ab1f940c9925da346c9b6e87646d6f0f374",
+      "observations": {
+        "surface-4d70e4bffc47b76b": 48,
+        "surface-67c8391fca7258ec": 6
+      },
+      "overlay_sha256": "9ec4e0ceb4b896322c262de4279fdbffff75e8425f3cd75ca429ca05020f9f4d"
+    }
+  ],
+  "warning": "Projected sparse-support plane outlines are inferred, not observed wall boundaries."
+}

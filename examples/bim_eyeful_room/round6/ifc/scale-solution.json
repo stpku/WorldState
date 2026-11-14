@@ -1,0 +1,78 @@
+{
+  "schema": "worldstate-multiview-scale-solution/0.1",
+  "binding_sha256": "e45f0fa9780e18091b530f303a39282217bc92a7289cb8e136633ad5c8eb550d",
+  "metres_per_sfm_unit": 0.4929564226441077,
+  "reference_distance_arbitrary": 5.029929400560399,
+  "reference_distance_m": 2.4795360034526754,
+  "measurement_uncertainty_m": null,
+  "basis": "assumed",
+  "description": "DEBUG ONLY: scale assumed from correlated Metashape reconstruction of the same photos; endpoints are tracked features, not independently measured ruler endpoints; uncertainty unknown",
+  "endpoint_solutions": [
+    {
+      "xyz": [
+        1.5193998260460433,
+        -0.9589116002471317,
+        7.009558493510063
+      ],
+      "observations": [
+        {
+          "image_id": 24,
+          "pixel_xy": [
+            555.75927734375,
+            421.0608215332031
+          ],
+          "reprojection_error_px": 0.4280427960906291
+        },
+        {
+          "image_id": 4,
+          "pixel_xy": [
+            417.9093322753906,
+            493.5300598144531
+          ],
+          "reprojection_error_px": 0.1873354177374888
+        }
+      ],
+      "max_reprojection_error_px": 0.4280427960906291,
+      "rms_reprojection_error_px": 0.3303900679681241,
+      "max_parallax_degrees": 19.352606995484074,
+      "uncertainty": "NOT_QUANTIFIED",
+      "status": "MULTIVIEW_TRIANGULATED_CORRESPONDENCE_UNVERIFIED"
+    },
+    {
+      "xyz": [
+        -3.1655457251810475,
+        0.8689157044783566,
+        6.906980227004218
+      ],
+      "observations": [
+        {
+          "image_id": 24,
+          "pixel_xy": [
+            195.90921020507812,
+            553.5025634765625
+          ],
+          "reprojection_error_px": 0.004523168658595358
+        },
+        {
+          "image_id": 4,
+          "pixel_xy": [
+            238.93373107910156,
+            558.3192138671875
+          ],
+          "reprojection_error_px": 0.002208516690539339
+        }
+      ],
+      "max_reprojection_error_px": 0.004523168658595358,
+      "rms_reprojection_error_px": 0.0035592555883562343,
+      "max_parallax_degrees": 6.740135081575211,
+      "uncertainty": "NOT_QUANTIFIED",
+      "status": "MULTIVIEW_TRIANGULATED_CORRESPONDENCE_UNVERIFIED"
+    }
+  ],
+  "measurement_only_scale_uncertainty_m_per_unit": null,
+  "applicability": "Uniform scale for the bound COLMAP reconstruction and its registered geometry only; not georeferenced.",
+  "fitted_constraint_residual_m": 0.0,
+  "uncertainty": "measurement uncertainty is unknown; triangulation and scale uncertainty NOT_QUANTIFIED",
+  "verification": "USER_DECLARATION_NOT_INDEPENDENTLY_VERIFIED",
+  "warning": "The fitted anchor residual is tautological, not independent accuracy."
+}

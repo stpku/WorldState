@@ -1,0 +1,37 @@
+{
+  "schema": "worldstate-surface-association/0.1",
+  "matches": [
+    {
+      "previous_surface_id": "surface-4d70e4bffc47b76b",
+      "current_surface_id": "surface-2dfa22395e1e8111",
+      "shared_observations": 1090,
+      "shared_views": 26,
+      "overlap_ratio": 0.9511343804537522,
+      "persistent_id": "surface-4d70e4bffc47b76b",
+      "status": "PROVISIONAL_SHARED_FEATURE_ASSOCIATION"
+    },
+    {
+      "previous_surface_id": "surface-67c8391fca7258ec",
+      "current_surface_id": "surface-fac1cf13d601a6c2",
+      "shared_observations": 68,
+      "shared_views": 21,
+      "overlap_ratio": 0.9444444444444444,
+      "persistent_id": "surface-67c8391fca7258ec",
+      "status": "PROVISIONAL_SHARED_FEATURE_ASSOCIATION"
+    },
+    {
+      "previous_surface_id": "surface-7dd032c1397ae296",
+      "current_surface_id": "surface-1d5b017934abf519",
+      "shared_observations": 81,
+      "shared_views": 24,
+      "overlap_ratio": 0.6923076923076923,
+      "persistent_id": "surface-7dd032c1397ae296",
+      "status": "PROVISIONAL_SHARED_FEATURE_ASSOCIATION"
+    }
+  ],
+  "unmatched_previous": [
+    "surface-699673d14262acd5"
+  ],
+  "unmatched_current": [],
+  "warning": "Shared image features link candidate surfaces; they do not independently verify physical wall identity."
+}

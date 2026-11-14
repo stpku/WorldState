@@ -1,0 +1,23 @@
+{
+  "operator": "automation",
+  "source": "real registered photo observations; one-pixel perturbation is artificial",
+  "baseline_basis": "assumed",
+  "baseline_endpoint_xyz": [
+    -3.1655457251810475,
+    0.8689157044783566,
+    6.906980227004218
+  ],
+  "perturbed_endpoint_xyz": [
+    -3.189411345578775,
+    0.8806045196649829,
+    7.003026072544788
+  ],
+  "endpoint_delta_arbitrary": 0.0996544062399581,
+  "perturbed_max_reprojection_px": 0.04375269122527152,
+  "stale_observation_rejected": "\u5c3a\u5ea6\u7aef\u70b9\u3001\u6d4b\u91cf\u6216\u76f8\u673a\u5df2\u6539\u53d8\uff1b\u8bf7\u91cd\u65b0\u6c42\u89e3",
+  "wrong_correspondence_rejected": "\u7aef\u70b9\u8de8\u89c6\u56fe\u91cd\u6295\u5f71\u8bef\u5dee\u8fc7\u5927\uff0c\u53ef\u80fd\u662f\u9519\u8bef\u5bf9\u5e94",
+  "stale_measurement_rejected": "\u5c3a\u5ea6\u7aef\u70b9\u3001\u6d4b\u91cf\u6216\u76f8\u673a\u5df2\u6539\u53d8\uff1b\u8bf7\u91cd\u65b0\u6c42\u89e3",
+  "measurement_counterfactual_ratio": 1.2,
+  "resulting_scale_ratio": 1.2,
+  "independent_accuracy": "NOT_MEASURED"
+}
