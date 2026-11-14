@@ -102,7 +102,7 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
         if not isinstance(raw_points, list) or not 2 <= len(raw_points) <= 40:
             raise ValueError("俯视草图至少需要两个墙角，最多 40 个")
         points = [_point(point, 800, 500) for point in raw_points]
-    elif mode=="photo_floor":
+    elif mode in {"photo_floor","photo_floor_segments"}:
         points,camera_evidence=_camera_floor_points(layout,annotations,photos)
         raw_points=[list(p) for p in points]
     else:
@@ -112,9 +112,24 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
     closed = layout.get("closed") is True
     if closed and len(points) < 3:
         raise ValueError("闭合草图至少需要三个墙角")
-    edges = [(i, i + 1) for i in range(len(points) - 1)]
-    if closed:
-        edges.append((len(points) - 1, 0))
+    if mode=="photo_floor_segments":
+        if closed:raise ValueError("独立可见墙段不能强行闭合房间")
+        groups: dict[str,list[int]]={}
+        for ann in annotations:
+            if ann.get("kind")=="corner" and ann.get("photo_id")==layout.get("photo_id"):
+                match=re.fullmatch(r"node-([1-9][0-9]*)",str(ann.get("object_id","")))
+                wall_id=ann.get("wall_id")
+                if not match or not isinstance(wall_id,str) or not re.fullmatch(r"wall-[1-9][0-9]*",wall_id):
+                    raise ValueError("独立墙段端点需关联有效墙段和角点编号")
+                groups.setdefault(wall_id,[]).append(int(match.group(1))-1)
+        expected=[f"wall-{i}" for i in range(1,len(groups)+1)]
+        if sorted(groups,key=lambda x:int(x.split("-")[1]))!=expected or any(len(groups[x])!=2 for x in expected):
+            raise ValueError("每个独立墙段需要两个端点，并按 wall-1、wall-2 连续编号")
+        edges=[tuple(sorted(groups[x])) for x in expected]
+    else:
+        edges = [(i, i + 1) for i in range(len(points) - 1)]
+        if closed:
+            edges.append((len(points) - 1, 0))
     if any(math.dist(points[a], points[b]) < (3 if mode=="manual_schematic" else 1e-5) for a, b in edges):
         raise ValueError("草图墙体过短，请重新标注")
     reference = project.get("reference") or {}
@@ -198,7 +213,7 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
     layout_evidence={"id": "layout-1", "kind": "manual_schematic_floor_layout" if mode=="manual_schematic" else "pinhole_floor_backprojection",
         "points": raw_points, "closed": closed,
         "note": "user-drawn proportional sketch, not geometry recovered from image pixels" if mode=="manual_schematic" else
-                "manual photo corner rays intersect an assumed level floor; camera calibration and pose require verification"}
+                "photo endpoint rays intersect an assumed level floor; camera calibration and pose require verification; independent segments do not imply connected walls"}
     if camera_evidence:
         layout_evidence["photo_ref"]=camera_evidence["photo_id"]
         layout_evidence["corner_refs"]=camera_evidence["corner_refs"]
@@ -272,7 +287,7 @@ def build_photo_room(project: dict[str, Any], uploads: list[dict[str, Any]]) -> 
                        "independence": basis, "method":mode},
              "validation": {"status": "UNVERIFIED_DRAFT", "scope": "user_closed_unverified" if closed else "PARTIAL_OPEN",
                             "warning": ("Manual sketch proportions and user measurements are not recovered from the photos" if mode=="manual_schematic" else
-                            "Photo corner backprojection assumes a level floor, known camera intrinsics, pitch, zero roll and no lens distortion") +
+                            "Photo endpoint backprojection assumes a level floor, known camera intrinsics, pitch, zero roll and no lens distortion; separate segments do not imply joints") +
                             "; the anchor must still identify the same physical endpoints after annotation edits; independent verification is required"}}
     validate_room(model)
     issues = geometry_issues(model)

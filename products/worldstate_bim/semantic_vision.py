@@ -143,3 +143,44 @@ class UperNetOnnxProvider:
                  "limitations": ["semantic regions do not identify individual walls",
                     "door/window not detected does not establish absence", "scores are uncalibrated",
                     "no camera pose, physical dimensions, or geometry inferred by this provider"]}, encoded.tobytes())
+
+
+def suggest_disconnected_segments(result: dict, *, limit: int = 3) -> list[dict]:
+    """Suggest nonduplicate visible floor lines, without asserting wall identity.
+
+    Each segment references the provider's actual proposed line and endpoints.
+    Pixel-space suppression is a heuristic; occlusions and separate wall
+    instances cannot be verified from it.
+    """
+    import math
+
+    if not isinstance(limit,int) or isinstance(limit,bool) or not 1<=limit<=10:
+        raise ValueError('invalid proposal limit')
+    candidates=result.get('candidates',[]);width=result.get('width_px',0)
+    if not isinstance(candidates,list) or not isinstance(width,int) or width<1:
+        raise ValueError('invalid visual candidate set')
+    lines=[c for c in candidates if c.get('kind')=='wall_floor_line' and c.get('status')=='proposed']
+    endpoints=[c for c in candidates if c.get('kind')=='line_endpoint' and c.get('status')=='proposed']
+    def length(line):
+        a,b=line['points_px'];return math.dist(a,b)
+    def duplicate(a,b):
+        p,q=a['points_px'];r,s=b['points_px'];ux,uy=q[0]-p[0],q[1]-p[1];vx,vy=s[0]-r[0],s[1]-r[1]
+        ul,vl=math.hypot(ux,uy),math.hypot(vx,vy)
+        if not ul or not vl or abs(ux*vy-uy*vx)/(ul*vl)>.15:return False
+        tolerance=max(4.,width*.022)
+        separation=abs((r[0]-p[0])*uy-(r[1]-p[1])*ux)/ul
+        t1=((r[0]-p[0])*ux+(r[1]-p[1])*uy)/ul;t2=((s[0]-p[0])*ux+(s[1]-p[1])*uy)/ul
+        return separation<tolerance and max(min(t1,t2),0)<=min(max(t1,t2),ul)+tolerance
+    selected=[];used=set()
+    for line in sorted(lines,key=length,reverse=True):
+        if any(duplicate(line,x['line']) for x in selected):continue
+        matches=[]
+        for point in line['points_px']:
+            match=next((x for x in endpoints if x.get('points_px')==[point] and x['id'] not in used and x not in matches),None)
+            if match is None:break
+            matches.append(match)
+        if len(matches)!=2:continue
+        used.update(x['id'] for x in matches)
+        selected.append({'line':line,'endpoints':matches})
+        if len(selected)>=limit:break
+    return selected

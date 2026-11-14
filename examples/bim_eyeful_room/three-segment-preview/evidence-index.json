@@ -1,0 +1,22 @@
+{
+  "schema": "worldstate-studio-evidence/0.1",
+  "uploads": [
+    {
+      "id": "upload-b83b709d19dc7ba6",
+      "sha256": "b83b709d19dc7ba633ae66a1a3c91de5c6137fd7387707231417a975aa4d01e8",
+      "extension": ".jpg",
+      "mime": "image/jpeg",
+      "width": 743,
+      "height": 1126,
+      "captured_at": "UNKNOWN",
+      "added_at": "2026-11-14T02:32:29.998222+00:00",
+      "status": "unassociated",
+      "quality": {
+        "brightness_mean": 101.04,
+        "laplacian_variance": 241.38,
+        "warnings": [],
+        "note": "heuristic only; coverage and registration not verified"
+      }
+    }
+  ]
+}

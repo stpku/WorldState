@@ -1,0 +1,1123 @@
+{
+  "schema": "worldstate-photo-project/0.1",
+  "id": "photo-room-9c75c7e0f9d74af5836899e711c086af",
+  "name": "Eyeful real-photo three separated candidates",
+  "operator_kind": "automation",
+  "created_at": "2026-11-14T02:32:29.878992+00:00",
+  "annotations": [
+    {
+      "id": "ann-3e889062fb39428698305bf6cbb1fd70",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "wall_boundary",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          35,
+          712
+        ],
+        [
+          162,
+          712
+        ]
+      ],
+      "object_id": null,
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132247+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "ground-line-5",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-6f20e2a6b4b846e784b9b8ca3df5cefe",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "corner",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          35,
+          712
+        ]
+      ],
+      "object_id": "node-1",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132272+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "line-endpoint-6-1",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-fc7d3b6c79144cfab733d80babb3e752",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "corner",
+      "wall_id": "wall-1",
+      "points": [
+        [
+          162,
+          712
+        ]
+      ],
+      "object_id": "node-2",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132285+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "line-endpoint-7-2",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-b44da966c0f3417e80f3b64c7f5eded1",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "wall_boundary",
+      "wall_id": "wall-2",
+      "points": [
+        [
+          626,
+          710
+        ],
+        [
+          730,
+          774
+        ]
+      ],
+      "object_id": null,
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132296+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "ground-line-8",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-1a00d38cf9764d5ca82eb2b347aac215",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "corner",
+      "wall_id": "wall-2",
+      "points": [
+        [
+          626,
+          710
+        ]
+      ],
+      "object_id": "node-3",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132311+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "line-endpoint-9-1",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-378dbed4e6dc4c8095300921f094ee81",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "corner",
+      "wall_id": "wall-2",
+      "points": [
+        [
+          730,
+          774
+        ]
+      ],
+      "object_id": "node-4",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132321+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "line-endpoint-10-2",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-298d72c5c282486e92f24ad18aa7d908",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "wall_boundary",
+      "wall_id": "wall-3",
+      "points": [
+        [
+          257,
+          650
+        ],
+        [
+          376,
+          650
+        ]
+      ],
+      "object_id": null,
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132330+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "ground-line-11",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-e952c1d0114d4eb68bd5fee3f071fd29",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "corner",
+      "wall_id": "wall-3",
+      "points": [
+        [
+          257,
+          650
+        ]
+      ],
+      "object_id": "node-5",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132340+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "line-endpoint-12-1",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    },
+    {
+      "id": "ann-578a102676cb4d27a5dfc5aa1edeb017",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "kind": "corner",
+      "wall_id": "wall-3",
+      "points": [
+        [
+          376,
+          650
+        ]
+      ],
+      "object_id": "node-6",
+      "dimensions": null,
+      "operator_kind": "automation",
+      "elapsed_ms": 0,
+      "created_at": "2026-11-14T02:32:34.132350+00:00",
+      "origin": "vision_candidate",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "vision_candidate_id": "line-endpoint-13-2",
+      "vision_model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e"
+    }
+  ],
+  "layout": {
+    "mode": "photo_floor_segments",
+    "points": [],
+    "closed": false,
+    "confirmed_schematic": false,
+    "confirmed_camera_assumptions": true,
+    "photo_id": "upload-b83b709d19dc7ba6",
+    "camera": {
+      "fx": 374.14093111975626,
+      "fy": 374.14093111975626,
+      "cx": 371.5,
+      "cy": 563,
+      "pitch_down_deg": 0,
+      "description": "Focal estimate from separate SfM run on same named camera; pitch 0 and roll 0 assumed; calibration unverified"
+    }
+  },
+  "reference": {
+    "wall_index": 1,
+    "length_m": 1,
+    "basis": "assumed",
+    "description": "EXPLICIT PLACEHOLDER 1 m, not a physical measurement; scale UNKNOWN",
+    "height_m": 2.5,
+    "height_basis": "assumed",
+    "thickness_m": 0.12
+  },
+  "events": [
+    {
+      "action": "project_created",
+      "at": "2026-11-14T02:32:29.879015+00:00"
+    },
+    {
+      "action": "photo_uploaded",
+      "at": "2026-11-14T02:32:29.998629+00:00",
+      "photo_id": "upload-b83b709d19dc7ba6"
+    },
+    {
+      "action": "vision_analyzed",
+      "at": "2026-11-14T02:32:34.032142+00:00",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "elapsed_seconds": 3.099,
+      "candidate_count": 27
+    },
+    {
+      "action": "vision_segments_accepted",
+      "at": "2026-11-14T02:32:34.132378+00:00",
+      "vision_run_id": "vision-af11dd8fd97c43878296188769a04c15",
+      "candidate_ids": [
+        "ground-line-5",
+        "line-endpoint-6-1",
+        "line-endpoint-7-2",
+        "ground-line-8",
+        "line-endpoint-9-1",
+        "line-endpoint-10-2",
+        "ground-line-11",
+        "line-endpoint-12-1",
+        "line-endpoint-13-2"
+      ],
+      "annotation_ids": [
+        "ann-3e889062fb39428698305bf6cbb1fd70",
+        "ann-6f20e2a6b4b846e784b9b8ca3df5cefe",
+        "ann-fc7d3b6c79144cfab733d80babb3e752",
+        "ann-b44da966c0f3417e80f3b64c7f5eded1",
+        "ann-1a00d38cf9764d5ca82eb2b347aac215",
+        "ann-378dbed4e6dc4c8095300921f094ee81",
+        "ann-298d72c5c282486e92f24ad18aa7d908",
+        "ann-e952c1d0114d4eb68bd5fee3f071fd29",
+        "ann-578a102676cb4d27a5dfc5aa1edeb017"
+      ],
+      "elapsed_ms": 91,
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T02:32:34.725689+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "scale_bound",
+      "at": "2026-11-14T02:32:34.739936+00:00",
+      "sha256": "d1f9fc12372959fdcabac7c6bbbcea2d88213637fe503ddc2237e3320b185a56",
+      "operator": "automation"
+    },
+    {
+      "action": "layout_saved",
+      "at": "2026-11-14T02:32:34.824858+00:00",
+      "point_count": 0
+    },
+    {
+      "action": "candidate_generated",
+      "at": "2026-11-14T02:32:35.332100+00:00",
+      "revision": 1,
+      "confirmed_by": "automation",
+      "wall_count": 3
+    },
+    {
+      "action": "revise",
+      "at": "2026-11-14T02:32:35.542082+00:00",
+      "element_id": "wall-1",
+      "attribute": "height"
+    },
+    {
+      "action": "external_ifc_synced",
+      "at": "2026-11-14T02:33:10.767168+00:00",
+      "element_id": "wall-1",
+      "attribute": "height"
+    }
+  ],
+  "current_revision": 3,
+  "vision_runs": [
+    {
+      "schema": "worldstate-visual-candidates/0.1",
+      "provider": "upernet-convnext-tiny-ade20k-onnx",
+      "model_sha256": "fea729ab6c5d338bc79ad3d986b073e6faa12c97255eafd78a1f7145326e534e",
+      "model_revision": "a8e2807c3479bc617b37d8ed53e68660b3fa1ebb",
+      "image_sha256": "b83b709d19dc7ba633ae66a1a3c91de5c6137fd7387707231417a975aa4d01e8",
+      "width_px": 743,
+      "height_px": 1126,
+      "runtime_seconds": 3.099,
+      "device": "CPU",
+      "candidates": [
+        {
+          "id": "region-wall-1",
+          "kind": "wall_region",
+          "bbox_px": [
+            0,
+            308,
+            742,
+            774
+          ],
+          "polygon_px": [
+            [
+              742,
+              308
+            ],
+            [
+              528,
+              467
+            ],
+            [
+              238,
+              467
+            ],
+            [
+              150,
+              396
+            ],
+            [
+              0,
+              405
+            ],
+            [
+              0,
+              703
+            ],
+            [
+              162,
+              712
+            ],
+            [
+              256,
+              650
+            ],
+            [
+              394,
+              659
+            ],
+            [
+              442,
+              624
+            ],
+            [
+              493,
+              633
+            ],
+            [
+              464,
+              555
+            ],
+            [
+              470,
+              502
+            ],
+            [
+              499,
+              492
+            ],
+            [
+              506,
+              650
+            ],
+            [
+              742,
+              774
+            ],
+            [
+              742,
+              572
+            ],
+            [
+              738,
+              606
+            ],
+            [
+              702,
+              545
+            ],
+            [
+              709,
+              501
+            ],
+            [
+              737,
+              492
+            ],
+            [
+              742,
+              519
+            ],
+            [
+              742,
+              370
+            ],
+            [
+              713,
+              378
+            ]
+          ],
+          "area_px": 178639,
+          "model_score_mean_uncalibrated": 0.895237922668457,
+          "status": "proposed",
+          "geometry": "semantic_region_not_instance"
+        },
+        {
+          "id": "region-floor-1",
+          "kind": "floor_region",
+          "bbox_px": [
+            0,
+            625,
+            742,
+            1125
+          ],
+          "polygon_px": [
+            [
+              742,
+              775
+            ],
+            [
+              662,
+              739
+            ],
+            [
+              592,
+              678
+            ],
+            [
+              494,
+              651
+            ],
+            [
+              481,
+              625
+            ],
+            [
+              442,
+              625
+            ],
+            [
+              435,
+              651
+            ],
+            [
+              394,
+              660
+            ],
+            [
+              256,
+              651
+            ],
+            [
+              162,
+              713
+            ],
+            [
+              0,
+              704
+            ],
+            [
+              0,
+              1125
+            ],
+            [
+              742,
+              1125
+            ]
+          ],
+          "area_px": 327980,
+          "model_score_mean_uncalibrated": 0.9997161626815796,
+          "status": "proposed",
+          "geometry": "semantic_region_not_instance"
+        },
+        {
+          "id": "region-ceiling-1",
+          "kind": "ceiling_region",
+          "bbox_px": [
+            0,
+            0,
+            742,
+            466
+          ],
+          "polygon_px": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              237
+            ],
+            [
+              267,
+              237
+            ],
+            [
+              278,
+              291
+            ],
+            [
+              35,
+              291
+            ],
+            [
+              0,
+              256
+            ],
+            [
+              0,
+              360
+            ],
+            [
+              64,
+              370
+            ],
+            [
+              0,
+              404
+            ],
+            [
+              150,
+              395
+            ],
+            [
+              238,
+              466
+            ],
+            [
+              528,
+              466
+            ],
+            [
+              742,
+              307
+            ],
+            [
+              742,
+              0
+            ],
+            [
+              487,
+              18
+            ]
+          ],
+          "area_px": 290496,
+          "model_score_mean_uncalibrated": 0.9719131588935852,
+          "status": "proposed",
+          "geometry": "semantic_region_not_instance"
+        },
+        {
+          "id": "region-door-2",
+          "kind": "door_region",
+          "bbox_px": [
+            465,
+            493,
+            510,
+            650
+          ],
+          "polygon_px": [
+            [
+              494,
+              493
+            ],
+            [
+              493,
+              502
+            ],
+            [
+              471,
+              502
+            ],
+            [
+              471,
+              554
+            ],
+            [
+              465,
+              555
+            ],
+            [
+              465,
+              589
+            ],
+            [
+              471,
+              590
+            ],
+            [
+              471,
+              606
+            ],
+            [
+              487,
+              606
+            ],
+            [
+              487,
+              599
+            ],
+            [
+              493,
+              598
+            ],
+            [
+              494,
+              606
+            ],
+            [
+              500,
+              607
+            ],
+            [
+              500,
+              624
+            ],
+            [
+              494,
+              625
+            ],
+            [
+              494,
+              650
+            ],
+            [
+              505,
+              650
+            ],
+            [
+              505,
+              572
+            ],
+            [
+              510,
+              571
+            ],
+            [
+              510,
+              563
+            ],
+            [
+              505,
+              562
+            ],
+            [
+              505,
+              502
+            ],
+            [
+              500,
+              502
+            ],
+            [
+              499,
+              493
+            ]
+          ],
+          "area_px": 4356,
+          "model_score_mean_uncalibrated": 0.612383246421814,
+          "status": "proposed",
+          "geometry": "semantic_region_not_instance"
+        },
+        {
+          "id": "ground-line-5",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              35,
+              712
+            ],
+            [
+              162,
+              712
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated",
+          "annotation_id": "ann-3e889062fb39428698305bf6cbb1fd70"
+        },
+        {
+          "id": "line-endpoint-6-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              35,
+              712
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-6f20e2a6b4b846e784b9b8ca3df5cefe"
+        },
+        {
+          "id": "line-endpoint-7-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              162,
+              712
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-fc7d3b6c79144cfab733d80babb3e752"
+        },
+        {
+          "id": "ground-line-8",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              626,
+              710
+            ],
+            [
+              730,
+              774
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated",
+          "annotation_id": "ann-b44da966c0f3417e80f3b64c7f5eded1"
+        },
+        {
+          "id": "line-endpoint-9-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              626,
+              710
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-1a00d38cf9764d5ca82eb2b347aac215"
+        },
+        {
+          "id": "line-endpoint-10-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              730,
+              774
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-378dbed4e6dc4c8095300921f094ee81"
+        },
+        {
+          "id": "ground-line-11",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              257,
+              650
+            ],
+            [
+              376,
+              650
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated",
+          "annotation_id": "ann-298d72c5c282486e92f24ad18aa7d908"
+        },
+        {
+          "id": "line-endpoint-12-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              257,
+              650
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-e952c1d0114d4eb68bd5fee3f071fd29"
+        },
+        {
+          "id": "line-endpoint-13-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              376,
+              650
+            ]
+          ],
+          "status": "accepted",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner",
+          "annotation_id": "ann-578a102676cb4d27a5dfc5aa1edeb017"
+        },
+        {
+          "id": "ground-line-14",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              626,
+              711
+            ],
+            [
+              726,
+              774
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "line-endpoint-15-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              626,
+              711
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "line-endpoint-16-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              726,
+              774
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "ground-line-17",
+          "kind": "wall_floor_line",
+          "points_px": [
+            [
+              587,
+              677
+            ],
+            [
+              660,
+              730
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "line-endpoint-18-1",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              587,
+              677
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "line-endpoint-19-2",
+          "kind": "line_endpoint",
+          "points_px": [
+            [
+              660,
+              730
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_segment_endpoint",
+          "uncertainty": "may_be_image_edge_or_occlusion_not_wall_corner"
+        },
+        {
+          "id": "ceiling-line-20",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              238,
+              466
+            ],
+            [
+              528,
+              466
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-21",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              627,
+              388
+            ],
+            [
+              738,
+              307
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-22",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              632,
+              383
+            ],
+            [
+              736,
+              307
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-23",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              632,
+              382
+            ],
+            [
+              735,
+              307
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-24",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              632,
+              380
+            ],
+            [
+              729,
+              307
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-25",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              150,
+              399
+            ],
+            [
+              237,
+              464
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-26",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              632,
+              381
+            ],
+            [
+              718,
+              316
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        },
+        {
+          "id": "ceiling-line-27",
+          "kind": "wall_ceiling_line",
+          "points_px": [
+            [
+              150,
+              397
+            ],
+            [
+              237,
+              460
+            ]
+          ],
+          "status": "proposed",
+          "method": "hough_on_semantic_boundary",
+          "uncertainty": "heuristic_not_calibrated"
+        }
+      ],
+      "cross_photo_association": "NOT_IMPLEMENTED",
+      "occlusion_and_unobserved": "UNKNOWN",
+      "limitations": [
+        "semantic regions do not identify individual walls",
+        "door/window not detected does not establish absence",
+        "scores are uncalibrated",
+        "no camera pose, physical dimensions, or geometry inferred by this provider"
+      ],
+      "id": "vision-af11dd8fd97c43878296188769a04c15",
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "overlay_sha256": "241e23a481c45f631c876f8c1cb35c6f0097bdc240cd9a15ee784d679a96959e",
+      "created_at": "2026-11-14T02:32:34.032118+00:00"
+    }
+  ],
+  "scale_binding": {
+    "schema": "worldstate-scale-binding/0.1",
+    "snapshot": {
+      "photo_id": "upload-b83b709d19dc7ba6",
+      "photo_sha256": "b83b709d19dc7ba633ae66a1a3c91de5c6137fd7387707231417a975aa4d01e8",
+      "observations": [
+        {
+          "annotation_id": "ann-6f20e2a6b4b846e784b9b8ca3df5cefe",
+          "node_id": "node-1",
+          "points_px": [
+            [
+              35,
+              712
+            ]
+          ]
+        },
+        {
+          "annotation_id": "ann-fc7d3b6c79144cfab733d80babb3e752",
+          "node_id": "node-2",
+          "points_px": [
+            [
+              162,
+              712
+            ]
+          ]
+        }
+      ],
+      "wall_id": "wall-1",
+      "geometry": {
+        "mode": "photo_floor_segments",
+        "camera": {
+          "fx": 374.14093111975626,
+          "fy": 374.14093111975626,
+          "cx": 371.5,
+          "cy": 563,
+          "pitch_down_deg": 0,
+          "description": "Focal estimate from separate SfM run on same named camera; pitch 0 and roll 0 assumed; calibration unverified"
+        },
+        "photo_id": "upload-b83b709d19dc7ba6"
+      },
+      "measurement": {
+        "length_m": 1,
+        "basis": "assumed",
+        "description": "EXPLICIT PLACEHOLDER 1 m, not a physical measurement; scale UNKNOWN"
+      }
+    },
+    "sha256": "d1f9fc12372959fdcabac7c6bbbcea2d88213637fe503ddc2237e3320b185a56",
+    "status": "user_confirmed_not_independently_verified"
+  }
+}

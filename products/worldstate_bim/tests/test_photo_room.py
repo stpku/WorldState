@@ -133,3 +133,36 @@ def test_camera_scale_binding_is_invalidated_when_calibration_changes():
     project['annotations'][-3]['points'][0][0] += 1
     with pytest.raises(ValueError, match='尺度参照已失效'):
         build_photo_room(project,uploads)
+
+
+def test_photo_floor_segments_do_not_invent_connections_or_room_closure():
+    project, uploads = fixture()
+    project['annotations']=[a for a in project['annotations'] if a['kind'] not in {'window','scale'}]
+    project['layout']={'mode':'photo_floor_segments','photo_id':uploads[0]['id'],'closed':False,
+        'confirmed_camera_assumptions':True,'camera':{'fx':525,'fy':525,'cx':319,'cy':239,
+        'pitch_down_deg':20,'description':'synthetic camera for disjoint segments'}}
+    for i,point in enumerate(([80,350],[180,350],[250,350],[350,350],[420,350],[520,350]),1):
+        project['annotations'].append({'id':'ann-'+f'{i+4:x}'*32,'photo_id':uploads[0]['id'],
+            'kind':'corner','wall_id':f'wall-{(i+1)//2}','object_id':f'node-{i}','points':[list(point)]})
+    project['scale_binding']=bind_scale(project,uploads,confirmed=True)
+    model=build_photo_room(project,uploads)
+    walls=[e for e in model['elements'] if e['ifc_type']=='IfcWall']
+    assert [(w['start'],w['end']) for w in walls]==[('node-1','node-2'),('node-3','node-4'),('node-5','node-6')]
+    assert model['validation']['scope']=='PARTIAL_OPEN' and not any(e['ifc_type']=='IfcSpace' for e in model['elements'])
+    project['annotations'][-1]['wall_id']='wall-2'
+    with pytest.raises(ValueError,match='每个独立墙段需要两个端点'):
+        build_photo_room(project,uploads)
+
+
+def test_vision_segment_grouping_suppresses_near_duplicate_lines():
+    from products.worldstate_bim.semantic_vision import suggest_disconnected_segments
+    candidates=[]
+    def add(i,a,b):
+        candidates.extend([{'id':f'l{i}','kind':'wall_floor_line','points_px':[a,b],'status':'proposed'},
+            {'id':f'a{i}','kind':'line_endpoint','points_px':[a],'status':'proposed'},
+            {'id':f'b{i}','kind':'line_endpoint','points_px':[b],'status':'proposed'}])
+    add(1,[10,20],[110,20]);add(2,[12,21],[108,21]);add(3,[200,30],[300,30]);add(4,[400,80],[450,130])
+    result=suggest_disconnected_segments({'width_px':640,'candidates':candidates})
+    assert [x['line']['id'] for x in result]==['l1','l3','l4']
+    assert all(len(x['endpoints'])==2 for x in result)
+    assert all(x['line']['status']=='proposed' for x in result)

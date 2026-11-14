@@ -235,6 +235,7 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/project":self.create_project(body);return
                 if path=="/api/vision/analyze":self.analyze_photo(body);return
                 if path=="/api/vision/decision":self.decide_candidate(body);return
+                if path=="/api/vision/accept-segments":self.accept_segments(body);return
                 if path=="/api/annotation":self.add_annotation(body);return
                 if path=="/api/annotation/delete":self.delete_annotation(body);return
                 if path=="/api/layout":self.save_layout(body);return
@@ -310,6 +311,39 @@ class Handler(BaseHTTPRequestHandler):
         self.server.record("vision_analyzed",vision_run_id=ident,photo_id=photo["id"],
                            elapsed_seconds=result["runtime_seconds"],candidate_count=len(result["candidates"]))
         self.send_json(201,result)
+
+    def accept_segments(self, body: dict) -> None:
+        project=self.server.project
+        if project is None:raise ValueError("请先创建房间项目")
+        if body.get("confirmed_proposals") is not True:raise ValueError("请先检查识别线段并确认接受")
+        if project.get("annotations"):raise ValueError("批量接受适用于尚无标注的新项目；已有标注请逐项确认")
+        run=next((r for r in project.get("vision_runs",[]) if r.get("id")==body.get("run_id")),None)
+        if run is None:raise ValueError("未找到视觉结果")
+        elapsed=body.get("elapsed_ms",0)
+        if isinstance(elapsed,bool) or not isinstance(elapsed,int) or not 0<=elapsed<=86_400_000:raise ValueError("操作耗时无效")
+        from .semantic_vision import suggest_disconnected_segments
+        suggestions=suggest_disconnected_segments(run,limit=3)
+        if not suggestions:raise ValueError("没有可用墙地线段；请重新拍摄或手工标注")
+        operator=project.get("operator_kind","user");created=[]
+        for i,suggestion in enumerate(suggestions,1):
+            for j,candidate in enumerate([suggestion["line"],*suggestion["endpoints"]]):
+                ann={"id":"ann-"+uuid.uuid4().hex,"photo_id":run["photo_id"],
+                     "kind":"wall_boundary" if j==0 else "corner","wall_id":f"wall-{i}",
+                     "points":candidate["points_px"],"object_id":None if j==0 else f"node-{2*i-2+j}",
+                     "dimensions":None,"operator_kind":operator,"elapsed_ms":0,
+                     "created_at":datetime.now(timezone.utc).isoformat(),"origin":"vision_candidate",
+                     "vision_run_id":run["id"],"vision_candidate_id":candidate["id"],
+                     "vision_model_sha256":run["model_sha256"]}
+                created.append(ann)
+        for ann in created:
+            candidate=next(c for c in run["candidates"] if c["id"]==ann["vision_candidate_id"])
+            candidate["status"]="accepted";candidate["annotation_id"]=ann["id"]
+        project["annotations"].extend(created)
+        self.server.record("vision_segments_accepted",vision_run_id=run["id"],
+                           candidate_ids=[x["vision_candidate_id"] for x in created],
+                           annotation_ids=[x["id"] for x in created],elapsed_ms=elapsed,operator=operator)
+        self.send_json(201,{"wall_segments":len(suggestions),"annotation_ids":[x["id"] for x in created],
+                            "warning":"线段端点不一定是实际墙角；遮挡和连接未知，需要人工检查"})
 
     def decide_candidate(self, body: dict) -> None:
         project=self.server.project

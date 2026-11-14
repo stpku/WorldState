@@ -24,7 +24,7 @@ def scale_snapshot(project: dict, uploads: list[dict]) -> dict[str, Any]:
         raise ValueError('请说明标尺实际物理端点和测量来源')
     photos={x['id']:x for x in uploads}
     mode=layout.get('mode','manual_schematic')
-    if mode=='photo_floor':
+    if mode in {'photo_floor','photo_floor_segments'}:
         photo=photos.get(layout.get('photo_id'))
         corners={}
         for ann in project.get('annotations',[]):
@@ -32,8 +32,14 @@ def scale_snapshot(project: dict, uploads: list[dict]) -> dict[str, Any]:
                 name=ann.get('object_id')
                 if name in corners:raise ValueError('尺度墙段端点重复')
                 corners[name]=ann
-        first=f'node-{wall}'
-        second=f'node-{wall+1}' if f'node-{wall+1}' in corners else ('node-1' if layout.get('closed') else '')
+        if mode=='photo_floor_segments':
+            selected=sorted((name for name,ann in corners.items() if ann.get('wall_id')==f'wall-{wall}' and isinstance(name,str)),
+                            key=lambda name: int(name[5:]) if name.startswith('node-') and name[5:].isdigit() else -1)
+            if len(selected)!=2:raise ValueError('独立墙段的标尺需要同一墙段上的两个端点')
+            first,second=selected
+        else:
+            first=f'node-{wall}'
+            second=f'node-{wall+1}' if f'node-{wall+1}' in corners else ('node-1' if layout.get('closed') else '')
         a,b=corners.get(first),corners.get(second)
         if photo is None or a is None or b is None:
             raise ValueError('请先在相机照片标注标尺墙段的两个物理角点')

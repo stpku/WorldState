@@ -1,0 +1,29 @@
+{
+  "operator": "automation",
+  "input": "real photograph and real CPU inference",
+  "line_selection": "product-selected non-maximum suppression; scripted user confirmation; no manual coordinates",
+  "wall_segments": 3,
+  "connections": "UNKNOWN; no room closure",
+  "ai_evidence_count": 9,
+  "selected_line_ids": [
+    "ground-line-5",
+    "ground-line-8",
+    "ground-line-11"
+  ],
+  "selected_endpoint_ids": [
+    "line-endpoint-6-1",
+    "line-endpoint-7-2",
+    "line-endpoint-9-1",
+    "line-endpoint-10-2",
+    "line-endpoint-12-1",
+    "line-endpoint-13-2"
+  ],
+  "metric_scale": "ASSUMED 1m; no measured anchor",
+  "height": "ASSUMED",
+  "camera_attitude": "ASSUMED",
+  "focal": "self-calibrated estimate from different photos with same camera-name prefix; unverified",
+  "photo_registered_in_sfm": false,
+  "actual_human_time": "NOT_MEASURED",
+  "independent_accuracy": "NOT_MEASURED",
+  "revision_after_edit": 2
+}

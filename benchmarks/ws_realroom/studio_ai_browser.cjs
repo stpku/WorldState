@@ -8,7 +8,7 @@ if(fs.existsSync(out))throw Error('use a new output directory');fs.mkdirSync(out
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:1600,height:1100}});let errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(url+'/builder');await page.fill('#project-name','Eyeful real-photo scripted preview');await page.selectOption('#operator-kind','automation');await page.click('#create');
+ await page.goto(url+'/builder');await page.fill('#project-name','Eyeful real-photo scripted preview');await page.selectOption('#operator-kind','automation');await page.click('#create');await page.waitForFunction(()=>document.querySelector('#project-status').textContent.includes('项目：'));
  await page.setInputFiles('#photo-upload',imagePath);await page.waitForFunction(()=>document.querySelector('#photo-select').options.length>0);
  await page.click('#ai-analyze');await page.waitForFunction(()=>document.querySelector('#vision-status').textContent.includes('个图像候选'),{timeout:60000});
  let state=await page.evaluate(()=>fetch('/api/project').then(r=>r.json()));const run=state.project.vision_runs.at(-1),lines=run.candidates.filter(c=>c.kind==='wall_floor_line');
