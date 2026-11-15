@@ -69,6 +69,8 @@ def test_large_photo_preview_is_bounded_without_changing_source_dimensions(serve
     assert status==201 and (item['width'],item['height'])==(3200,1600)
     status,preview=api(server,'/api/photo-preview/'+item['id']);assert status==200
     with Image.open(io.BytesIO(preview)) as small:assert small.size==(1600,800)
+    status,crop=api(server,'/api/photo-crop/'+item['id']+'?x=100&y=200');assert status==200
+    with Image.open(io.BytesIO(crop)) as detail:assert detail.size==(200,200)
     status,original=api(server,'/api/photo/'+item['id']);assert status==200
     with Image.open(io.BytesIO(original)) as source:assert source.size==(3200,1600)
 

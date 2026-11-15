@@ -17,7 +17,7 @@ import uuid
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 from .modeling_tools import compare_revisions, validate_geometry
 from .room_cli import save_version
@@ -188,12 +188,16 @@ class Handler(BaseHTTPRequestHandler):
         path=urlsplit(self.path).path
         try:
             with self.server.lock:
-                if path in {"/", "/builder"}:
-                    filename="photo_studio.html" if path=="/builder" or self.server.model is None else "studio.html"
+                if path in {"/", "/builder", "/modeler"}:
+                    filename=("general_modeler.html" if path=="/modeler" else
+                              "photo_studio.html" if path=="/builder" or self.server.model is None else "studio.html")
                     page=Path(__file__).with_name(filename).read_text().replace("__WS_TOKEN__",self.server.token)
                     self.send_data(200,page.encode(),"text/html; charset=utf-8")
                 elif path=="/api/project":self.send_json(200,{"project":self.server.project,"uploads":self.server.uploaded,
                                                                "has_model":self.server.model is not None, "vision_configured":self.server.vision_model is not None})
+                elif path=="/api/modeler/state":
+                    from .studio_modeler import get_state
+                    get_state(self)
                 elif path=="/api/versions":
                     versions=[]
                     for directory in sorted(self.server.workspace.glob("revision-*")):
@@ -219,8 +223,14 @@ class Handler(BaseHTTPRequestHandler):
                     "quarantined":self.server.model.get("quarantined",[]) if self.server.model else [],
                     "history":self.server.model.get("history",[]) if self.server.model else [],
                     "photo_project":self.server.project})
-                elif path=="/api/export/model.ifc":self.send_data(200,(self.server.model_dir/"model.ifc").read_bytes(),"application/octet-stream")
-                elif path=="/api/export/model.json":self.send_json(200,self.server.model)
+                elif path in {"/api/export/model.ifc","/api/export/model.json"}:
+                    if self.server.model is None or self.server.model_dir is None:raise ValueError('模型尚未生成')
+                    general=(self.server.project or {}).get('general_modeler') or {}
+                    is_general=any(e.get('kind')=='multiview_modeler_observations' for e in self.server.model.get('evidence',[]))
+                    if is_general and general.get('model_dirty'):
+                        self.send_json(409,{'error':'观测已变更；请重新求解并保存模型。旧版本保留在工作区。'})
+                    elif path.endswith('.ifc'):self.send_data(200,(self.server.model_dir/"model.ifc").read_bytes(),"application/octet-stream")
+                    else:self.send_json(200,self.server.model)
                 elif path.startswith("/api/fusion/"):
                     ident=path.rsplit("/",1)[-1]
                     result=self.read_fusion(ident)
@@ -247,6 +257,23 @@ class Handler(BaseHTTPRequestHandler):
                     raw=filename.read_bytes()
                     if hashlib.sha256(raw).hexdigest()!=run.get("overlay_sha256"):raise ValueError("视觉叠加图哈希不符")
                     self.send_data(200,raw,"image/png")
+                elif path.startswith("/api/photo-crop/"):
+                    ident=path.rsplit("/",1)[-1]
+                    item=next((x for x in self.server.uploaded if x['id']==ident),None)
+                    if not item:raise ValueError('照片不可用')
+                    filename=self.server.uploads/(item['sha256']+item['extension'])
+                    if filename.is_symlink() or not filename.is_file():raise ValueError('照片路径不可用')
+                    with filename.open('rb') as stream:
+                        if hashlib.file_digest(stream,'sha256').hexdigest()!=item['sha256']:raise ValueError('照片哈希不符')
+                    query=parse_qs(urlsplit(self.path).query);cx=int(query['x'][0]);cy=int(query['y'][0]);size=200
+                    if not (0<=cx<item['width'] and 0<=cy<item['height']):raise ValueError('放大位置无效')
+                    x=max(0,min(item['width']-size,cx-size//2));y=max(0,min(item['height']-size,cy-size//2))
+                    from PIL import Image
+                    with Image.open(filename) as image:
+                        if image.size!=(item['width'],item['height']):raise ValueError('照片尺寸已改变')
+                        crop=image.convert('RGB').crop((x,y,min(x+size,item['width']),min(y+size,item['height'])))
+                        result=io.BytesIO();crop.save(result,format='PNG')
+                    self.send_data(200,result.getvalue(),'image/png')
                 elif path.startswith("/api/photo-preview/"):
                     ident=path.rsplit("/",1)[-1]
                     item=next((x for x in self.server.uploaded if x["id"]==ident),None)
@@ -294,6 +321,9 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/layout":self.save_layout(body);return
                 if path=="/api/scale/bind":self.bind_scale(body);return
                 if path=="/api/generate":self.generate(body);return
+                if path.startswith('/api/modeler/'):
+                    from .studio_modeler import post
+                    if post(self,path,body):return
                 if path=="/api/model/reoptimize":
                     if self.server.model is None:raise ValueError("请先打开局部墙面模型")
                     if body.get("revision")!=self.server.model["revision"]:
