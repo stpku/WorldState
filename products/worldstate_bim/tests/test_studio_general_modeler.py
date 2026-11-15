@@ -53,6 +53,11 @@ def test_studio_creates_new_surface_from_uploaded_photos_and_versioned_points(tm
         assert status==200;state=response['state']
         accepted=[o for o in state['observations'] if o.get('track_id')==7]
         assert len(accepted)==2 and all(o['origin']=='deterministic' and o['accepted_by']=='automation' for o in accepted)
+        before_events=len(server.project['events'])
+        status,preview=api(server,'/api/modeler/preview-solve',{'state_revision':state['revision']})
+        assert status==200 and preview['persisted'] is False and preview['state_revision']==state['revision']
+        assert preview['solution']['optimization']['point_max_px']<1e-5
+        assert server.project['general_modeler']['revision']==state['revision'] and len(server.project['events'])==before_events
         status,response=api(server,'/api/modeler/solve',{'state_revision':state['revision'],
             'sensitivity':{'samples':4,'camera_position_sigma_source':.001,'camera_rotation_sigma_deg':.01,'focal_sigma_fraction':.0001}})
         assert status==200 and response['solution']['optimization']['point_max_px']<1e-5;state=response['state']

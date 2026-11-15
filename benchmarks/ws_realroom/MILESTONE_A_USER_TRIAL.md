@@ -4,28 +4,9 @@
 
 ## 从自己的电脑访问
 
-先连接已有授权的 Tailscale 网络，在自己电脑的终端保持以下 SSH 命令运行（要求已有服务器账户 SSH 权限；将目标改为授权管理员提供的地址）：
+连接已有授权的 Tailscale 网络后，在 Windows 浏览器直接打开部署管理员提供的 Studio HTTPS 地址。Studio 首页可进入“多视图构件”；不需要 SSH 隧道。若显示无权访问，请确认 Windows 和服务器位于同一授权 Tailnet，且该设备允许访问 Studio 端口。
 
-```bash
-WS_SSH_TARGET='AUTHORIZED_USER@YOUR_TAILSCALE_HOST'
-ssh -N -o ExitOnForwardFailure=yes \
-  -L 127.0.0.1:18790:127.0.0.1:18790 \
-  -L 127.0.0.1:18791:127.0.0.1:18791 \
-  "$WS_SSH_TARGET"
-```
-
-在**同一台电脑**的浏览器打开：
-
-- 建模：<http://127.0.0.1:18790/modeler>
-- IFC 工作台：<http://127.0.0.1:18790/>
-- 独立扫描审核：<http://127.0.0.1:18791/>。请交给未看过待测模型的独立审核人员；页面本身不包含候选模型。
-
-两个服务只监听服务器的本机回环地址，不公开到互联网。不要把地址写成 `localhost` 或更换本地端口：Studio 校验本机 Host 和 Origin。如果 SSH 显示权限错误，请使用已有的 Tailscale/SSH 授权流程；无需向任何人提供密码、Cookie 或密钥。尚未从负责人的电脑验证其 SSH 权限。
-
-当前服务已完成三张照片的本地语义分析，可先查看叠加图：
-[DSC_6500](http://127.0.0.1:18790/api/vision/overlay-preview/vision-dc56f3a75e5c4064ad690628c97a413e) ·
-[DSC_6503](http://127.0.0.1:18790/api/vision/overlay-preview/vision-e791b858a83d40b7b2411e80776d74d8) ·
-[DSC_6508](http://127.0.0.1:18790/api/vision/overlay-preview/vision-99f5750165fa43e4be3adfec46d7b014)。这些是未审核的 AI 像素建议；DSC_6503 存在家具误识别。
+服务仅在 Tailnet 上通过 Tailscale Serve 提供 HTTPS；后台进程仍只监听服务器回环地址。Studio 对 Host、Origin 与会话令牌进行检查，仅接受显式配置的精确域名和本机来源，不使用 Funnel。独立扫描审核服务不经此入口发布，应由有权限的审核人员按单独的隔离流程访问。
 
 ## 建模操作
 
@@ -41,25 +22,10 @@ ssh -N -o ExitOnForwardFailure=yes \
 
 ## 独立扫描审核
 
-审核人员打开扫描页面，依次下载全场抽样 PLY 和单面 PLY，结合原始两站扫描判断墙、家具、地面或未知；审核可靠边界、物理实例、独立尺寸和不确定度。页面的记录暂存在浏览器内存中，刷新前必须点击“下载审核记录 JSON”，并在授权位置保存。页面不自动认证审核身份，也不会把未审核平面当作真值。若无法判断，保持“未知”。
+经授权的审核人员通过独立隔离入口打开扫描页面，依次下载全场抽样 PLY 和单面 PLY，结合原始两站扫描判断墙、家具、地面或未知；审核可靠边界、物理实例、独立尺寸和不确定度。页面的记录暂存在浏览器内存中，刷新前必须点击“下载审核记录 JSON”，并在授权位置保存。页面不自动认证审核身份，也不会把未审核平面当作真值。若无法判断，保持“未知”。
 
-## 服务中断后由服务器管理员恢复
+## 服务管理
 
-演示数据不会自动重建，也不会覆盖已有试用记录。可在服务器仓库根目录手动启动：
+服务器已将 Studio 配置为用户级 systemd 服务并启用用户 lingering；Tailscale Serve 使用后台持久配置。服务管理员可用 `systemctl --user status worldstate-studio.service` 检查状态。该操作不应重置其他 Tailscale Serve 或 Funnel 配置。扫描审核服务继续保持独立，不随 Studio 代理发布。
 
-```bash
-PYTHONPATH=. OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 \
-  /tmp/worldstate-bim-reset-venv/bin/python -m products.worldstate_bim.studio_server \
-  --workspace "$HOME/.cache/worldstate-milestone-a/user-demo-v1" \
-  --vision-model "$HOME/.cache/worldstate-round5/upernet-convnext-tiny-ade.onnx" \
-  --warm-vision --port 18790
-```
-
-另一个本机终端运行：
-
-```bash
-/tmp/worldstate-bim-reset-venv/bin/python -m http.server 18791 --bind 127.0.0.1 \
-  --directory "$HOME/.cache/worldstate-milestone-a/scan-review-v1"
-```
-
-若端口已被占用，先确认占用的是本演示，不要覆盖或停止其他服务。准备新副本时使用 `prepare_kicker_user_demo.py` 并指定不存在的输出目录。
+部署时应将服务的 `--trusted-origin` 设置为具体的 `https://域名:端口`，并使用持久磁盘上的 Python 环境、照片工作区和模型权重；不得使用通配符、未受信任的来源或临时目录作为开机依赖。

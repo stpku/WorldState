@@ -54,10 +54,23 @@ def _photo_preview(path: Path, width: int, height: int) -> bytes:
         return output.getvalue()
 
 
+def _trusted_https_origin(value: str) -> tuple[str, str]:
+    """Accept one explicitly configured HTTPS DNS origin, including its port."""
+    match=re.fullmatch(r"https://((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+"
+                       r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?):([1-9][0-9]{0,4})",value)
+    if not match or len(match.group(1))>253 or int(match.group(2))>65535:
+        raise ValueError("trusted origin must be an exact HTTPS DNS origin with an explicit port")
+    return f"{match.group(1)}:{match.group(2)}",value
+
+
 class StudioServer(ThreadingHTTPServer):
     """Serve an explicitly selected room project on loopback only."""
-    def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None, vision_model: Path | None = None):
+    def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None, vision_model: Path | None = None,
+                 trusted_origins: tuple[str, ...] = ()):
+        trusted=dict(_trusted_https_origin(origin) for origin in trusted_origins)
         super().__init__(("127.0.0.1",port),Handler)
+        local_host=f"127.0.0.1:{self.server_port}"
+        self.allowed_origins={local_host:f"http://{local_host}",**trusted}
         self.workspace=workspace.resolve()
         if self.workspace.is_relative_to(Path(__file__).resolve().parents[2]):
             raise ValueError("Studio workspace must be outside the source repository")
@@ -182,7 +195,12 @@ class Handler(BaseHTTPRequestHandler):
     def send_json(self,status: int,value)->None:
         self.send_data(status,json.dumps(value,ensure_ascii=False,allow_nan=False).encode(),"application/json; charset=utf-8")
     def valid_host(self)->bool:
-        return self.headers.get("Host")==f"127.0.0.1:{self.server.server_port}"
+        hosts=self.headers.get_all("Host",[])
+        return len(hosts)==1 and hosts[0] in self.server.allowed_origins
+    def valid_origin(self)->bool:
+        origins=self.headers.get_all("Origin",[])
+        return (self.valid_host() and len(origins)==1 and
+                origins[0]==self.server.allowed_origins[self.headers["Host"]])
     def do_GET(self)->None:
         if not self.valid_host():self.send_data(403,b"local host required","text/plain");return
         path=urlsplit(self.path).path
@@ -295,7 +313,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(400,{"error":"无法读取模型或证据"})
     def do_POST(self)->None:
         path=urlsplit(self.path).path
-        if not self.valid_host() or self.headers.get("Origin")!=f"http://127.0.0.1:{self.server.server_port}" or not secrets.compare_digest(self.headers.get("X-WorldState-Token",""),self.server.token):
+        if not self.valid_origin() or not secrets.compare_digest(self.headers.get("X-WorldState-Token",""),self.server.token):
             self.send_data(403,b"local origin and session token required","text/plain");return
         try:
             size=int(self.headers.get("Content-Length","0"))
@@ -1039,10 +1057,12 @@ def main()->int:
     parser.add_argument("--point-cloud",type=Path,help="Optional explicitly selected metre-coordinate NPY XYZ; alignment is not assumed")
     parser.add_argument("--vision-model",type=Path,help="Local supported UperNet ONNX model; no download is performed")
     parser.add_argument("--warm-vision",action="store_true",help="Load the configured CPU vision model before accepting requests")
+    parser.add_argument("--trusted-origin",action="append",default=[],metavar="HTTPS_ORIGIN",
+                        help="Explicit HTTPS origin permitted through a trusted local reverse proxy (repeatable)")
     parser.add_argument("--port",type=int,default=8766)
     args=parser.parse_args()
     if args.warm_vision and args.vision_model is None:parser.error("--warm-vision requires --vision-model")
-    server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud,args.vision_model)
+    server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud,args.vision_model,tuple(args.trusted_origin))
     if args.warm_vision:
         from .semantic_vision import UperNetOnnxProvider
         server.vision_provider=UperNetOnnxProvider(server.vision_model)

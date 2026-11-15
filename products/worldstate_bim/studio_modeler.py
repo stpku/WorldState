@@ -257,10 +257,12 @@ def post(handler, path: str, body: dict) -> bool:
         server.record('modeler_correspondence_decision',operator=operator,decision=decision,
                       suggestion=copy.deepcopy(suggestion),previous=previous)
         handler.send_json(200,{'state':state});return True
-    elif path=='/api/modeler/solve':
+    elif path in {'/api/modeler/solve','/api/modeler/preview-solve'}:
         settings=body.get('sensitivity')
         if settings is not None and not isinstance(settings,dict):raise ValueError('敏感性配置无效')
         solution=solve_modeler(_data(state),sensitivity=settings)
+        if path=='/api/modeler/preview-solve':
+            handler.send_json(200,{'solution':solution,'state_revision':state['revision'],'persisted':False});return True
         state['solution']=solution;state['revision']+=1
         server.record('modeler_solved',operator=_operator(handler),objects=len(solution['objects']),
                       state_revision=state['revision'],point_rms_px=solution['optimization']['point_rms_px'])

@@ -53,6 +53,44 @@ def test_real_ifc_geometry_and_versioned_edits(server):
     assert api(server,"/api/revise",request,authorized=False)[0]==403
 
 
+def test_explicit_https_origin_preserves_host_origin_pair_and_token_checks(tmp_path):
+    """Only the configured HTTPS host and matching origin may use the proxy."""
+    import http.client
+    trusted='https://studio.example.ts.net:18790'
+    instance=StudioServer(0,ROOT,tmp_path/'proxy',trusted_origins=(trusted,))
+    thread=threading.Thread(target=instance.serve_forever,daemon=True);thread.start()
+    try:
+        local=f'127.0.0.1:{instance.server_port}'
+        def request(method, host, origin=None, token=None):
+            conn=http.client.HTTPConnection('127.0.0.1',instance.server_port,timeout=10)
+            headers={'Host':host}
+            if origin is not None:headers['Origin']=origin
+            if token is not None:headers['X-WorldState-Token']=token
+            conn.request(method,'/api/does-not-exist',body='{}' if method=='POST' else None,headers=headers)
+            response=conn.getresponse();response.read();status=response.status;conn.close();return status
+        assert request('GET','studio.example.ts.net:18790')==404
+        assert request('GET','other.example.ts.net:18790')==403
+        assert request('POST','studio.example.ts.net:18790',trusted,instance.token)==404
+        assert request('POST','studio.example.ts.net:18790','https://attacker.example:18790',instance.token)==403
+        assert request('POST','studio.example.ts.net:18790',f'http://{local}',instance.token)==403
+        assert request('POST',local,trusted,instance.token)==403
+        assert request('POST','studio.example.ts.net:18790',trusted,'incorrect')==403
+        assert request('POST',local,f'http://{local}',instance.token)==404
+        assert request('POST','studio.example.ts.net:18790',None,instance.token)==403
+    finally:
+        instance.shutdown();instance.server_close();thread.join()
+
+
+@pytest.mark.parametrize('origin',[
+    'http://studio.example.ts.net:18790','https://*.example.ts.net:18790',
+    'https://studio.example.ts.net','https://studio.example.ts.net:18790/path',
+    'https://studio.example.ts.net:18790.evil.test','https://user@studio.example.ts.net:18790',
+])
+def test_trusted_origins_reject_inexact_or_non_https_values(origin, tmp_path):
+    with pytest.raises(ValueError,match='exact HTTPS DNS origin'):
+        StudioServer(0,ROOT,tmp_path/'invalid',trusted_origins=(origin,))
+
+
 def test_upload_is_validated_and_explicitly_unassociated(server):
     image=Image.new("RGB",(3,3),"white");buffer=io.BytesIO();image.save(buffer,format="PNG")
     payload={"data_base64":base64.b64encode(buffer.getvalue()).decode()}
