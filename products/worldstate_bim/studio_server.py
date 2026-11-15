@@ -1038,8 +1038,15 @@ def main()->int:
     parser.add_argument("--workspace",type=Path,required=True)
     parser.add_argument("--point-cloud",type=Path,help="Optional explicitly selected metre-coordinate NPY XYZ; alignment is not assumed")
     parser.add_argument("--vision-model",type=Path,help="Local supported UperNet ONNX model; no download is performed")
+    parser.add_argument("--warm-vision",action="store_true",help="Load the configured CPU vision model before accepting requests")
     parser.add_argument("--port",type=int,default=8766)
-    args=parser.parse_args();server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud,args.vision_model)
+    args=parser.parse_args()
+    if args.warm_vision and args.vision_model is None:parser.error("--warm-vision requires --vision-model")
+    server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud,args.vision_model)
+    if args.warm_vision:
+        from .semantic_vision import UperNetOnnxProvider
+        server.vision_provider=UperNetOnnxProvider(server.vision_model)
+        print("Vision provider loaded on CPU",flush=True)
     print(f"WorldState Studio: http://127.0.0.1:{server.server_port}/",flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass

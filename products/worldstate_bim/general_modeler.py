@@ -277,6 +277,57 @@ def _solve_edge_to_line(data: dict, cameras: dict, objects: dict, groups: dict, 
             'Reprojection residual is not independent geometric accuracy.']}
 
 
+def _check_overlapping_surfaces(objects: list[dict]) -> None:
+    """Fail closed on invalid polygons and likely duplicate visible patches."""
+    from shapely.geometry import Polygon
+    polygons={};points={};diameters={}
+    for obj in objects:
+        ident=obj['id'];xyz=np.asarray([v['xyz_source'] for v in obj['vertices']],dtype=float)
+        normal,offset,_=_plane(xyz);axis=np.eye(3)[int(np.argmin(np.abs(normal)))]
+        x=axis-normal*(axis@normal);x/=np.linalg.norm(x);y=np.cross(normal,x)
+        polygon=Polygon([(float(p@x),float(p@y)) for p in xyz])
+        if not polygon.is_valid or polygon.area<1e-12:raise ValueError(f'{ident}: visible boundary is invalid or self-intersecting')
+        polygons[ident]=(normal,offset,x,y,polygon);points[ident]=xyz
+        diameters[ident]=max(float(np.linalg.norm(a-b)) for a in xyz for b in xyz)
+    names=list(polygons)
+    for i,a in enumerate(names):
+        for b in names[i+1:]:
+            normal,offset,x,y,first=polygons[a];other=polygons[b][0]
+            if abs(float(normal@other))<math.cos(math.radians(3)):continue
+            if max(abs(float(p@normal+offset)) for p in points[b])>min(diameters[a],diameters[b])*.02:continue
+            second=Polygon([(float(p@x),float(p@y)) for p in points[b]])
+            if second.is_valid and first.intersection(second).area/min(first.area,second.area)>.5:
+                raise ValueError(f'{a} and {b}: overlapping coplanar surfaces may be duplicates; review association')
+
+
+def _solve_mixed_independently(data: dict, objects: dict, sensitivity: dict | None) -> dict:
+    """Keep separately solved patches in one camera frame, without inventing joins."""
+    if data.get('object_constraints'):
+        raise ValueError('mixed edge-to-line objects do not yet support cross-object constraints')
+    results=[]
+    for ident,obj in objects.items():
+        subset={**data,'objects':[obj],
+                'observations':[o for o in data['observations'] if o['object_id']==ident],
+                'object_constraints':[]}
+        results.append(solve_modeler(subset,sensitivity=sensitivity))
+    candidates=[obj for result in results for obj in result['objects']]
+    _check_overlapping_surfaces(candidates)
+    weights=[max(1,len(obj['observations'])) for obj in candidates]
+    rms=math.sqrt(sum(w*r['optimization']['point_rms_px']**2 for w,r in zip(weights,results))/sum(weights))
+    return {'schema':'worldstate-bim-modeler-solution/0.1','input_sha256':digest(data),'objects':candidates,
+        'camera_mode':data.get('camera_mode','UNSPECIFIED'),'source_coordinate_system':data.get('coordinate_system',{}),
+        'optimization':{'method':'independent per-object solves in the same registered camera frame',
+            'point_rms_px':rms,'point_max_px':max(r['optimization']['point_max_px'] for r in results),
+            'metric_scope':'weighted per-object point/line consistency; not a joint optimization',
+            'per_object':[{'id':obj['id'],'optimization':result['optimization']} for obj,result in zip(candidates,results)]},
+        'sensitivity':{'status':'PER_OBJECT_WHAT_IF_ONLY_NOT_CALIBRATED',
+            'objects':[{'id':obj['id'],'result':result['sensitivity']} for obj,result in zip(candidates,results)]},
+        'status':'UNVERIFIED_VISIBLE_SURFACE_CANDIDATE',
+        'limitations':['Objects were solved independently; common cameras do not prove a connection.',
+            'No shared topology, room closure, physical wall identity or metric accuracy is inferred.',
+            'Individual point and line metrics do not establish engineering accuracy.']}
+
+
 def solve_modeler(data: dict, *, sensitivity: dict | None = None) -> dict:
     """Solve general planar wall polygons jointly from version-bound pixels.
 
@@ -285,7 +336,8 @@ def solve_modeler(data: dict, *, sensitivity: dict | None = None) -> dict:
     """
     cameras,objects,groups,lines=_validate(data);constraints=_constraint_data(data,objects)
     if any(obj.get('construction',{}).get('kind')=='edge_to_line' for obj in objects.values()):
-        return _solve_edge_to_line(data,cameras,objects,groups,lines,sensitivity)
+        return (_solve_edge_to_line(data,cameras,objects,groups,lines,sensitivity) if len(objects)==1
+                else _solve_mixed_independently(data,objects,sensitivity))
     keys=list(groups);index={key:i for i,key in enumerate(keys)};initial=[];triangulated={}
     for key in keys:
         result=triangulate_observations(list(cameras.values()),groups[key]);initial.extend(result['xyz']);triangulated[key]=result
@@ -352,25 +404,7 @@ def solve_modeler(data: dict, *, sensitivity: dict | None = None) -> dict:
             'observations':observations,'projections':projections,'scale_status':'UNKNOWN',
             'unknown':['physical wall identity unconfirmed','occluded and complete boundaries','wall thickness',
                        'metric scale','camera and spatial uncertainty not calibrated']})
-    # Refuse ambiguous overlapping patches rather than counting one physical
-    # surface twice. Adjacent coplanar patches with disjoint support remain.
-    from shapely.geometry import Polygon
-    polygons={}
-    for ident,ids in slices.items():
-        normal,offset,_=_plane(points[ids]);axis=np.eye(3)[int(np.argmin(np.abs(normal)))]
-        x=axis-normal*(axis@normal);x/=np.linalg.norm(x);y=np.cross(normal,x)
-        polygon=Polygon([(float(p@x),float(p@y)) for p in points[ids]])
-        if not polygon.is_valid or polygon.area<1e-12:raise ValueError(f'{ident}: visible boundary is invalid or self-intersecting')
-        polygons[ident]=(normal,offset,x,y,polygon)
-    names=list(objects)
-    for i,a in enumerate(names):
-        for b in names[i+1:]:
-            normal,offset,x,y,first=polygons[a];other=polygons[b][0]
-            if abs(float(normal@other))<math.cos(math.radians(3)):continue
-            if max(abs(float(points[j]@normal+offset)) for j in slices[b])>min(diameters[a],diameters[b])*.02:continue
-            second=Polygon([(float(points[j]@x),float(points[j]@y)) for j in slices[b]])
-            if second.is_valid and first.intersection(second).area/min(first.area,second.area)>.5:
-                raise ValueError(f'{a} and {b}: overlapping coplanar surfaces may be duplicates; review association')
+    _check_overlapping_surfaces(output)
     for c in constraints:
         na,da,_=_plane(points[slices[c['a']]]);nb,db,_=_plane(points[slices[c['b']]])
         angular=abs(float(na@nb));kind=c['kind'];limit=math.sin(math.radians(3))

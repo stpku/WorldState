@@ -77,5 +77,18 @@ def test_studio_creates_new_surface_from_uploaded_photos_and_versioned_points(tm
         status,error=api(server,'/api/modeler/commit',body);assert status==400 and '重新绑定' in error['error']
         anchor['endpoints']=anchor_endpoints(state);status,response=api(server,'/api/modeler/commit',body);assert status==201
         assert response['model']['revision']==2 and api(server,'/api/export/model.ifc')[0]==200
+        state=response['state']
+        status,response=api(server,'/api/modeler/discard-unsaved-object',{'state_revision':state['revision'],'object_id':'west'})
+        assert status==400 and '已保存' in response['error']
+        status,response=api(server,'/api/modeler/object',{'state_revision':state['revision'],'id':'abandoned','vertices':4})
+        assert status==201;state=response['state']
+        status,response=api(server,'/api/modeler/point',{'state_revision':state['revision'],'object_id':'abandoned',
+            'image_id':1,'feature_id':'p1','pixel_xy':[12.,34.],'sigma_px':2.})
+        assert status==201;state=response['state']
+        status,response=api(server,'/api/modeler/discard-unsaved-object',{'state_revision':state['revision'],'object_id':'abandoned'})
+        assert status==200 and [o['id'] for o in response['state']['objects']]==['west']
+        event=server.project['events'][-1]
+        assert event['action']=='modeler_unsaved_candidate_discarded' and event['observations'][0]['pixel_xy']==[12.,34.]
+        assert api(server,'/api/export/model.ifc')[0]==409
     finally:
         server.shutdown();server.server_close();thread.join()

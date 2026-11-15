@@ -95,6 +95,20 @@ def post(handler, path: str, body: dict) -> bool:
     state=_state(handler)
     if body.get('state_revision')!=state['revision']:
         handler.send_json(409,{'error':'建模观测已更新，请刷新后重试'});return True
+    if path=='/api/modeler/discard-unsaved-object':
+        ident=body.get('object_id');obj=next((o for o in state['objects'] if o['id']==ident),None)
+        if not obj:raise ValueError('请选择现有候选')
+        if server.model and any(e.get('id')==ident for e in server.model.get('elements',[])):
+            raise ValueError('已保存的构件不能通过放弃候选移除')
+        removed_observations=[o for o in state['observations'] if o['object_id']==ident]
+        removed_constraints=[c for c in state['object_constraints'] if ident in (c.get('a'),c.get('b'))]
+        state['objects']=[o for o in state['objects'] if o['id']!=ident]
+        state['observations']=[o for o in state['observations'] if o['object_id']!=ident]
+        state['object_constraints']=[c for c in state['object_constraints'] if ident not in (c.get('a'),c.get('b'))]
+        state['solution']=None;state['model_dirty']=True;state['suggestions']=[];state['revision']+=1
+        server.record('modeler_unsaved_candidate_discarded',operator=_operator(handler),object=copy.deepcopy(obj),
+                      observations=copy.deepcopy(removed_observations),constraints=copy.deepcopy(removed_constraints))
+        handler.send_json(200,{'state':state});return True
     if path=='/api/modeler/object':
         ident=body.get('id');count=body.get('vertices')
         if not isinstance(ident,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,64}',ident):raise ValueError('构件 ID 只允许字母、数字、下划线和短横线')

@@ -126,6 +126,38 @@ def test_generic_edge_to_line_marks_inferred_vertices_and_preserves_evidence(tmp
     assert export_room(model,tmp_path/'model.ifc').is_file()
 
 
+def test_existing_edge_patch_and_new_polygon_share_frame_without_implied_topology():
+    from products.worldstate_bim.tests.test_model_first import scene
+    legacy,_=scene();cameras={c['image_id']:c for c in legacy['cameras']};observations=[]
+    for old,new in (('left_top','p1'),('right_top','p2'),('right_bottom','p5')):
+        for o in legacy['corners'][old]:
+            observations.append({**o,'kind':'point','object_id':'existing','feature_id':new,
+                'camera_sha256':camera_digest(cameras[o['image_id']]),'origin':'automation',
+                'confirmation':'automation_unverified','visibility':'visible','sigma_px':1.,'created_at':'test'})
+    for o in legacy['ceiling_lines']:
+        observations.append({**o,'kind':'line','object_id':'existing','feature_ids':['p3','p4'],
+            'camera_sha256':camera_digest(cameras[o['image_id']]),'origin':'automation',
+            'confirmation':'automation_unverified','visibility':'visible','sigma_px':1.,'created_at':'test'})
+    polygon=[np.array(p)+np.array([.3,0.,0.]) for p in ([.5,.5,5.],[.5,.5,6.],[.5,-.5,6.],[.5,-.5,5.])]
+    for vertex,point in zip(['a','b','c','d'],polygon):
+        for cam in cameras.values():
+            observations.append({'kind':'point','object_id':'new','feature_id':vertex,'image_id':cam['image_id'],
+                'photo_sha256':cam['sha256'],'camera_sha256':camera_digest(cam),'pixel_xy':_project(point,cam).tolist(),
+                'origin':'automation','confirmation':'automation_unverified','visibility':'visible','sigma_px':1.,'created_at':'test'})
+    data={'schema':SCHEMA_INPUT,'camera_mode':'test','coordinate_system':{'scale_status':'UNKNOWN'},
+        'source_reconstruction':[],'cameras':legacy['cameras'],'objects':[
+            {'id':'existing','ifc_type':'IfcWall','vertices':['p1','p2','p3','p4'],'surface_kind':'visible_surface_patch',
+             'construction':{'kind':'edge_to_line','direction_feature':'p5'}},
+            {'id':'new','ifc_type':'IfcWall','vertices':['a','b','c','d'],'surface_kind':'visible_surface_patch'}],
+        'observations':observations,'object_constraints':[]}
+    solution=solve_modeler(data)
+    assert {o['id'] for o in solution['objects']}=={'existing','new'}
+    assert 'independent per-object' in solution['optimization']['method']
+    model=build_room_ir(data,solution,project_id='mixed',scale={'basis':'assumed','metres_per_source_unit':1.},
+                        thickness_m=.1,up_source=[0,-1,0],allow_rectangular_approximation=True)
+    assert len(model['elements'])==2 and model['constraints']==[]
+
+
 def test_existing_multiview_metric_anchor_is_actually_applied():
     data=fixture();data['objects']=data['objects'][:1];data['observations']=[o for o in data['observations'] if o['object_id']=='west']
     solution=solve_modeler(data)
