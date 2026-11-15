@@ -6,14 +6,14 @@ async function main(){
   if(target.protocol!=='https:'||target.username||target.password||target.pathname!=='/'||target.search||target.hash||!output||fs.existsSync(output))
     throw Error('expected an HTTPS origin and a new output directory');
   fs.mkdirSync(output,{recursive:true});
-  const browser=await chromium.launch({headless:true,executablePath:process.env.WS_CHROMIUM||'/usr/bin/chromium',args:['--no-sandbox','--no-proxy-server']});
-  const context=await browser.newContext({viewport:{width:1500,height:1000},userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'});
+  const browser=await chromium.launch({headless:true,executablePath:process.env.WS_CHROMIUM||'/usr/bin/chromium',args:['--no-sandbox','--no-proxy-server','--enable-unsafe-swiftshader']});
+  const context=await browser.newContext({viewport:{width:1440,height:900},userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'});
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
   try{
     const response=await page.goto(target.origin+'/modeler',{waitUntil:'domcontentloaded',timeout:60000});
     if(response.status()!==200)throw Error('modeler HTTP '+response.status());
     await page.waitForFunction(()=>document.querySelector('#view-a').options.length>=2&&document.querySelector('#view-b').options.length>=2,null,{timeout:60000});
-    await page.waitForFunction(()=>['canvas-a','canvas-b'].every(id=>document.getElementById(id).toDataURL('image/jpeg').length>12000),null,{timeout:60000});
+    await page.waitForFunction(()=>['canvas-a','canvas-b'].every(id=>document.getElementById(id).dataset.imageId)&&document.querySelector('#viewer canvas')&&document.getElementById('viewer-fallback').hidden,null,{timeout:60000});
     const result=await page.evaluate(async()=>{
       const before=await(await fetch('/api/modeler/state')).json();
       const projectBefore=await(await fetch('/api/project')).json();
@@ -21,6 +21,7 @@ async function main(){
       const photo=before.uploads.find(u=>u.sha256===camera.sha256);
       const preview=await fetch('/api/photo-preview/'+encodeURIComponent(photo.id));
       const previewBytes=(await preview.arrayBuffer()).byteLength;
+      const token=document.querySelector('meta[name="worldstate-token"]').content;
       const solved=await fetch('/api/modeler/preview-solve',{method:'POST',headers:{'Content-Type':'application/json','X-WorldState-Token':token},body:JSON.stringify({state_revision:before.state.revision})});
       const solution=await solved.json();
       const after=await(await fetch('/api/modeler/state')).json();
@@ -40,7 +41,7 @@ async function main(){
     const bytes=Buffer.from(result.ifcData);delete result.ifcData;
     if(!bytes.subarray(0,12).toString().startsWith('ISO-10303-21'))throw Error('IFC header mismatch');
     fs.writeFileSync(path.join(output,'download.ifc'),bytes);result.ifc_bytes=bytes.length;result.ifc_sha256=crypto.createHash('sha256').update(bytes).digest('hex');
-    await page.locator('.views').screenshot({path:path.join(output,'views.png')});
+    await page.screenshot({path:path.join(output,'workbench-1440.png')});
     result.status='PASS_SERVER_SIDE_WINDOWS_UA';result.browser_os='Linux; Windows user agent only';result.tls='verified by Chromium';result.errors=errors;
     fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
   }finally{await browser.close()}

@@ -27,6 +27,14 @@ from .room_sync import _verify_geometry
 from .photo_room import ANNOTATION_KINDS, build_photo_room
 from .photo_scale import bind_scale
 
+_ASSETS={
+    '/assets/workbench.css':('workbench.css','text/css; charset=utf-8'),
+    '/assets/workbench.js':('workbench.js','text/javascript; charset=utf-8'),
+    '/assets/workbench_viewer.js':('workbench_viewer.js','text/javascript; charset=utf-8'),
+    '/assets/three.module.js':('vendor/three-r128/three.module.js','text/javascript; charset=utf-8'),
+    '/assets/OrbitControls.js':('vendor/three-r128/OrbitControls.js','text/javascript; charset=utf-8'),
+}
+
 
 def _write_json(path: Path, value: dict) -> None:
     """Atomically persist product state without following a destination symlink."""
@@ -43,13 +51,13 @@ def _write_json(path: Path, value: dict) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def _photo_preview(path: Path, width: int, height: int) -> bytes:
+def _photo_preview(path: Path, width: int, height: int, max_size: int = 1600) -> bytes:
     """Create a bounded local preview while preserving original pixel metadata."""
     from PIL import Image
     with Image.open(path) as image:
         if image.size != (width,height):raise ValueError('照片尺寸与原始记录不一致')
-        image.draft('RGB',(1600,1600))
-        image.thumbnail((1600,1600),Image.Resampling.LANCZOS)
+        image.draft('RGB',(max_size,max_size))
+        image.thumbnail((max_size,max_size),Image.Resampling.LANCZOS)
         output=io.BytesIO();image.convert('RGB').save(output,format='JPEG',quality=85)
         return output.getvalue()
 
@@ -65,6 +73,7 @@ def _trusted_https_origin(value: str) -> tuple[str, str]:
 
 class StudioServer(ThreadingHTTPServer):
     """Serve an explicitly selected room project on loopback only."""
+    request_queue_size=64
     def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None, vision_model: Path | None = None,
                  trusted_origins: tuple[str, ...] = ()):
         trusted=dict(_trusted_https_origin(origin) for origin in trusted_origins)
@@ -97,7 +106,7 @@ class StudioServer(ThreadingHTTPServer):
             with tempfile.TemporaryDirectory(prefix="worldstate-studio-") as temp:
                 expected=Path(temp)/"model.ifc";export_room(self.model,expected)
                 _verify_geometry(ifcopenshell.open(str(expected)),ifcopenshell.open(str(self.model_dir/"model.ifc")))
-        self.lock=threading.Lock();self.token=secrets.token_urlsafe(24)
+        self.lock=threading.Lock();self.photo_io=threading.BoundedSemaphore(2);self.token=secrets.token_urlsafe(24)
         self.vision_model=vision_model.resolve(strict=True) if vision_model is not None else None
         self.vision_provider=None
         self.cloud=None
@@ -201,14 +210,47 @@ class Handler(BaseHTTPRequestHandler):
         origins=self.headers.get_all("Origin",[])
         return (self.valid_host() and len(origins)==1 and
                 origins[0]==self.server.allowed_origins[self.headers["Host"]])
+    def serve_photo(self,path: str)->None:
+        """Serve hash-checked evidence without holding the project mutation lock."""
+        ident=path.rsplit('/',1)[-1]
+        with self.server.lock:
+            item=next((copy.deepcopy(x) for x in self.server.uploaded if x['id']==ident),None)
+        if not item:self.send_data(404,b"not found","text/plain");return
+        filename=self.server.uploads/(item['sha256']+item['extension'])
+        with self.server.photo_io:
+            if filename.is_symlink() or not filename.is_file():raise ValueError('照片路径不可用')
+            with filename.open('rb') as stream:
+                if hashlib.file_digest(stream,'sha256').hexdigest()!=item['sha256']:raise ValueError('照片哈希不符')
+            if path.startswith('/api/photo-crop/'):
+                query=parse_qs(urlsplit(self.path).query);cx=int(query['x'][0]);cy=int(query['y'][0]);size=200
+                if not (0<=cx<item['width'] and 0<=cy<item['height']):raise ValueError('放大位置无效')
+                x=max(0,min(item['width']-size,cx-size//2));y=max(0,min(item['height']-size,cy-size//2))
+                from PIL import Image
+                with Image.open(filename) as image:
+                    if image.size!=(item['width'],item['height']):raise ValueError('照片尺寸已改变')
+                    crop=image.crop((x,y,min(x+size,item['width']),min(y+size,item['height']))).convert('RGB')
+                    result=io.BytesIO();crop.save(result,format='PNG');data=result.getvalue()
+                mime='image/png'
+            elif path.startswith('/api/photo-thumbnail/'):
+                data=_photo_preview(filename,item['width'],item['height'],240);mime='image/jpeg'
+            elif path.startswith('/api/photo-preview/'):
+                data=_photo_preview(filename,item['width'],item['height']);mime='image/jpeg'
+            else:
+                data=filename.read_bytes();mime=item['mime']
+        self.send_data(200,data,mime)
     def do_GET(self)->None:
         if not self.valid_host():self.send_data(403,b"local host required","text/plain");return
         path=urlsplit(self.path).path
         try:
+            if path in _ASSETS:
+                filename,mime=_ASSETS[path];self.send_data(200,(Path(__file__).parent/filename).read_bytes(),mime);return
+            if path.startswith(('/api/photo-crop/','/api/photo-preview/','/api/photo-thumbnail/','/api/photo/')):
+                self.serve_photo(path);return
             with self.server.lock:
-                if path in {"/", "/builder", "/modeler"}:
-                    filename=("general_modeler.html" if path=="/modeler" else
-                              "photo_studio.html" if path=="/builder" or self.server.model is None else "studio.html")
+                if path in {"/", "/builder", "/modeler", "/legacy-studio", "/legacy-modeler"}:
+                    filename=("photo_studio.html" if path=="/builder" else
+                              "studio.html" if path=="/legacy-studio" else
+                              "general_modeler.html" if path=="/legacy-modeler" else "workbench.html")
                     page=Path(__file__).with_name(filename).read_text().replace("__WS_TOKEN__",self.server.token)
                     self.send_data(200,page.encode(),"text/html; charset=utf-8")
                 elif path=="/api/project":self.send_json(200,{"project":self.server.project,"uploads":self.server.uploaded,
@@ -275,41 +317,10 @@ class Handler(BaseHTTPRequestHandler):
                     raw=filename.read_bytes()
                     if hashlib.sha256(raw).hexdigest()!=run.get("overlay_sha256"):raise ValueError("视觉叠加图哈希不符")
                     self.send_data(200,raw,"image/png")
-                elif path.startswith("/api/photo-crop/"):
-                    ident=path.rsplit("/",1)[-1]
-                    item=next((x for x in self.server.uploaded if x['id']==ident),None)
-                    if not item:raise ValueError('照片不可用')
-                    filename=self.server.uploads/(item['sha256']+item['extension'])
-                    if filename.is_symlink() or not filename.is_file():raise ValueError('照片路径不可用')
-                    with filename.open('rb') as stream:
-                        if hashlib.file_digest(stream,'sha256').hexdigest()!=item['sha256']:raise ValueError('照片哈希不符')
-                    query=parse_qs(urlsplit(self.path).query);cx=int(query['x'][0]);cy=int(query['y'][0]);size=200
-                    if not (0<=cx<item['width'] and 0<=cy<item['height']):raise ValueError('放大位置无效')
-                    x=max(0,min(item['width']-size,cx-size//2));y=max(0,min(item['height']-size,cy-size//2))
-                    from PIL import Image
-                    with Image.open(filename) as image:
-                        if image.size!=(item['width'],item['height']):raise ValueError('照片尺寸已改变')
-                        crop=image.convert('RGB').crop((x,y,min(x+size,item['width']),min(y+size,item['height'])))
-                        result=io.BytesIO();crop.save(result,format='PNG')
-                    self.send_data(200,result.getvalue(),'image/png')
-                elif path.startswith("/api/photo-preview/"):
-                    ident=path.rsplit("/",1)[-1]
-                    item=next((x for x in self.server.uploaded if x["id"]==ident),None)
-                    if not item:self.send_data(404,b"not found","text/plain");return
-                    filename=self.server.uploads/(item["sha256"]+item["extension"])
-                    if filename.is_symlink() or not filename.is_file() or hashlib.sha256(filename.read_bytes()).hexdigest()!=item["sha256"]:
-                        self.send_data(404,b"evidence unavailable","text/plain");return
-                    self.send_data(200,_photo_preview(filename,item['width'],item['height']),"image/jpeg")
-                elif path.startswith("/api/photo/"):
-                    ident=path.rsplit("/",1)[-1]
-                    item=next((x for x in self.server.uploaded if x["id"]==ident),None)
-                    if not item:self.send_data(404,b"not found","text/plain");return
-                    filename=self.server.uploads/(item["sha256"]+item["extension"])
-                    if filename.is_symlink() or not filename.is_file() or hashlib.sha256(filename.read_bytes()).hexdigest()!=item["sha256"]:
-                        self.send_data(404,b"evidence unavailable","text/plain");return
-                    self.send_data(200,filename.read_bytes(),item["mime"])
                 else:self.send_data(404,b"not found","text/plain")
-        except (ValueError,KeyError,RuntimeError,FileNotFoundError):
+        except (BrokenPipeError,ConnectionResetError):
+            return
+        except (ValueError,KeyError,RuntimeError,OSError):
             self.send_json(400,{"error":"无法读取模型或证据"})
     def do_POST(self)->None:
         path=urlsplit(self.path).path

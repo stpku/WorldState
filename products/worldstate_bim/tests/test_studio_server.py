@@ -53,6 +53,15 @@ def test_real_ifc_geometry_and_versioned_edits(server):
     assert api(server,"/api/revise",request,authorized=False)[0]==403
 
 
+def test_studio_and_modeler_share_workbench_with_allowlisted_assets(server):
+    home=api(server,'/');modeler=api(server,'/modeler')
+    assert home[0]==modeler[0]==200 and home[1]==modeler[1]
+    assert b'/assets/workbench.js' in home[1]
+    assert api(server,'/assets/workbench.js')[0]==200
+    assert api(server,'/assets/three.module.js')[0]==200
+    assert api(server,'/assets/../../studio_server.py')[0]==404
+
+
 def test_explicit_https_origin_preserves_host_origin_pair_and_token_checks(tmp_path):
     """Only the configured HTTPS host and matching origin may use the proxy."""
     import http.client
@@ -98,6 +107,8 @@ def test_upload_is_validated_and_explicitly_unassociated(server):
     assert status==201 and item["status"]=="unassociated" and item["captured_at"]=="UNKNOWN"
     assert api(server,"/api/photo/"+item["id"])[0]==200
     assert api(server,"/api/upload",{"data_base64":base64.b64encode(b"invalid").decode()})[0]==400
+    (server.uploads/(item['sha256']+item['extension'])).write_bytes(b'tampered')
+    assert api(server,'/api/photo-preview/'+item['id'])[0]==400
 
 
 def test_large_photo_preview_is_bounded_without_changing_source_dimensions(server):
@@ -107,10 +118,32 @@ def test_large_photo_preview_is_bounded_without_changing_source_dimensions(serve
     assert status==201 and (item['width'],item['height'])==(3200,1600)
     status,preview=api(server,'/api/photo-preview/'+item['id']);assert status==200
     with Image.open(io.BytesIO(preview)) as small:assert small.size==(1600,800)
+    status,thumbnail=api(server,'/api/photo-thumbnail/'+item['id']);assert status==200
+    with Image.open(io.BytesIO(thumbnail)) as small:assert small.size==(240,120)
     status,crop=api(server,'/api/photo-crop/'+item['id']+'?x=100&y=200');assert status==200
     with Image.open(io.BytesIO(crop)) as detail:assert detail.size==(200,200)
     status,original=api(server,'/api/photo/'+item['id']);assert status==200
     with Image.open(io.BytesIO(original)) as source:assert source.size==(3200,1600)
+
+
+def test_slow_photo_preview_does_not_block_project_reads(server,monkeypatch):
+    """Large photo decoding must not hold the shared project mutation lock."""
+    from concurrent.futures import ThreadPoolExecutor
+    import products.worldstate_bim.studio_server as studio
+    image=Image.new('RGB',(640,480),'white');buffer=io.BytesIO();image.save(buffer,format='JPEG')
+    status,item=api(server,'/api/upload',{'data_base64':base64.b64encode(buffer.getvalue()).decode()});assert status==201
+    started=threading.Event();release=threading.Event();original=studio._photo_preview
+    def slow(path,width,height):
+        started.set();assert release.wait(5);return original(path,width,height)
+    monkeypatch.setattr(studio,'_photo_preview',slow)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        preview=pool.submit(api,server,'/api/photo-preview/'+item['id'])
+        try:
+            assert started.wait(3)
+            model=pool.submit(api,server,'/api/model')
+            assert model.result(timeout=2)[0]==200
+        finally:release.set()
+        assert preview.result(timeout=5)[0]==200
 
 
 def test_local_rule_is_explicit_and_bounded(server):
