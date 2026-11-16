@@ -321,6 +321,19 @@ def revise_element(model: dict[str, Any], element_id: str, attribute: str, value
             # list so a local edit cannot contaminate unrelated provenance.
             nodes[node_id]["evidence_refs"] = nodes[node_id]["evidence_refs"] + [ref]
         before, after = old, float(value)
+    elif kind == "IfcWall" and attribute in {"position_x", "position_y"}:
+        axis = attribute[-1]
+        a, b = nodes[element["start"]], nodes[element["end"]]
+        if a.get(axis) is None or b.get(axis) is None:
+            raise ValueError("wall position is unknown")
+        before = a[axis]
+        delta = float(value) - before
+        for node in (a, b):
+            node[axis] += delta
+            node["status"] = status
+            node["evidence_refs"] = node["evidence_refs"] + [ref]
+            changed_nodes.add(node["id"])
+        after = float(value)
     else:
         if attribute not in DIMENSIONS[kind]:
             raise ValueError("unsupported element parameter")

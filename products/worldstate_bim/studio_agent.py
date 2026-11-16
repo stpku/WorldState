@@ -65,6 +65,20 @@ def status(server) -> dict:
             if not {v['image_id'] for v in item['views']} <= set(job['image_ids']):raise ValueError('unauthorized photo')
             hypotheses.append(item)
         except (ValueError, KeyError, OSError, TypeError):artifact_errors.append(path.stem)
+    observations=[]
+    state=(server.project or {}).get('general_modeler') or {}
+    cameras={c['image_id']:c for c in state.get('cameras',[])}
+    for path in sorted(job['output'].glob('observation-*.json'))[:200]:
+        if not re.fullmatch(r'observation-[0-9a-f]{32}\.json',path.name):continue
+        try:
+            item=read_json(path);camera=cameras.get(item.get('image_id'))
+            if (item.get('origin')!='ai_suggested' or item.get('confirmation')!='proposed' or
+                item.get('image_id') not in job['image_ids'] or not camera or
+                item.get('photo_sha256')!=camera['sha256'] or item.get('camera_sha256')!=camera_digest(camera)):
+                raise ValueError('unauthorized or stale AI observation')
+            item['stale']=state.get('revision')!=job.get('source_revision')
+            observations.append(item)
+        except (ValueError, KeyError, OSError, TypeError):artifact_errors.append(path.stem)
     revisions = []
     for path in sorted(job['output'].glob('revision-proposal-*.json'))[:20]:
         if not re.fullmatch(r'revision-proposal-[0-9a-f]{32}\.json', path.name):continue
@@ -73,7 +87,7 @@ def status(server) -> dict:
             if item.get('status') != 'AI_PROPOSED_UNVERIFIED':raise ValueError('invalid revision proposal')
             revisions.append(item)
         except (ValueError, KeyError, OSError, TypeError):artifact_errors.append(path.stem)
-    public.update(events=events, hypotheses=hypotheses, revision_proposals=revisions,
+    public.update(events=events, hypotheses=hypotheses, observations=observations, revision_proposals=revisions,
                   artifact_errors=artifact_errors);result['job'] = public
     return result
 
@@ -81,17 +95,23 @@ def status(server) -> dict:
 def start(handler, body: dict) -> None:
     server = handler.server;settings = server.agent_settings
     if settings is None:raise ValueError('未配置多模态建模 Agent；当前仍为本地规则模式')
-    if body.get('allow_external_images') is not True:
+    if server.project is None:raise ValueError('请先在隔离工作区打开或创建项目')
+    model_only = body.get('model_only') is True
+    if model_only and body.get('allow_external_model') is not True:
+        raise ValueError('请先明确同意将模型构件信息发送至已配置模型')
+    if not model_only and body.get('allow_external_images') is not True:
         raise ValueError('请先明确同意将选定照片发送至已配置模型')
     goal, images, selected = body.get('goal'), body.get('image_ids'), body.get('selected_id')
     if (not isinstance(goal, str) or not goal.strip() or len(goal) > 1000 or
-        not isinstance(images, list) or not 2 <= len(images) <= 8 or
+        not isinstance(images, list) or not (model_only and not images or 2 <= len(images) <= 8) or
         any(isinstance(i, bool) or not isinstance(i, int) for i in images) or len(set(images)) != len(images)):
         raise ValueError('请输入任务并选择 2–8 张不同的已注册照片')
     state = (server.project or {}).get('general_modeler')
-    if not state or not set(images) <= {c['image_id'] for c in state['cameras']}:
+    if model_only and (images or not server.model):
+        raise ValueError('仅模型模式需要已保存模型，且不能发送照片')
+    if not model_only and (not state or not set(images) <= {c['image_id'] for c in state['cameras']}):
         raise ValueError('所选照片未注册到当前项目')
-    known = {o['id'] for o in state['objects']} | {e['id'] for e in (server.model or {}).get('elements', [])}
+    known = {o['id'] for o in (state or {}).get('objects', [])} | {e['id'] for e in (server.model or {}).get('elements', [])}
     if selected is not None and (not isinstance(selected, str) or selected not in known):
         raise ValueError('选中构件不属于当前项目')
     if server.agent_job and server.agent_job['status'] == 'RUNNING':
@@ -99,7 +119,7 @@ def start(handler, body: dict) -> None:
     ident = 'agent-' + uuid.uuid4().hex
     output = settings['output_root'] / ident
     output.mkdir(mode=0o700)
-    job = {'id': ident, 'status': 'RUNNING', 'source_revision': state['revision'],
+    job = {'id': ident, 'status': 'RUNNING', 'source_revision': state['revision'] if state else 0,
            'image_ids': list(images), 'selected_id': selected, 'output': output, 'result': '', 'candidates': [], 'error': None,
            'started_at': datetime.now(timezone.utc).isoformat()}
     persist_job(server, job)
@@ -110,7 +130,7 @@ def start(handler, body: dict) -> None:
             from .agent_runner import run_codex_agent
             result = run_codex_agent(workspace=server.workspace, output=output, image_ids=images, goal=goal,
                 codex=settings['codex'], node=settings['node'], model=settings['model'],
-                timeout=settings['timeout'], selected_id=selected)
+                timeout=settings['timeout'], selected_id=selected, model_only=model_only)
             with server.lock:
                 job.update(status=result['status'], result=result['result'], candidates=result['candidates'],
                            error=result.get('error'))
@@ -152,7 +172,8 @@ def accept(handler, body: dict) -> None:
             track = tracks.get(observation.get('track_id'))
             match = next((o for o in (track or {}).get('observations', [])
                           if o['image_id'] == observation['image_id']), None)
-            if not match or match['pixel_xy'] != observation.get('pixel_xy'):
+            if (not match or match['pixel_xy'] != observation.get('pixel_xy') or
+                (state.get('track_source') and observation.get('track_source') != state['track_source'])):
                 raise ValueError('候选特征点与已登记轨迹不一致')
         else:
             ref = observation.get('agent_observation_id')
@@ -208,6 +229,16 @@ def accept_revision(handler, body: dict) -> None:
         body.get('revision') != model['revision'] or proposal.get('source_model_revision') != model['revision'] or
         proposal.get('source_model_sha256') != digest(model) or (state and state.get('model_dirty'))):
         raise ValueError('模型或照片观察已改变；请重新生成修改建议')
+    if proposal.get('projection_evidence'):
+        tools=AgentTools(server.workspace,job['output'],'studio-agent',allowed_images=set(job['image_ids']))
+        views=proposal['projection_evidence'].get('views', [])
+        if (not isinstance(views,list) or len(views)<2 or any(not isinstance(v,dict) for v in views) or
+            len({v.get('image_id') for v in views})!=len(views)):
+            raise ValueError('修订缺少独立视角的原始证据')
+        for view in views:
+            camera=tools.camera(view['image_id']);tools.photo(camera)
+            if camera['sha256']!=view['photo_sha256'] or camera_digest(camera)!=view['camera_sha256']:
+                raise ValueError('修订所用照片或相机版本已改变')
     from .modeling_tools import compare_revisions, update_element
     from .room_cli import save_version
     revised, diff = update_element(model, proposal['element_id'], proposal['attribute'], proposal['value'],
@@ -216,6 +247,8 @@ def accept_revision(handler, body: dict) -> None:
     evidence = revised['evidence'][-1]
     evidence.update(kind='agent_proposed_revision', provider=proposal['provider'], proposal_id=ident,
                     confirmation='accepted_unverified')
+    if proposal.get('projection_evidence'):
+        evidence['projection_evidence']=copy.deepcopy(proposal['projection_evidence'])
     target = server.workspace / f"revision-{revised['revision']:03}"
     save_version(revised, target, diff=diff)
     server.model, server.model_dir = revised, target

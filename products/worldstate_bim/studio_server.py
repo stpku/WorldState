@@ -253,6 +253,17 @@ class Handler(BaseHTTPRequestHandler):
                 filename,mime=_ASSETS[path];self.send_data(200,(Path(__file__).parent/filename).read_bytes(),mime);return
             if path.startswith(('/api/photo-crop/','/api/photo-preview/','/api/photo-thumbnail/','/api/photo/')):
                 self.serve_photo(path);return
+            if path == '/api/modeler/recommend-views':
+                query=parse_qs(urlsplit(self.path).query);ident=query.get('object_id', [''])[0]
+                if not ident or len(ident)>128:raise ValueError('请选择对象')
+                with self.server.lock:
+                    state=copy.deepcopy((self.server.project or {}).get('general_modeler'))
+                    uploads=copy.deepcopy(self.server.uploaded)
+                if not state:raise ValueError('请先导入已注册相机')
+                from .view_recommendation import recommend_views
+                with self.server.photo_io:
+                    result=recommend_views(self.server.workspace,state,uploads,ident)
+                self.send_json(200,result);return
             with self.server.lock:
                 if path in {"/", "/builder", "/modeler", "/legacy-studio", "/legacy-modeler"}:
                     filename=("photo_studio.html" if path=="/builder" else

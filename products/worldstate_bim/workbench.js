@@ -9,6 +9,7 @@ let state=null,uploads=[],project=null,model=null,mesh={objects:[],failures:[]},
 let pendingLine=null,pendingZoom=null,zoomSerial=0,viewSerial={a:0,b:0},mutationTail=Promise.resolve(),pendingMutations=0;
 let viewer=null,viewerMode='ifc',viewerSignature='';
 let agentInfo=null,agentTimer=null,agentPollFailures=0;
+let recommendedObject=null;
 const imageCache=new Map();
 let thumbnailObserver=null,thumbnailGeneration=0,thumbnailActive=0,thumbnailQueue=[];
 
@@ -84,7 +85,7 @@ function renderProperties(){
   const attributes=[];
   if(target.ifc_type==='IfcWall'){
     const a=model.nodes.find(n=>n.id===target.start),b=model.nodes.find(n=>n.id===target.end);
-    if(a&&b&&[a.x,a.y,b.x,b.y].every(Number.isFinite))attributes.push(['length','长度',Math.hypot(b.x-a.x,b.y-a.y),'inferred']);
+    if(a&&b&&[a.x,a.y,b.x,b.y].every(Number.isFinite)){attributes.push(['length','长度',Math.hypot(b.x-a.x,b.y-a.y),'inferred']);attributes.push(['position_x','起点 X',a.x,a.status],['position_y','起点 Y',a.y,a.status])}
   }
   const names={height:'高度',thickness:'厚度',base_elevation:'底部标高',offset:'位置',width:'宽度',sill:'底高',panel_thickness:'板厚',elevation:'标高'};
   for(const [key,value] of Object.entries(target.parameters||{}))attributes.push([key,names[key]||key,value.value,value.status]);
@@ -105,7 +106,7 @@ function renderFeatures(){
   $('line-end-label').hidden=$('mark-mode').value!=='line';
 }
 function renderObjectSelect(){const select=$('object');select.replaceChildren();for(const o of state?.objects||[])select.add(new Option(o.id,o.id));if(state?.objects?.some(o=>o.id===selected))select.value=selected;else select.selectedIndex=-1;renderFeatures()}
-function select(id){selected=id;pendingLine=null;cancelZoom();renderTree();renderProperties();renderObjectSelect();viewer?.select(id);renderDimensions();drawPhoto('a');drawPhoto('b');if(!$('evidence-tab').hidden)refreshPhotoRelations()}
+function select(id){if(selected!==id){recommendedObject=null;$('agent-photo-choices').hidden=true}selected=id;pendingLine=null;cancelZoom();renderTree();renderProperties();renderObjectSelect();viewer?.select(id);renderDimensions();drawPhoto('a');drawPhoto('b');if(!$('evidence-tab').hidden)refreshPhotoRelations()}
 function populateViews(){
   const observed=[...new Set((state?.observations||[]).filter(o=>o.object_id===selected).map(o=>String(o.image_id)))];
   for(const side of ['a','b']){const el=$('view-'+side),old=el.value;el.replaceChildren();for(const cam of state?.cameras||[])el.add(new Option(cam.photo,String(cam.image_id)));if([...el.options].some(o=>o.value===old))el.value=old;else{const pick=observed[side==='a'?0:1];if([...el.options].some(o=>o.value===pick))el.value=pick;else if(side==='b'&&el.options.length>1)el.selectedIndex=1}$('frame-'+side).querySelector('.photo-empty').hidden=!!el.options.length}
@@ -124,6 +125,7 @@ async function drawPhoto(side){
   const obj=state?.solution?.objects?.find(o=>o.id===selected),p=obj?.projections?.find(x=>x.image_id===cam.image_id);
   if(p){ctx.beginPath();p.polygon_px.forEach((q,i)=>i?ctx.lineTo(q[0]*sx,q[1]*sy):ctx.moveTo(q[0]*sx,q[1]*sy));ctx.closePath();ctx.strokeStyle='#64e4ce';ctx.lineWidth=3;ctx.stroke()}
   if($('assistant-mode').value==='agent'&&$('agent-hypotheses').value){const h=agentInfo?.job?.hypotheses?.find(x=>x.id===$('agent-hypotheses').value),v=h?.views?.find(x=>x.image_id===cam.image_id&&x.photo_sha256===cam.sha256);if(v){const [x0,y0,x1,y1]=v.bbox_original_px;ctx.save();ctx.setLineDash([10,7]);ctx.strokeStyle='#ffd35c';ctx.lineWidth=3;ctx.strokeRect(x0*sx,y0*sy,(x1-x0)*sx,(y1-y0)*sy);ctx.fillStyle='#ffd35c';ctx.fillText('AI 未确认',x0*sx+4,Math.max(18,y0*sy-5));ctx.restore()}}
+  if($('assistant-mode').value==='agent'){for(const o of agentInfo?.job?.observations||[]){if(o.stale||o.image_id!==cam.image_id||o.photo_sha256!==cam.sha256||($('agent-hypotheses').value&&o.hypothesis_id!==$('agent-hypotheses').value))continue;const pts=o.points_original_px||[];ctx.save();ctx.strokeStyle='#ffd35c';ctx.fillStyle='#ffd35c';ctx.lineWidth=3;ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(x*sx,y*sy):ctx.moveTo(x*sx,y*sy));if(pts.length>1)ctx.stroke();for(const [x,y] of pts){ctx.beginPath();ctx.arc(x*sx,y*sy,5,0,2*Math.PI);ctx.fill()}if(pts.length)ctx.fillText('AI '+(o.feature_ids||[]).join('/')+' 未确认',pts[0][0]*sx+8,pts[0][1]*sy-8);ctx.restore()}}
   $('photo-'+side+'-status').textContent=observations.length?observations.length+' 项观察':'已注册';
 }
 function renderSuggestions(){const root=$('suggestions');root.replaceChildren();for(const item of state?.suggestions||[]){const row=element('div',`照片 ${item.target_image_id} · 轨迹 ${item.track_id} · 偏差 ${item.source_distance_px.toFixed(1)} px · ${item.status}`,'candidate-row');if(item.status==='proposed')for(const [label,decision] of [['接受','accept'],['拒绝','reject']]){const b=element('button',label);b.onclick=()=>silently(queue('正在记录对应建议…',async()=>{const result=await api('/api/modeler/decision',{state_revision:state.revision,suggestion_id:item.id,decision});state=result.state;renderState();message(decision==='accept'?'已接受建议，仍需核验物理对应。':'已拒绝建议。')}));row.append(b)}root.append(row)}}
@@ -196,37 +198,49 @@ $('save').onclick=()=>{const edit={element_id:$('editor').dataset.target,attribu
 function showAgent(info){
   agentInfo=info;$('assistant-mode').querySelector('[value="agent"]').disabled=!info.enabled;
   const agent=$('assistant-mode').value==='agent',job=info.job;$('agent-output').hidden=!agent||!job;
+  $('agent-evidence-mode').hidden=!agent;
+  $('recommend-views').hidden=!agent||$('agent-evidence-mode').value!=='photos';
+  if(!agent||$('agent-evidence-mode').value!=='photos')$('agent-photo-choices').hidden=true;
+  else if(recommendedObject===selected)$('agent-photo-choices').hidden=false;
   $('assistant-provider').textContent=agent?('Codex · '+(info.provider||'未配置')):'本地规则模式 · DSH 未连接';
-  $('assistant-hint').textContent=agent?'使用当前左右照片；发送前需确认模型数据使用。':'可输入受支持的构件修改指令。';
+  $('assistant-hint').textContent=agent?($('agent-evidence-mode').value==='model'?'仅发送模型数据，不发送照片。':'使用当前左右照片；发送前需确认模型数据使用。'):'可输入受支持的构件修改指令。';
   if(!agent)return;if(!job){activity('输入目标并确认所选照片的传输授权。');return}
   const events=(job.events||[]).map(e=>`${e.tool} · ${e.status}${e.error?' · '+e.error:''}`).join('\n');
-  $('agent-trace').textContent=[job.result?'结果：\n'+job.result:'',events?'工具记录：\n'+events:'',job.error].filter(Boolean).join('\n\n');
+  const selectedProposal=(job.revision_proposals||[]).find(x=>x.id===$('agent-revisions').value);
+  const geometry=selectedProposal?.affected_geometry?.map(g=>{const pos=d=>{const r=d.reference_geometry;if(r)return `${r.kind}: [${r.start.map(x=>Number(x).toFixed(3)).join(', ')}] → [${r.end.map(x=>Number(x).toFixed(3)).join(', ')}]${r.height_m!==undefined?'，高 '+Number(r.height_m).toFixed(3):''}`;return (d.nodes||[]).map(n=>`${n.id}: (${Number(n.x).toFixed(3)}, ${Number(n.y).toFixed(3)})`).join('；')||'无可用参考几何'};return `${g.id}\n  修改前 ${pos(g.before)}\n  修改后 ${pos(g.after)}`}).join('\n');
+  $('agent-trace').textContent=[job.result?'结果：\n'+job.result:'',geometry?'受影响构件坐标（米）：\n'+geometry:'',events?'工具记录：\n'+events:'',job.error].filter(Boolean).join('\n\n');
   const hypotheses=$('agent-hypotheses'),chosen=hypotheses.value;hypotheses.replaceChildren(new Option('照片中不显示 AI 建议',''));for(const h of job.hypotheses||[])hypotheses.add(new Option((semanticLabels[h.label]||h.label)+' · '+h.description.slice(0,28),h.id));if([...hypotheses.options].some(o=>o.value===chosen))hypotheses.value=chosen;hypotheses.hidden=hypotheses.options.length<2;
+  const points=(job.observations||[]).filter(x=>!x.stale);$('agent-observations').textContent=points.length?`${points.length} 项 AI 点线建议显示在照片上；尚未确认，也未自动加入构件。`:(job.observations||[]).length?'AI 点线建议已过期，请重新分析。':'';
   const finished=['COMPLETED','COMPLETED_NO_SOLVED_CANDIDATE'].includes(job.status);
   const list=$('agent-candidates'),old=list.value;list.replaceChildren(new Option('请选择待核验候选',''));for(const id of job.candidates||[]){const stale=state?.revision!==job.source_revision,option=new Option(id+(stale?' · 已过期':' · 未核验'),id);option.disabled=stale;list.add(option)}if([...list.options].some(o=>o.value===old&&!o.disabled))list.value=old;
   list.hidden=list.options.length<2;$('agent-import').hidden=!list.value||!finished;
-  const revisions=$('agent-revisions'),previous=revisions.value;revisions.replaceChildren(new Option('请选择修改建议',''));for(const r of job.revision_proposals||[]){const before=Number(r.diff?.before),after=Number(r.diff?.after),delta=after-before,stale=r.source_model_revision!==model?.revision||state?.model_dirty;const option=new Option(`${r.element_id} · ${r.attribute}: ${before.toFixed(3)} → ${after.toFixed(3)} m (${delta>=0?'+':''}${delta.toFixed(3)})${stale?' · 已过期':''}`,r.id);option.disabled=stale;revisions.add(option)}if([...revisions.options].some(o=>o.value===previous&&!o.disabled))revisions.value=previous;revisions.hidden=revisions.options.length<2;$('agent-apply-revision').hidden=!revisions.value||!finished;
+  const revisions=$('agent-revisions'),previous=revisions.value;revisions.replaceChildren(new Option('请选择修改建议',''));for(const r of job.revision_proposals||[]){const before=Number(r.diff?.before),after=Number(r.diff?.after),delta=after-before,stale=r.source_model_revision!==model?.revision||state?.model_dirty;const option=new Option(`${r.projection_evidence?'多视图拟合 · ':'参数预览 · '}${r.element_id} · ${r.attribute}: ${before.toFixed(3)} → ${after.toFixed(3)} m (${delta>=0?'+':''}${delta.toFixed(3)})${stale?' · 已过期':''}`,r.id);option.disabled=stale;revisions.add(option)}if([...revisions.options].some(o=>o.value===previous&&!o.disabled))revisions.value=previous;revisions.hidden=revisions.options.length<2;$('agent-apply-revision').hidden=!revisions.value||!finished;
   activity(job.status==='RUNNING'?'AI 正在分析照片和调用工具…':job.status==='COMPLETED_NO_SOLVED_CANDIDATE'?'本次没有可靠的已求解候选，请查看原因。':job.status==='APPROVAL_BLOCKED'?'模型工具调用未获授权，请查看记录并联系管理员。':job.status==='INTERRUPTED'?'任务因服务重启中断，未自动重试。':job.status==='FAILED'||job.status==='TIMEOUT'?'Agent 运行失败，请查看记录。':'Agent 已完成；候选仍需核验。',['FAILED','TIMEOUT','APPROVAL_BLOCKED','INTERRUPTED'].includes(job.status));
+  drawPhoto('a');drawPhoto('b');
 }
 async function pollAgent(){
   clearTimeout(agentTimer);try{const info=await api('/api/agent/status');agentPollFailures=0;showAgent(info);if(info.job?.status==='RUNNING')agentTimer=setTimeout(pollAgent,1500)}
   catch(error){if(error.status===404){showAgent({enabled:false,provider:null,job:null});return}console.warn('[WorldState] agent status read failed',error.message);agentPollFailures++;if(agentPollFailures<3)agentTimer=setTimeout(pollAgent,1500*agentPollFailures);else activity('Agent 状态读取失败，请刷新核验；不会重复启动。',true)}
 }
 $('assistant-mode').onchange=()=>{if(agentInfo)showAgent(agentInfo);$('command').placeholder=$('assistant-mode').value==='agent'?'根据这些照片，尝试建立这个房间的可编辑模型。':'例如：将选中的墙延长20厘米'};
+$('agent-evidence-mode').onchange=()=>{if(agentInfo)showAgent(agentInfo)};
+$('recommend-views').onclick=()=>silently(queue('正在本地计算视角建议…',async()=>{if(!selected||!state)throw new Error('请先选择多视图对象。');const result=await api('/api/modeler/recommend-views?object_id='+encodeURIComponent(selected));if(!result.pairs.length)throw new Error(result.warning);const choices=$('agent-photo-choices');choices.replaceChildren();const pair=new Set(result.pairs[0].image_ids);for(const view of result.views){const coverage=view.projection_fraction===null?'仅参考点':`投影 ${(100*view.projection_fraction).toFixed(0)}%`;const option=new Option(`${view.photo} · ${coverage} · 遮挡未知`,String(view.image_id));option.selected=pair.has(view.image_id);choices.add(option)}recommendedObject=selected;choices.hidden=false;const bad=(result.excluded||[]).filter(x=>['PHOTO_HASH_MISMATCH','PHOTO_UNAVAILABLE','CAMERA_PHOTO_DIMENSION_MISMATCH'].includes(x.reason));activity(`本地推荐视差 ${result.pairs[0].parallax_deg}°；请检查遮挡，可多选 2–8 张。${bad.length?' 照片校验失败：'+bad.map(x=>x.image_id+' '+x.reason).join('、'):''}`);message(result.warning)}));
 $('agent-hypotheses').onchange=()=>{drawPhoto('a');drawPhoto('b')};
 $('send').onclick=()=>{
   const command=$('command').value,selectedId=selected;
   if($('assistant-mode').value==='agent'){
-    const cameras=[camFor('a'),camFor('b')];if(!command.trim()||cameras.some(c=>!c)||cameras[0].image_id===cameras[1].image_id){activity('请输入任务，并在左右选择两张不同的已注册照片。',true);return}
-    if(!confirm(`将以下照片发送给已配置的 ${agentInfo?.provider||'多模态模型'} 进行分析：\n${cameras.map(c=>c.photo).join('\n')}\n请确认您有权使用和传输这些照片。`))return;
-    const request={goal:command,image_ids:cameras.map(c=>c.image_id),selected_id:selectedId,allow_external_images:true};
+    const modelOnly=$('agent-evidence-mode').value==='model',selectedPhotos=recommendedObject===selected&&!$('agent-photo-choices').hidden?[...$('agent-photo-choices').selectedOptions].map(o=>state?.cameras?.find(c=>String(c.image_id)===o.value)):null,cameras=modelOnly?[]:(selectedPhotos||[camFor('a'),camFor('b')]);
+    if(!command.trim()||(modelOnly&&!model)||(!modelOnly&&(cameras.length<2||cameras.length>8||cameras.some(c=>!c)||new Set(cameras.map(c=>c.image_id)).size!==cameras.length))){activity(modelOnly?'请输入任务并打开已有模型。':'请输入任务，并选择 2–8 张不同的已注册照片。',true);return}
+    const consent=modelOnly?`将当前模型的构件和参数信息发送给 ${agentInfo?.provider||'模型'}，不发送照片。请确认您有权使用和传输模型信息。`:`将以下照片及当前模型的构件参数发送给已配置的 ${agentInfo?.provider||'多模态模型'} 进行分析：\n${cameras.map(c=>c.photo).join('\n')}\n请确认您有权使用和传输这些数据。`;
+    if(!confirm(consent))return;
+    const request={goal:command,image_ids:cameras.map(c=>c.image_id),selected_id:selectedId,allow_external_images:!modelOnly,allow_external_model:modelOnly,model_only:modelOnly};
     silently(queue('正在启动 AI 建模…',async()=>{showAgent(await api('/api/agent/start',request));message('Agent 已启动；不会自动提交 IFC。');pollAgent()}));return;
   }
   silently(queue('正在执行本地规则…',async()=>{if(!model)throw new Error('请先打开 IFC 模型。');const result=await api('/api/command',{revision:model.revision,selected_id:selectedId,command});activity(`已生成版本 ${result.model.revision}；请检查受影响构件。`);await loadAll();message('规则命令已执行。')}));
 };
 $('agent-candidates').onchange=()=>{if(agentInfo)showAgent(agentInfo)};$('agent-revisions').onchange=()=>{if(agentInfo)showAgent(agentInfo)};
 $('agent-import').onclick=()=>{const job=agentInfo?.job,candidate=$('agent-candidates').value;if(!job||!candidate||!confirm(`导入未经核验的 AI 候选 ${candidate}？请随后检查照片、对应点及未知属性。`))return;const request={job_id:job.id,candidate_id:candidate,state_revision:state?.revision};silently(queue('正在导入候选…',async()=>{const result=await api('/api/agent/accept',request);state=result.state;selected=result.object_id;renderState();if(agentInfo)showAgent(agentInfo);switchRight('observations');message(result.warning)}))};
-$('agent-apply-revision').onclick=()=>{const job=agentInfo?.job,proposal=job?.revision_proposals?.find(x=>x.id===$('agent-revisions').value);if(!proposal)return;const before=Number(proposal.diff?.before),after=Number(proposal.diff?.after),delta=after-before;if(!confirm(`应用待核验的 AI 修改建议？\n${proposal.element_id} · ${proposal.attribute}: ${before.toFixed(3)} → ${after.toFixed(3)} m\n变化：${delta>=0?'+':''}${delta.toFixed(3)} m\n依据：${proposal.reason}`))return;const request={job_id:job.id,proposal_id:proposal.id,revision:model?.revision};silently(queue('正在应用修改建议…',async()=>{const result=await api('/api/agent/accept-revision',request);activity(`已创建版本 ${result.model.revision}；请重新验证。`);await loadAll();if(agentInfo)showAgent(agentInfo);message('AI 修改建议已应用；仍需独立核验。')}))};
+$('agent-apply-revision').onclick=()=>{const job=agentInfo?.job,proposal=job?.revision_proposals?.find(x=>x.id===$('agent-revisions').value);if(!proposal)return;const before=Number(proposal.diff?.before),after=Number(proposal.diff?.after),delta=after-before,warningsBefore=proposal.validation_before?.wall_axis_warnings?.length||0,warningsAfter=proposal.validation?.wall_axis_warnings?.length||0,fit=proposal.projection_evidence?`\n源照片拟合残差：${proposal.projection_evidence.before_line_rms_px.toFixed(2)} → ${proposal.projection_evidence.after_line_rms_px.toFixed(2)} px（非独立验证）`:'';if(!confirm(`应用待核验的 AI 修改建议？\n${proposal.element_id} · ${proposal.attribute}: ${before.toFixed(3)} → ${after.toFixed(3)} m\n变化：${delta>=0?'+':''}${delta.toFixed(3)} m\n受影响：${proposal.diff?.affected_elements?.join('、')||'未知'}\n未关联墙轴交叉警告：${warningsBefore} → ${warningsAfter}；非完整碰撞检查。${fit}\n依据：${proposal.reason}`))return;const request={job_id:job.id,proposal_id:proposal.id,revision:model?.revision};silently(queue('正在应用修改建议…',async()=>{const result=await api('/api/agent/accept-revision',request);activity(`已创建版本 ${result.model.revision}；请重新验证。`);await loadAll();if(agentInfo)showAgent(agentInfo);message('AI 修改建议已应用；仍需独立核验。')}))};
 $('restore').onclick=()=>silently(queue('正在恢复版本…',async()=>{const result=await api('/api/restore',{revision:model.revision,source_revision:Number($('versions').value)});activity(`已从版本 ${result.source_revision} 创建版本 ${result.model.revision}。`);await loadAll();message('历史版本已恢复为新版本。')}));
 $('sync-ifc').onclick=()=>{const edit={file:$('external-ifc').files[0],reason:$('reason').value.trim(),element_id:$('editor').dataset.target,attribute:$('attribute').value};silently(queue('正在核验 IFC 修改…',async()=>{if(!edit.file||!edit.reason)throw new Error('请选择 IFC 并填写修改依据。');const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(edit.file)});const result=await api('/api/sync-ifc',{revision:model.revision,element_id:edit.element_id,attribute:edit.attribute,reason:edit.reason,data_base64:data});activity(`外部 IFC 已核验并生成版本 ${result.model.revision}。`);await loadAll();message('外部修改已回写，需重新验证。')}))};
 $('add-evidence').onclick=()=>$('upload').click();$('upload').onchange=async e=>{for(const file of e.target.files){try{await queue('正在上传照片…',async()=>{const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});await api('/api/upload',{data_base64:data});await loadState();message('照片已上传；关联相机后可参与建模。')})}catch(_){break}}e.target.value=''};

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import copy
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -38,10 +39,54 @@ def inspect_element(model: dict, element_id: str) -> dict:
     selected=next((e for e in model["elements"] if e["id"]==element_id),None)
     if selected is None:raise ValueError("element not found")
     node_ids={selected.get("start"),selected.get("end")} | set(selected.get("outline",[]))
-    return {"element":copy.deepcopy(selected),
+    related=[]
+    for e in model['elements']:
+        if (e.get('host') == element_id or e.get('opening') == element_id or
+            e['id'] in {selected.get('host'), selected.get('fill'), selected.get('opening')} or
+            (e.get('ifc_type') == 'IfcWall' and e['id'] != element_id and
+             node_ids.intersection({e.get('start'), e.get('end')}) - {None})):
+            related.append({'id':e['id'], 'ifc_type':e['ifc_type'],
+                            'host':e.get('host'), 'fill':e.get('fill'), 'opening':e.get('opening')})
+    dimensions={};reference_geometry=None
+    if selected['ifc_type'] == 'IfcWall':
+        nodes={n['id']:n for n in model['nodes']};a=nodes[selected['start']];b=nodes[selected['end']]
+        if all(isinstance(n.get(k),(float,int)) for n in (a,b) for k in ('x','y')):
+            dimensions={'length_m':math.hypot(b['x']-a['x'],b['y']-a['y']),
+                        'position_x_m':a['x'], 'position_y_m':a['y']}
+            reference_geometry={'kind':'wall_axis_xy_m','start':[a['x'],a['y']],'end':[b['x'],b['y']]}
+    if selected['ifc_type'] in {'IfcOpeningElement','IfcDoor','IfcWindow'}:
+        by_id={e['id']:e for e in model['elements']}
+        opening=selected if selected['ifc_type']=='IfcOpeningElement' else by_id[selected['opening']]
+        wall=by_id[opening['host']];nodes={n['id']:n for n in model['nodes']}
+        a,b=nodes[wall['start']],nodes[wall['end']];p=opening['parameters']
+        values=[a.get('x'),a.get('y'),b.get('x'),b.get('y'),p['offset']['value'],p['width']['value'],
+                p['sill']['value'],p['height']['value'],wall['parameters']['base_elevation']['value']]
+        if all(isinstance(v,(int,float)) and math.isfinite(v) for v in values):
+            dx,dy=b['x']-a['x'],b['y']-a['y'];length=math.hypot(dx,dy)
+            if length>1e-9:
+                x,y=a['x']+dx*p['offset']['value']/length,a['y']+dy*p['offset']['value']/length
+                z=wall['parameters']['base_elevation']['value']+p['sill']['value']
+                reference_geometry={'kind':'host_axis_projection_m','start':[x,y,z],
+                    'end':[x+dx*p['width']['value']/length,y+dy*p['width']['value']/length,z],
+                    'height_m':p['height']['value'],'warning':'Host-axis reference, not verified wall face or full opening solid.'}
+    return {"element":copy.deepcopy(selected), "derived_dimensions":dimensions, "reference_geometry":reference_geometry, "related_elements":related,
             "nodes":[copy.deepcopy(n) for n in model["nodes"] if n["id"] in node_ids],
             "constraints":[copy.deepcopy(c) for c in model.get("constraints",[]) if element_id in {c.get("a"),c.get("b")}],
             "issues":[i for i in geometry_issues(model) if element_id in i["id"]]}
+
+
+def list_elements(model: dict) -> list[dict]:
+    """List identities and actual relations to support evidence-bound object selection."""
+    validate_room(model)
+    result=[]
+    for e in model['elements']:
+        detail=inspect_element(model,e['id'])
+        result.append({'id':e['id'], 'name':e.get('name'), 'ifc_type':e['ifc_type'],
+                       'storey':e['storey'], 'classification_status':e['classification']['status'],
+                       'dimensions':detail['derived_dimensions'],
+                       'parameters_m':{k:v['value'] for k,v in e.get('parameters',{}).items()},
+                       'related_elements':detail['related_elements']})
+    return result
 
 
 def apply_constraint(model: dict, *, kind: str, a: str, b: str, reason: str,
@@ -71,11 +116,36 @@ def update_element(model: dict, element_id: str, attribute: str, value: float,
     return revise_element(model,element_id,attribute,value,reason=reason,operator=operator)
 
 
+def wall_intersection_warnings(model: dict) -> list[dict]:
+    """Find unlinked wall-axis intersections; this is not a full 3-D clash test."""
+    from shapely.geometry import LineString
+    validate_room(model)
+    nodes={n['id']:n for n in model['nodes']};walls=[e for e in model['elements'] if e['ifc_type']=='IfcWall']
+    warnings=[]
+    for i,a in enumerate(walls):
+        for b in walls[i+1:]:
+            if {a['start'],a['end']} & {b['start'],b['end']}:
+                continue  # Explicit shared topology is not an unlinked intersection.
+            points=[nodes[a['start']],nodes[a['end']],nodes[b['start']],nodes[b['end']]]
+            if any(p.get(k) is None for p in points for k in ('x','y')):continue
+            ah=a['parameters']['height']['value'];bh=b['parameters']['height']['value']
+            az=a['parameters']['base_elevation']['value'];bz=b['parameters']['base_elevation']['value']
+            if None in (ah,bh,az,bz):continue
+            if min(az+ah,bz+bh)<=max(az,bz):continue
+            first=LineString([(p['x'],p['y']) for p in points[:2]])
+            second=LineString([(p['x'],p['y']) for p in points[2:]])
+            if first.intersects(second):
+                warnings.append({'elements':sorted((a['id'],b['id'])),
+                                 'code':'UNLINKED_WALL_AXIS_INTERSECTION_REQUIRES_REVIEW'})
+    return warnings
+
+
 def validate_geometry(model: dict) -> dict:
     """Report explicit geometric conflicts, not engineering certification."""
     issues=geometry_issues(model)
     return {"status":"CONFLICT" if issues else "UNVERIFIED_DRAFT","issues":issues,
-            "warning":"Passing geometric checks does not independently verify scene accuracy."}
+            "wall_axis_warnings":wall_intersection_warnings(model),
+            "warning":"Axis intersections are a limited diagnostic, not a full solid clash test or scene verification."}
 
 
 def compile_ifc(model: dict, output: Path) -> Path:

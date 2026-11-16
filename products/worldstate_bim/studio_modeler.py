@@ -226,7 +226,8 @@ def post(handler, path: str, body: dict) -> bool:
             'object_id':obj['id'],'feature_id':feature,'source_image_id':image_id,'source_pixel_xy':here['pixel_xy'],
             'target_image_id':other['image_id'],'target_pixel_xy':other['pixel_xy'],'source_distance_px':distance,
             'track_id':track['id'],'duplicate_source_track_ids':alternatives,
-            'status':'proposed','origin':'deterministic_colmap_track'}
+            'track_source':state.get('track_source','COLMAP registered feature tracks'),
+            'status':'proposed','origin':'deterministic_feature_track' if state.get('track_source') else 'deterministic_colmap_track'}
             for other in track['observations'] if other['image_id']!=image_id][:12]
         state['revision']+=1
         server.record('modeler_correspondence_proposed',operator=_operator(handler),object_id=obj['id'],
@@ -237,22 +238,37 @@ def post(handler, path: str, body: dict) -> bool:
         decision=body.get('decision')
         if not suggestion or suggestion['status']!='proposed' or decision not in {'accept','reject'}:
             raise ValueError('请选择待处理候选')
-        suggestion['status']='accepted' if decision=='accept' else 'rejected';operator=_operator(handler)
+        operator=_operator(handler)
         previous=[]
         if decision=='accept':
+            path_tracks=server.workspace/'modeler-tracks.json'
+            if path_tracks.is_symlink() or not path_tracks.is_file():raise ValueError('轨迹文件不可用')
+            import json
+            raw=path_tracks.read_bytes()
+            if hashlib.sha256(raw).hexdigest()!=state['track_sha256']:raise ValueError('轨迹文件已改变，请重新导入')
+            if state.get('track_source') and suggestion.get('track_source')!=state['track_source']:
+                raise ValueError('对应建议的轨迹来源已改变')
+            track=next((t for t in json.loads(raw)['tracks'] if t['id']==suggestion['track_id']),None)
+            pairs=((suggestion['source_image_id'],suggestion['source_pixel_xy']),
+                   (suggestion['target_image_id'],suggestion['target_pixel_xy']))
+            if not track or any(not any(o['image_id']==image_id and o['pixel_xy']==pixel for o in track['observations']) for image_id,pixel in pairs):
+                raise ValueError('对应建议与已登记轨迹不一致')
             cameras={c['image_id']:c for c in state['cameras']}
-            for image_id,pixel in ((suggestion['source_image_id'],suggestion['source_pixel_xy']),
-                                   (suggestion['target_image_id'],suggestion['target_pixel_xy'])):
+            additions=[]
+            for image_id,pixel in pairs:
                 cam=cameras[image_id];_image(handler,cam['sha256']);_point({'pixel_xy':pixel},cam)
                 old=next((o for o in state['observations'] if o['kind']=='point' and o['object_id']==suggestion['object_id'] and
                           o['feature_id']==suggestion['feature_id'] and o['image_id']==image_id),None)
-                if old:previous.append(old);state['observations'].remove(old)
-                state['observations'].append({'kind':'point','object_id':suggestion['object_id'],
+                if old:previous.append(old)
+                additions.append({'kind':'point','object_id':suggestion['object_id'],
                     'feature_id':suggestion['feature_id'],'image_id':image_id,'pixel_xy':pixel,'photo_sha256':cam['sha256'],
                     'camera_sha256':camera_digest(cam),'origin':'deterministic','confirmation':'accepted_unverified',
                     'accepted_by':operator,'visibility':'visible','sigma_px':2.,'created_at':datetime.now(timezone.utc).isoformat(),
-                    'track_id':suggestion['track_id']})
+                    'track_id':suggestion['track_id'],'track_source':suggestion.get('track_source','COLMAP registered feature tracks')})
+            for old in previous:state['observations'].remove(old)
+            state['observations'].extend(additions)
             state['solution']=None;state['model_dirty']=True
+        suggestion['status']='accepted' if decision=='accept' else 'rejected'
         state['revision']+=1
         server.record('modeler_correspondence_decision',operator=operator,decision=decision,
                       suggestion=copy.deepcopy(suggestion),previous=previous)

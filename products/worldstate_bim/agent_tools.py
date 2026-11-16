@@ -44,10 +44,12 @@ class AgentTools:
         self.approved_constraints = read_json(approved_constraints) if approved_constraints else None
         self.state = self.project.get('general_modeler')
         if not isinstance(self.state, dict):
-            raise ValueError('project has no registered modeler cameras')
+            if not self.project.get('current_revision'):
+                raise ValueError('project has neither registered cameras nor a saved model')
+            self.state = {'revision': 0, 'camera_mode': None, 'cameras': [], 'objects': []}
         self.cameras = {c['image_id']: c for c in self.state['cameras']}
         self.allowed_images = allowed_images
-        if allowed_images is not None and (not allowed_images or not allowed_images <= self.cameras.keys()):
+        if allowed_images is not None and not allowed_images <= self.cameras.keys():
             raise ValueError('allowed photos must belong to the registered project')
         index = read_json(self.workspace / 'evidence-index.json')
         self.uploads = {x['sha256']: x for x in index['uploads']}
@@ -83,13 +85,29 @@ class AgentTools:
         return read_json(path)['tracks']
 
     def inspect_scene(self, _: dict) -> dict:
+        model_summary = []
+        if self.project.get('current_revision'):
+            from .modeling_tools import list_elements
+            model_summary = list_elements(self.model())
         return {'project': self.project['name'], 'state_revision': self.state['revision'],
-                'camera_mode': self.state['camera_mode'], 'scale_status': 'UNKNOWN',
+                'model_revision': self.project.get('current_revision'), 'model_elements': model_summary,
+                'camera_mode': self.state['camera_mode'],
+                'scale_status': 'MODEL_DECLARED_METRIC_NOT_INDEPENDENTLY_VERIFIED' if model_summary else 'UNKNOWN',
                 'registration_status': self.state.get('registration_status'),
                 'cameras': [{k: c[k] for k in ('image_id', 'photo', 'sha256', 'width_px', 'height_px')}
                             for c in self.cameras.values() if self.allowed_images is None or c['image_id'] in self.allowed_images],
-                'existing_objects': self.state['objects'],
+                'existing_objects': [{k:o.get(k) for k in ('id','ifc_type','surface_kind')}
+                                     for o in self.state['objects']],
                 'warning': 'Camera and object semantics are not independently verified.'}
+
+    def model(self) -> dict:
+        revision = self.project.get('current_revision')
+        if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+            raise ValueError('no saved IR model')
+        model = read_json(self.workspace / f'revision-{revision:03}' / 'model.json')
+        if model.get('project_id') != self.project.get('id') or model.get('revision') != revision:
+            raise ValueError('saved model identity or revision mismatch')
+        return model
 
     def view_photo(self, args: dict) -> dict:
         camera = self.camera(args.get('image_id'))
@@ -115,6 +133,17 @@ class AgentTools:
                 polygon = [(x*image.width/camera['width_px'], y*image.height/camera['height_px'])
                            for x, y in projection['polygon_px']]
                 draw.line(polygon + [polygon[0]], fill='#29ead0', width=3)
+        model_projection = None
+        if args.get('model_projection') is True:
+            projected = self.inspect_model_projection({})
+            model_projection = next((v for v in projected['views'] if v['image_id'] == camera['image_id']), None)
+            if model_projection:
+                polygon = [(x*image.width/camera['width_px'], y*image.height/camera['height_px'])
+                           for x,y in model_projection['polygon_px']]
+                draw.line(polygon+[polygon[0]],fill='#29ead0',width=3)
+                for line in model_projection['ceiling_lines']:
+                    points=[(x*image.width/camera['width_px'],y*image.height/camera['height_px']) for x,y in line['points_px']]
+                    draw.line(points,fill='#ffdd33',width=3)
         for ident in selected:
             track = tracks.get(ident)
             observation = next((o for o in (track or {}).get('observations', []) if o['image_id'] == camera['image_id']), None)
@@ -130,8 +159,65 @@ class AgentTools:
                 'image_id': camera['image_id'], 'photo': camera['photo'], 'photo_sha256': camera['sha256'],
                 'camera_sha256': camera_digest(camera), 'original_size': [camera['width_px'], camera['height_px']],
                 'preview_size': list(image.size), 'marked_tracks': visible,
-                'candidate_id': candidate_id,
+                'candidate_id': candidate_id, 'model_projection': model_projection,
                 'status': 'UNVERIFIED_IMAGE_EVIDENCE'}
+
+    def inspect_model_projection(self, _: dict) -> dict:
+        """Compare a supported IR patch with its own registered image observations."""
+        from .model_first import project_local_wall_ir
+        model = self.model();projection = project_local_wall_ir(model)
+        if not projection:raise ValueError('model has no supported registered photo projection')
+        evidence = next((e for e in model['evidence'] if e.get('id') == 'camera'), {})
+        source = {c['image_id']:c for c in evidence.get('cameras', [])}
+        views=[]
+        for v in projection['views']:
+            if self.allowed_images is not None and v['image_id'] not in self.allowed_images:continue
+            camera = self.camera(v['image_id']);self.photo(camera)
+            if v['image_id'] not in source or camera_digest(source[v['image_id']]) != camera_digest(camera):
+                raise ValueError('model and authorized photo camera versions differ')
+            views.append({**v, 'camera_sha256':camera_digest(camera)})
+        if not views:raise ValueError('no registered model photos were authorized')
+        return {**projection, 'views':views,
+                'warning':'Original model observations are not independent ground truth; occlusion and scale remain unverified.'}
+
+    def preview_projection_repair(self, args: dict) -> dict:
+        """Fit a single existing patch height to two authorized observed ceiling lines."""
+        import copy
+        import numpy as np
+        from scipy.optimize import minimize_scalar
+        from .model_first import project_local_wall_ir
+        if args.get('element_id') != 'wall-above-opening':
+            raise ValueError('only the existing supported local patch can be optimized')
+        reason=args.get('reason')
+        if not isinstance(reason,str) or not reason.strip():raise ValueError('repair reason is required')
+        model=self.model();before=self.inspect_model_projection({})
+        selected=[v for v in before['views'] if v['ceiling_lines']]
+        if len(selected)<2:raise ValueError('at least two authorized observed ceiling lines are required')
+        image_ids={v['image_id'] for v in selected};wall=next(e for e in model['elements'] if e['id']=='wall-above-opening')
+        height=wall['parameters']['height']['value']
+        if not isinstance(height,(int,float)) or not math.isfinite(height) or height<=0:raise ValueError('wall height is unknown')
+        def errors(value):
+            candidate=copy.deepcopy(model)
+            next(e for e in candidate['elements'] if e['id']=='wall-above-opening')['parameters']['height']['value']=float(value)
+            views=project_local_wall_ir(candidate)['views']
+            return [err for v in views if v['image_id'] in image_ids for line in v['ceiling_lines'] for err in line['endpoint_error_px']]
+        initial=errors(height)
+        result=minimize_scalar(lambda h:float(np.sum(np.square(errors(h)))),
+                               bounds=(max(height*.25,1e-6),height*2.),method='bounded',options={'xatol':1e-10})
+        final=errors(result.x) if result.success else []
+        if (len(final)!=len(initial) or not final or max(final)>3. or
+            np.linalg.norm(final)>=np.linalg.norm(initial)-1e-6):
+            raise ValueError('authorized observations do not support a better height within the 3 px gate')
+        summary=self.preview_revision({'element_id':args['element_id'],'attribute':'height',
+                                       'value':float(result.x),'reason':reason})
+        proposal=read_json(self.output/(summary['id']+'.json'))
+        proposal['projection_evidence']={'method':'bounded scalar height fit to original ceiling lines',
+            'views':[{'image_id':v['image_id'],'photo_sha256':v['photo_sha256'],'camera_sha256':v['camera_sha256']} for v in selected],
+            'before_line_rms_px':float(np.sqrt(np.mean(np.square(initial)))),
+            'after_line_rms_px':float(np.sqrt(np.mean(np.square(final)))), 'after_max_line_px':float(max(final)),
+            'status':'SOURCE_OBSERVATIONS_NOT_INDEPENDENTLY_VERIFIED'}
+        (self.output/(proposal['id']+'.json')).write_text(json.dumps(proposal,ensure_ascii=False,indent=2,allow_nan=False))
+        return {**summary,'projection_evidence':proposal['projection_evidence']}
 
     def find_tracks(self, args: dict) -> dict:
         first, second = self.camera(args.get('image_a')), self.camera(args.get('image_b'))
@@ -154,11 +240,13 @@ class AgentTools:
             x, y = a['pixel_xy'];nx, ny = x/first['width_px'], y/first['height_px']
             if region[0] <= nx <= region[2] and region[1] <= ny <= region[3]:
                 matches.append({'track_id': track['id'], 'a_pixel_xy': a['pixel_xy'],
-                                'b_pixel_xy': b['pixel_xy'], 'total_views': len(track['observations'])})
+                                'b_pixel_xy': b['pixel_xy'], 'total_views': len(track['observations']),
+                                'source_line_ids':track.get('source_line_ids')})
         matches.sort(key=lambda x: (-x['total_views'], x['track_id']))
         return {'image_a': first['image_id'], 'image_b': second['image_id'], 'region_a': region,
                 'count': len(matches), 'tracks': matches[:limit],
-                'warning': 'COLMAP tracks are feature matches, not verified wall corners or wall instances.'}
+                'track_source':self.state.get('track_source','COLMAP registered feature tracks'),
+                'warning': 'Feature correspondences are not verified wall corners or wall instances.'}
 
     def record_hypothesis(self, args: dict) -> dict:
         label, description, uncertainty = args.get('label'), args.get('description'), args.get('uncertainty')
@@ -245,19 +333,15 @@ class AgentTools:
         return result
 
     def inspect_element(self, args: dict) -> dict:
-        revision = self.project.get('current_revision')
-        if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
-            raise ValueError('no saved IR model')
         from .modeling_tools import inspect_element
-        model = read_json(self.workspace / f'revision-{revision:03}' / 'model.json')
-        return inspect_element(model, args.get('element_id'))
+        return inspect_element(self.model(), args.get('element_id'))
 
     def preview_revision(self, args: dict) -> dict:
         revision = self.project.get('current_revision')
         if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
             raise ValueError('no saved IR model')
-        from .modeling_tools import update_element, validate_geometry
-        model = read_json(self.workspace / f'revision-{revision:03}' / 'model.json')
+        from .modeling_tools import inspect_element, update_element, validate_geometry
+        model = self.model()
         revised, diff = update_element(model, args.get('element_id'), args.get('attribute'), args.get('value'),
                                        reason=args.get('reason'), operator='analyst')
         ident = 'revision-proposal-' + uuid.uuid4().hex
@@ -265,10 +349,16 @@ class AgentTools:
                     'project_id': self.project['id'], 'source_model_revision': revision,
                     'source_model_sha256': digest(model), 'element_id': args.get('element_id'),
                     'attribute': args.get('attribute'), 'value': args.get('value'), 'reason': args.get('reason'),
-                    'diff': diff, 'validation': validate_geometry(revised)}
+                    'diff': diff, 'validation_before': validate_geometry(model), 'validation': validate_geometry(revised),
+                    'affected_geometry': [{'id': ident,
+                        'before': inspect_element(model, ident), 'after': inspect_element(revised, ident)}
+                        for ident in diff['affected_elements']]}
         with (self.output / (ident + '.json')).open('x') as stream:
             json.dump(proposal, stream, ensure_ascii=False, indent=2, allow_nan=False)
-        return proposal
+        # Full geometry remains available for explicit review in Studio. Sending
+        # duplicated element/geometry blobs back into the model on every tool
+        # call inflates context without improving the deterministic check.
+        return {k:proposal[k] for k in ('id','status','element_id','attribute','value','diff','validation')}
 
     def solve_surface(self, args: dict) -> dict:
         ids, views = args.get('track_ids'), args.get('image_ids')
@@ -302,7 +392,8 @@ class AgentTools:
                     'image_id': camera['image_id'], 'pixel_xy': item['pixel_xy'], 'photo_sha256': camera['sha256'],
                     'camera_sha256': camera_digest(camera), 'origin': 'deterministic',
                     'confirmation': 'automation_unverified', 'visibility': 'visible', 'sigma_px': 2.0,
-                    'track_id': ident, 'created_at': now})
+                    'track_id': ident, 'track_source': self.state.get('track_source','COLMAP registered feature tracks'),
+                    'created_at': now})
         data = {'schema': SCHEMA_INPUT, 'camera_mode': self.state['camera_mode'],
                 'coordinate_system': {'name': 'registered reconstruction', 'scale_status': 'UNKNOWN'},
                 'source_reconstruction': self.state['source_reconstruction'], 'cameras': cameras,
@@ -403,6 +494,8 @@ class AgentTools:
 
     def execute(self, action: str, args: dict) -> dict:
         operations = {'inspect_scene': self.inspect_scene, 'view_photo': self.view_photo,
+                      'inspect_model_projection': self.inspect_model_projection,
+                      'preview_projection_repair': self.preview_projection_repair,
                       'find_tracks': self.find_tracks, 'record_hypothesis': self.record_hypothesis,
                       'record_image_observation': self.record_image_observation,
                       'inspect_element': self.inspect_element, 'preview_revision': self.preview_revision,
@@ -419,10 +512,12 @@ def main() -> int:
     parser.add_argument('--provider', default='unspecified')
     parser.add_argument('--approved-constraints', type=Path)
     parser.add_argument('--allowed-images', help='Comma-separated operator-authorized registered image IDs')
+    parser.add_argument('--deny-images', action='store_true', help='Restrict model-only tasks from all photo observations')
     args = parser.parse_args()
     try:
         request = json.load(sys.stdin)
-        allowed = {int(x) for x in args.allowed_images.split(',')} if args.allowed_images else None
+        if args.deny_images and args.allowed_images:raise ValueError('photo scope conflicts with model-only mode')
+        allowed = set() if args.deny_images else {int(x) for x in args.allowed_images.split(',')} if args.allowed_images else None
         result = AgentTools(args.workspace, args.output, args.provider, args.approved_constraints, allowed).execute(request['action'], request.get('arguments', {}))
         print(json.dumps({'ok': True, 'result': result}, ensure_ascii=False, allow_nan=False))
         return 0

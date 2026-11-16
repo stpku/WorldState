@@ -46,13 +46,22 @@ def test_studio_creates_new_surface_from_uploaded_photos_and_versioned_points(tm
             assert status==201, response
             state=response['state']
         assert all(o['origin']=='automation' and o['confirmation']=='automation_unverified' for o in state['observations'])
+        server.project['general_modeler']['track_source']='synthetic line-intersection candidates'
         status,response=api(server,'/api/modeler/suggest',{'state_revision':state['revision'],'object_id':'west','feature_id':'p1','image_id':1})
         assert status==200 and response['state']['suggestions'];state=response['state']
+        assert state['suggestions'][0]['origin']=='deterministic_feature_track'
+        track_file=server.workspace/'modeler-tracks.json';original=track_file.read_bytes();track_file.write_bytes(b'tampered')
+        status,error=api(server,'/api/modeler/decision',{'state_revision':state['revision'],
+            'suggestion_id':state['suggestions'][0]['id'],'decision':'accept'})
+        assert status==400 and '轨迹文件已改变' in error['error']
+        assert server.project['general_modeler']['suggestions'][0]['status']=='proposed'
+        track_file.write_bytes(original)
         status,response=api(server,'/api/modeler/decision',{'state_revision':state['revision'],
             'suggestion_id':state['suggestions'][0]['id'],'decision':'accept'})
         assert status==200;state=response['state']
         accepted=[o for o in state['observations'] if o.get('track_id')==7]
-        assert len(accepted)==2 and all(o['origin']=='deterministic' and o['accepted_by']=='automation' for o in accepted)
+        assert len(accepted)==2 and all(o['origin']=='deterministic' and o['accepted_by']=='automation' and
+                                      o['track_source']=='synthetic line-intersection candidates' for o in accepted)
         before_events=len(server.project['events'])
         status,preview=api(server,'/api/modeler/preview-solve',{'state_revision':state['revision']})
         assert status==200 and preview['persisted'] is False and preview['state_revision']==state['revision']
