@@ -54,8 +54,11 @@ def run_one(args: argparse.Namespace, number: str, script: str) -> dict:
                 command.append(str(args.input))
             command.append(str(root / 'browser'))
             started = time.monotonic()
+            browser_env=os.environ.copy()
+            if args.browser_tmp:
+                browser_env['TMPDIR']=str(args.browser_tmp.resolve(strict=True))
             with (root / 'browser.log').open('w') as browser_log:
-                result = subprocess.run(command, cwd=ROOT, env=os.environ.copy(),
+                result = subprocess.run(command, cwd=ROOT, env=browser_env,
                                         stdout=browser_log, stderr=subprocess.STDOUT, timeout=240)
             return {'run': number, 'returncode': result.returncode,
                     'elapsed_seconds': round(time.monotonic() - started, 2)}
@@ -76,9 +79,11 @@ def main() -> int:
     parser.add_argument('--python', default='python')
     parser.add_argument('--node', default='node')
     parser.add_argument('--runs', type=int, default=3)
+    parser.add_argument('--browser-tmp', type=Path, help='Optional existing isolated browser temporary directory; does not retry failed tests')
     args = parser.parse_args()
     if not 1 <= args.runs <= 10:
         parser.error('--runs must be between 1 and 10')
+    if args.browser_tmp and not args.browser_tmp.is_dir():parser.error('--browser-tmp must be an existing directory')
     args.output.mkdir(parents=True, exist_ok=False)
     results = []
     try:
