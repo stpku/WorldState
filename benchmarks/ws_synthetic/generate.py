@@ -125,7 +125,9 @@ def main() -> None:
             cameras.append(candidate)
         write(ref/'cameras-exact.json',camera_data)
         write(inp/'cameras.json',{'schema':'worldstate-modeler-cameras/0.1','camera_mode':'known-pose',
-             'cameras':cameras,'source_reconstruction':[],'warning':'Synthetic cameras; poses may be perturbed. No real measurement.'})
+             'cameras':cameras,'source_reconstruction':[{'kind':'synthetic_blender_render',
+                 'sha256':sha(HERE/'render_blender.py'),'status':'SIMULATED'}],
+             'warning':'Synthetic cameras; poses may be perturbed. No real measurement.'})
         records.append({'id':ident,'shape':shape,'views':len(cameras),'camera_translation_sigma_m':pos_sigma,
                         'camera_rotation_sigma_deg':rot_sigma,'low_texture':index==1,'furniture_occluder':True})
     write(a.output/'reference'/'generation.json',{'seed':a.seed,'split':a.split,'scenes':records,
