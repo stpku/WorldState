@@ -75,7 +75,7 @@ class StudioServer(ThreadingHTTPServer):
     """Serve an explicitly selected room project on loopback only."""
     request_queue_size=64
     def __init__(self, port: int, model_dir: Path | None, workspace: Path, point_cloud: Path | None = None, vision_model: Path | None = None,
-                 trusted_origins: tuple[str, ...] = ()):
+                 trusted_origins: tuple[str, ...] = (), agent_settings: dict | None = None):
         trusted=dict(_trusted_https_origin(origin) for origin in trusted_origins)
         super().__init__(("127.0.0.1",port),Handler)
         local_host=f"127.0.0.1:{self.server_port}"
@@ -107,6 +107,7 @@ class StudioServer(ThreadingHTTPServer):
                 expected=Path(temp)/"model.ifc";export_room(self.model,expected)
                 _verify_geometry(ifcopenshell.open(str(expected)),ifcopenshell.open(str(self.model_dir/"model.ifc")))
         self.lock=threading.Lock();self.photo_io=threading.BoundedSemaphore(2);self.token=secrets.token_urlsafe(24)
+        self.agent_settings=agent_settings;self.agent_job=None
         self.vision_model=vision_model.resolve(strict=True) if vision_model is not None else None
         self.vision_provider=None
         self.cloud=None
@@ -136,6 +137,9 @@ class StudioServer(ThreadingHTTPServer):
                 item.get("extension") not in {".png",".jpg"} or item.get("id")!="upload-"+item["sha256"][:16] or
                 item.get("mime") not in {"image/png","image/jpeg"}):
                 raise ValueError("invalid evidence index entry")
+        if self.agent_settings:
+            from .studio_agent import recover_job
+            self.agent_job=recover_job(self)
 
     def record(self, action: str, **details: object) -> None:
         if self.project is None:
@@ -261,6 +265,9 @@ class Handler(BaseHTTPRequestHandler):
                 elif path=="/api/modeler/state":
                     from .studio_modeler import get_state
                     get_state(self)
+                elif path=="/api/agent/status":
+                    from .studio_agent import status
+                    self.send_json(200,status(self.server))
                 elif path=="/api/versions":
                     versions=[]
                     for directory in sorted(self.server.workspace.glob("revision-*")):
@@ -338,6 +345,15 @@ class Handler(BaseHTTPRequestHandler):
             body=json.loads(self.rfile.read(size))
             with self.server.lock:
                 if path=="/api/upload":self.upload(body);return
+                if path=="/api/agent/start":
+                    from .studio_agent import start
+                    start(self,body);return
+                if path=="/api/agent/accept":
+                    from .studio_agent import accept
+                    accept(self,body);return
+                if path=="/api/agent/accept-revision":
+                    from .studio_agent import accept_revision
+                    accept_revision(self,body);return
                 if path=="/api/project":self.create_project(body);return
                 if path=="/api/geometry/reconstruct":self.reconstruct_photos(body);return
                 if path=="/api/fusion/reconstruct":self.reconstruct_fusion(body);return
@@ -1077,10 +1093,26 @@ def main()->int:
     parser.add_argument("--warm-vision",action="store_true",help="Load the configured CPU vision model before accepting requests")
     parser.add_argument("--trusted-origin",action="append",default=[],metavar="HTTPS_ORIGIN",
                         help="Explicit HTTPS origin permitted through a trusted local reverse proxy (repeatable)")
+    parser.add_argument('--enable-codex-agent',action='store_true',help='Enable opt-in Codex modeling with explicit photo consent')
+    parser.add_argument('--agent-output',type=Path,help='Private output root outside the source workspace and repository')
+    parser.add_argument('--agent-codex',default='codex',help='Codex CLI executable')
+    parser.add_argument('--agent-node',default='node',help='Node.js executable')
+    parser.add_argument('--agent-model',default='gpt-6.1-terra',help='Authorized Codex model name')
     parser.add_argument("--port",type=int,default=8766)
     args=parser.parse_args()
     if args.warm_vision and args.vision_model is None:parser.error("--warm-vision requires --vision-model")
-    server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud,args.vision_model,tuple(args.trusted_origin))
+    settings=None
+    if args.enable_codex_agent:
+        import shutil
+        if args.agent_output is None:parser.error('--enable-codex-agent requires --agent-output')
+        root=args.agent_output.resolve();workspace=args.workspace.resolve();repo=Path(__file__).resolve().parents[2]
+        if root==workspace or root.is_relative_to(workspace) or root.is_relative_to(repo):
+            parser.error('agent output must be outside the source workspace and repository')
+        root.mkdir(parents=True,exist_ok=True,mode=0o700)
+        codex=shutil.which(args.agent_codex);node=shutil.which(args.agent_node)
+        if not codex or not node:parser.error('configured Codex and Node executables must be available')
+        settings={'output_root':root,'codex':codex,'node':node,'model':args.agent_model,'timeout':300}
+    server=StudioServer(args.port,args.model_dir,args.workspace,args.point_cloud,args.vision_model,tuple(args.trusted_origin),settings)
     if args.warm_vision:
         from .semantic_vision import UperNetOnnxProvider
         server.vision_provider=UperNetOnnxProvider(server.vision_model)

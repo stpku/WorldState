@@ -1,0 +1,9 @@
+{
+  "name": "worldstate-bim-agent-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Optional MCP adapter for evidence-constrained WorldState BIM experiments",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1"
+  }
+}
