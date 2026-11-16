@@ -27,6 +27,8 @@ Studio 增加可选的 AI 建模模式。用户选择两张已注册照片并明
 
 在 kicker 的另一次真实 Agent 交互中，模型检查既有局部墙片段并提出长度增加 0.2 m 的预览；隔离浏览器确认后，IFC4 从版本 3 更新到版本 4，墙体 GUID 保持 `15K4a41pXJxPHst4KdtLRH`。该尺度仍是假设，模型没有相邻墙或门窗，Agent 明确表示无法检查这些对象，不能当成实测或完整房间。运行记录位于 `~/.cache/worldstate-milestone-a/ai-agent-systemd-edit-v1/` 及对应 `ai-agent-systemd-runs/`。
 
+最初的 `ai-agent-kicker-run1/` 因 Codex 的 MCP 调用需要审批而被 `never` 策略拒绝，没有执行工具；后续使用 Codex 支持的自动审批路径，在受限工作区成功运行。与正式服务同权限的早期隔离运行还分别因 systemd 环境缺少 Node 路径、缺少模型网络代理而失败，记录保留在 `ai-agent-systemd-runs/`；补齐该服务专用环境后才完成真实调用。未读取或输出模型凭据。
+
 另一次真实测试中，模型先错误地将 `0.2 m` 当作最终墙长，随后提出正确的增量预览。旧界面默认选中了早先建议，自动化复测因此应用了错误值；此失败保存在 `ai-agent-systemd-edit-final/`，只影响隔离副本。界面现要求显式选择建议，并展示修改前、修改后及变化量；随后在另一隔离版本中选择正确建议，实际增量为 0.2 m，GUID 保持。该自动化确认不代表真人审核。
 
 最终同权限 systemd 隔离测试在原始版本上再次完成真实 Agent 修订：长度约 `0.9532 → 1.1532 m`，增量 `0.2 m`，结果仍需现场验证；记录在 `ai-agent-recovery-browser-v1/`。重启该隔离服务后，已完成任务及建议被恢复，已经应用的旧建议在界面中标为过期。Core 与产品全量测试共 **258 项通过**；依赖 IfcOpenShell 发出 `datetime.utcnow()` 弃用提示。
