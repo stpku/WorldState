@@ -1,0 +1,31 @@
+{
+  "schema": "worldstate-agent-tasks/0.1",
+  "model": "examples/bim_synthetic_room_round3/original/model.json",
+  "model_status": "SIMULATED",
+  "instructions": "Each task starts from the unchanged, simulated reference model. The expected values and untouched objects are declared before any Agent run. Proposals are not applied to the source workspace.",
+  "tasks": [
+    {"id":"A01","prompt":"将选中的墙延长20厘米，检查相邻墙和开口。","selected":"wall-1","kind":"edit","steps":[["wall-1","length",4.2]],"keep":[]},
+    {"id":"A02","prompt":"把 wall-1 的长度设置为4.5米。","kind":"edit","steps":[["wall-1","length",4.5]],"keep":[]},
+    {"id":"A03","prompt":"把 wall-2 的高度设为2.9米。","kind":"edit","steps":[["wall-2","height",2.9]],"keep":["wall-1","wall-3","door-1","window-1"]},
+    {"id":"A04","prompt":"将 wall-2 的高度调整到290厘米。","kind":"edit","steps":[["wall-2","height",2.9]],"keep":["wall-1","wall-3","door-1","window-1"]},
+    {"id":"A05","prompt":"把 wall-2 的高度增加20厘米。","kind":"edit","steps":[["wall-2","height",3.0]],"keep":["wall-1","wall-3","door-1","window-1"]},
+    {"id":"A06","prompt":"把 wall-3 的高度设置为2.95米。","kind":"edit","steps":[["wall-3","height",2.95]],"keep":["wall-1","wall-2","door-1"]},
+    {"id":"A07","prompt":"将 wall-2 起点的X坐标设为4.1米，整面墙平移。","variant":"unconstrained","kind":"edit","steps":[["wall-2","position_x",4.1]],"keep":[]},
+    {"id":"A08","prompt":"将 opening-window 沿宿主墙的偏移设置为1.2米。","kind":"edit","steps":[["opening-window","offset",1.2]],"keep":["wall-1","wall-2","door-1"]},
+    {"id":"A09","prompt":"将窗户 window-1 的开口宽度改为1.1米。","kind":"edit","steps":[["opening-window","width",1.1]],"keep":["wall-1","wall-2","door-1"]},
+    {"id":"A10","prompt":"将门 door-1 沿墙的开口偏移调整为1.2米。","kind":"edit","steps":[["opening-door","offset",1.2]],"keep":["wall-2","wall-3","window-1"]},
+    {"id":"A11","prompt":"把 door-1 所在开口的宽度改为80厘米。","kind":"edit","steps":[["opening-door","width",0.8]],"keep":["wall-2","wall-3","window-1"]},
+    {"id":"A12","prompt":"将 opening-door 的高度改为2.15米。","kind":"edit","steps":[["opening-door","height",2.15]],"keep":["wall-2","wall-3","window-1"]},
+    {"id":"A13","prompt":"将 opening-window 的高度改为1.1米。","kind":"edit","steps":[["opening-window","height",1.1]],"keep":["wall-1","wall-2","door-1"]},
+    {"id":"A14","prompt":"将 wall-1 缩到0.5米；若门窗越界就拒绝修改。","kind":"reject","reason":"OPENING_OUTSIDE_WALL"},
+    {"id":"A15","prompt":"将 wall-1 的高度设为1.9米；如果门洞超出墙高则不要修改。","kind":"reject","reason":"OPENING_ABOVE_WALL"},
+    {"id":"A16","prompt":"将 window-1 的开口宽度设为负20厘米；无效时应拒绝。","kind":"reject","reason":"invalid dimension"},
+    {"id":"A17","prompt":"将名为 wall-99 的墙高度改为3米。找不到时请说明。","kind":"reject","reason":"unknown element"},
+    {"id":"A18","prompt":"把墙的高度改为3米。若有多个墙且没有选定对象，请先询问是哪面。","kind":"clarify","reason":"ambiguous wall"},
+    {"id":"A19","prompt":"将 wall-2 起点的X坐标改为4.1米；如果破坏相邻墙的垂直约束则拒绝。","kind":"reject","reason":"ANGULAR_CONSTRAINT_CONFLICT"},
+    {"id":"A20","prompt":"将 wall-2 高度设为2.9米，同时将 opening-door 的偏移设为1.2米，提出两项修改。","kind":"multi","steps":[["wall-2","height",2.9],["opening-door","offset",1.2]],"keep":["wall-3","window-1"]},
+    {"id":"A21","prompt":"这个修改建议是在旧模型版本上生成的，而模型现已改变。请不要应用它，说明下一步。","kind":"clarify_stale","reason":"stale suggestion"},
+    {"id":"A22","prompt":"将模型直接恢复到历史版本，但不要在未确认的情况下应用。若没有可用工具请明确说明。","kind":"restore","reason":"version restore requires explicit supported operation"},
+    {"id":"A23","prompt":"请预览恢复到历史版本1，等待确认后再恢复。","variant":"history","kind":"restore_action","reason":"a real restore proposal is required"}
+  ]
+}
