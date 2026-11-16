@@ -198,7 +198,7 @@ function showAgent(info){
   const agent=$('assistant-mode').value==='agent',job=info.job;$('agent-output').hidden=!agent||!job;
   $('assistant-provider').textContent=agent?('Codex · '+(info.provider||'未配置')):'本地规则模式 · DSH 未连接';
   $('assistant-hint').textContent=agent?'使用当前左右照片；发送前需确认模型数据使用。':'可输入受支持的构件修改指令。';
-  if(!agent||!job)return;
+  if(!agent)return;if(!job){activity('输入目标并确认所选照片的传输授权。');return}
   const events=(job.events||[]).map(e=>`${e.tool} · ${e.status}${e.error?' · '+e.error:''}`).join('\n');
   $('agent-trace').textContent=[job.result?'结果：\n'+job.result:'',events?'工具记录：\n'+events:'',job.error].filter(Boolean).join('\n\n');
   const hypotheses=$('agent-hypotheses'),chosen=hypotheses.value;hypotheses.replaceChildren(new Option('照片中不显示 AI 建议',''));for(const h of job.hypotheses||[])hypotheses.add(new Option((semanticLabels[h.label]||h.label)+' · '+h.description.slice(0,28),h.id));if([...hypotheses.options].some(o=>o.value===chosen))hypotheses.value=chosen;hypotheses.hidden=hypotheses.options.length<2;

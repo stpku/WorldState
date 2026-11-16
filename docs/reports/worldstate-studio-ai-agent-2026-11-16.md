@@ -33,6 +33,12 @@ Studio 增加可选的 AI 建模模式。用户选择两张已注册照片并明
 
 实际浏览器及 systemd 隔离运行、照片分析、工具调用、拒绝和候选数据分别保存在 `~/.cache/worldstate-milestone-a/ai-agent-systemd-browser-v4/`、`ai-agent-systemd-edit-final2/`、`ai-agent-office-run2/`、`ai-agent-kicker-comparison.json` 和 `ai-agent-office-comparison-v2.json`。ETH3D 数据和衍生结果按此前审查的 CC BY-NC-SA 4.0 仅用于非商业研究，未提交仓库。
 
+## 现有 Studio 部署
+
+已在既有 Studio 用户服务上启用可选 Codex Agent，地址仍为 `https://skyswind.tailf4fad8.ts.net:18790/`。仅增加该服务的 systemd drop-in 和私有网络环境文件；原服务单元、Tailscale Serve 配置与独立扫描审核服务未修改。Agent 输出位于项目外的私有目录，现有用户项目在部署前已备份。
+
+部署后的服务端 Chromium 只读检查验证了 HTTPS、29 张照片、三维模型、非持久化求解、IFC 下载及 Agent 模式入口；未在正式用户项目启动模型任务，项目状态版本与事件数未变。错误 Host、错误 Origin 和错误令牌返回 403，未确认照片传输的 Agent 请求返回 400。在线检查使用 Linux Chromium 的 Windows UA，不代表实体 Windows 设备实测；systemd 服务已启用且 lingering 开启，本次未重启整台服务器。
+
 ## 配置与复现
 
 可选 MCP 依赖与 Core 分离。管理员在已授权的环境中安装并指定一个项目和项目外的私有输出目录：
