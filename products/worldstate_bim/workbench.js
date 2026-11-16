@@ -14,9 +14,13 @@ function element(tag,text,cls){const node=document.createElement(tag);if(text!==
 function message(text,error=false){$('message').textContent=text;$('message').style.color=error?'#a45145':''}
 function activity(text,error=false){$('activity').textContent=text;$('activity').style.color=error?'#a45145':''}
 async function api(path,body){
-  let response;
-  try{response=await fetch(path,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-WorldState-Token':token},body:JSON.stringify(body)})}
-  catch(error){throw new Error('连接中断，请检查服务后重试；未确认的操作不会自动重发。')}
+  let response;const retryState=body===undefined&&path==='/api/modeler/state';
+  for(let attempt=0;attempt<(retryState?3:1);attempt++){
+    try{response=await fetch(path,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-WorldState-Token':token},body:JSON.stringify(body)})}
+    catch(error){console.warn('[WorldState] request failed',path,'attempt',attempt+1,error.message);if(retryState&&attempt<2){await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));continue}throw new Error(body===undefined?'状态读取失败，请检查连接后重试。':'连接中断，本次写入状态不明，请刷新并核验；系统不会自动重发。')}
+    if(retryState&&[502,503,504].includes(response.status)&&attempt<2){console.warn('[WorldState] status read failed',response.status,'attempt',attempt+1);await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));continue}
+    break;
+  }
   const data=response.headers.get('content-type')?.includes('application/json')?await response.json():await response.text();
   if(!response.ok){const error=new Error(typeof data==='object'?(data.error||'操作失败'):('请求失败（'+response.status+'）'));error.status=response.status;throw error}
   return data;

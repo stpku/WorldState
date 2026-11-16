@@ -62,6 +62,23 @@ def test_studio_and_modeler_share_workbench_with_allowlisted_assets(server):
     assert api(server,'/assets/../../studio_server.py')[0]==404
 
 
+def test_http_connection_reuse_and_rejected_post_close(server):
+    """Reuse safe reads; do not leave an unauthorised request body on the stream."""
+    import http.client
+    connection=http.client.HTTPConnection('127.0.0.1',server.server_port,timeout=5)
+    try:
+        connection.request('GET','/api/model');response=connection.getresponse()
+        assert response.version==11 and response.status==200;response.read()
+        original=connection.sock
+        connection.request('GET','/api/versions');response=connection.getresponse()
+        assert response.status==200;response.read();assert connection.sock is original
+        connection.request('POST','/api/command',body='{}',headers={
+            'Origin':'http://attacker.invalid','X-WorldState-Token':server.token})
+        response=connection.getresponse();assert response.status==403 and response.will_close
+        response.read()
+    finally:connection.close()
+
+
 def test_explicit_https_origin_preserves_host_origin_pair_and_token_checks(tmp_path):
     """Only the configured HTTPS host and matching origin may use the proxy."""
     import http.client

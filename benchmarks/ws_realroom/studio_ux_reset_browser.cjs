@@ -5,9 +5,11 @@ async function main(){
  if(!/^http:\/\/127\.0\.0\.1:\d+\/$/.test(base||'')||!inputFile||!out||fs.existsSync(out))throw Error('expected isolated local URL, real observations and new output');
  fs.mkdirSync(out,{recursive:true});const input=JSON.parse(fs.readFileSync(inputFile,'utf8'));
  const browser=await chromium.launch({headless:true,executablePath:process.env.WS_CHROMIUM||'/usr/bin/chromium',args:['--no-sandbox','--enable-unsafe-swiftshader']});
- const errors=[],failed=[];let page;
- const attach=p=>{p.on('pageerror',e=>errors.push(e.message));p.on('requestfailed',r=>{if(new URL(r.url()).pathname.startsWith('/api/'))failed.push({path:new URL(r.url()).pathname,error:r.failure()?.errorText})});p.on('crash',()=>errors.push('browser page crashed'))};
- const read=()=>page.evaluate(async()=>await(await fetch('/api/modeler/state')).json());
+ const errors=[],failed=[],readFailures=[];let page;
+ const attach=p=>{p.on('pageerror',e=>errors.push(e.message));p.on('requestfailed',r=>{if(new URL(r.url()).pathname.startsWith('/api/'))failed.push({at:new Date().toISOString(),path:new URL(r.url()).pathname,error:r.failure()?.errorText})});p.on('crash',()=>errors.push('browser page crashed'))};
+ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+ async function read(){for(let attempt=1;attempt<=3;attempt++){try{return await page.evaluate(async()=>{const r=await fetch('/api/modeler/state',{signal:AbortSignal.timeout(10000)});if(!r.ok){const error=new Error('HTTP '+r.status);error.status=r.status;throw error}return await r.json()})}catch(error){readFailures.push({at:new Date().toISOString(),attempt,error:String(error.message)});console.warn('state read failed, attempt '+attempt+': '+error.message);if(attempt===3||/HTTP (?:4\d\d|501)\b/.test(error.message))throw error;await sleep(250*attempt)}}}
+ async function waitRevision(revision){const deadline=Date.now()+60000;let last;while(Date.now()<deadline){last=(await read()).state.revision;if(last>=revision)return;await sleep(300)}throw Error('state revision timeout: expected '+revision+', last '+last)}
  const message=async t=>{try{await page.waitForFunction(x=>document.querySelector('#message').textContent.includes(x),t,{timeout:30000})}catch(error){throw Error('waiting for '+t+'; current message: '+await page.locator('#message').textContent())}};
  async function waitReady(id){await page.waitForFunction(x=>document.querySelector('#canvas-a').dataset.imageId===String(x),id,{timeout:30000})}
  async function choose(cam,feature){await page.locator('#feature').selectOption(feature);await page.locator('#view-a').selectOption(String(cam.image_id));await waitReady(cam.image_id)}
@@ -16,7 +18,7 @@ async function main(){
    const canvas=page.locator('#canvas-a'),box=await canvas.boundingBox();
    await canvas.click({position:{x:xy[0]/cam.width_px*box.width,y:xy[1]/cam.height_px*box.height}});
    if(fine){try{await page.locator('#zoom-panel').waitFor({state:'visible',timeout:30000})}catch(e){throw Error('zoom image '+cam.image_id+' unavailable: '+await page.locator('#message').textContent())}const z=page.locator('#zoom'),r=await z.boundingBox(),crop=await z.evaluate(e=>({x:Number(e.dataset.cropX),y:Number(e.dataset.cropY),w:Number(e.dataset.cropWidth),h:Number(e.dataset.cropHeight)}));await z.click({position:{x:(xy[0]-crop.x)*r.width/crop.w,y:(xy[1]-crop.y)*r.height/crop.h}})}
-   if(wait)await page.waitForFunction(async n=>(await(await fetch('/api/modeler/state')).json()).state.revision>n,revision,{timeout:60000});
+   if(wait)await waitRevision(revision+1);
  }
  async function saveIfc(name){const bytes=await page.evaluate(async()=>{const r=await fetch('/api/export/model.ifc');if(!r.ok)throw Error('IFC download '+r.status);return Array.from(new Uint8Array(await r.arrayBuffer()))});fs.writeFileSync(path.join(out,name),Buffer.from(bytes))}
  try{
@@ -45,14 +47,14 @@ async function main(){
   const first=input.observations.find(o=>o.object_id===input.objects[0].id&&o.kind==='point'),cam=input.cameras.find(c=>c.image_id===first.image_id);
   await choose(cam,first.feature_id);await page.locator('#fine-mode').uncheck();await page.route('**/api/modeler/point',async route=>{await new Promise(r=>setTimeout(r,120));await route.continue()});
   const before=(await read()).state.revision;for(const dx of [.1,.3,.5,.7])await clickPixel(cam,[first.pixel_xy[0]+dx,first.pixel_xy[1]],{fine:false,wait:false});
-  await page.waitForFunction(async n=>(await(await fetch('/api/modeler/state')).json()).state.revision>=n,before+4,{timeout:60000});
+  await waitRevision(before+4);
   await page.waitForFunction(()=>!document.querySelector('#solve').disabled,null,{timeout:60000});await page.unroute('**/api/modeler/point');
   let after=(await read()).state;if(after.revision!==before+4)throw Error('queued updates did not all persist');
   await page.locator('[data-right-tab="observations"]').click();await page.locator('#observations-tab details summary').click();page.once('dialog',d=>d.accept());await page.locator('#discard-object').click();await message('候选已放弃');
   await page.locator('#solve').click();await message('候选已求解');await page.locator('#open-delivery').click();await page.locator('#confirm-up').check();await page.locator('#confirm-rectangle').check();await page.locator('#commit').click();await message('已生成 IFC 版本');await saveIfc('after-discard.ifc');
   if(errors.length||failed.length)throw Error('browser issues '+JSON.stringify({errors,failed}));
-  const result={status:'PASS_WITH_EXPECTED_CANDIDATE_REJECTION',operator:'automation',layout,real_photos:initial.uploads.length,registered_cameras:initial.state.cameras.length,photo_observations:count,queued_annotations:4,new_candidate_status:'UNREVIEWED_FEATURE_HULL_NOT_CONFIRMED_WALL',rejection,ifc_sha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(out,'revised.ifc'))).digest('hex'),errors,failed,caveats:['Automation is not a human trial or labor measurement.','The new feature hull was correctly rejected for IFC.']};
+  const result={status:'PASS_WITH_EXPECTED_CANDIDATE_REJECTION',operator:'automation',layout,real_photos:initial.uploads.length,registered_cameras:initial.state.cameras.length,photo_observations:count,queued_annotations:4,new_candidate_status:'UNREVIEWED_FEATURE_HULL_NOT_CONFIRMED_WALL',rejection,ifc_sha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(out,'revised.ifc'))).digest('hex'),errors,failed,readFailures,caveats:['Automation is not a human trial or labor measurement.','The new feature hull was correctly rejected for IFC.']};
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
- }finally{await browser.close()}
+ }finally{fs.writeFileSync(path.join(out,'request-failures.json'),JSON.stringify({errors,failed,readFailures},null,2)+'\n');await browser.close()}
 }
 main().catch(e=>{console.error(e);process.exitCode=1});

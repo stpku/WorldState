@@ -194,10 +194,13 @@ def parse_local_command(model: dict, text: str, selected_id: str | None = None) 
 
 class Handler(BaseHTTPRequestHandler):
     server: StudioServer
+    protocol_version = 'HTTP/1.1'
+    timeout = 15
     def log_message(self,format: str,*args: object)->None:
         pass
     def send_data(self,status: int,data: bytes,mime: str)->None:
         self.send_response(status);self.send_header("Content-Type",mime);self.send_header("Content-Length",str(len(data)))
+        if self.close_connection:self.send_header("Connection","close")
         self.send_header("Cache-Control","no-store");self.send_header("X-Content-Type-Options","nosniff")
         self.send_header("Content-Security-Policy","default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'")
         self.end_headers();self.wfile.write(data)
@@ -325,6 +328,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self)->None:
         path=urlsplit(self.path).path
         if not self.valid_origin() or not secrets.compare_digest(self.headers.get("X-WorldState-Token",""),self.server.token):
+            self.close_connection=True
             self.send_data(403,b"local origin and session token required","text/plain");return
         try:
             size=int(self.headers.get("Content-Length","0"))
@@ -381,7 +385,10 @@ class Handler(BaseHTTPRequestHandler):
                     self.server.project["current_revision"]=revised["revision"]
                     self.server.record("revise", element_id=ident, attribute=attribute)
                 self.send_json(200,{"model":revised,"diff":diff,"comparison":comparison})
+        except (BrokenPipeError,ConnectionResetError):
+            return
         except (KeyError,TypeError,ValueError,OSError,RuntimeError,json.JSONDecodeError,binascii.Error) as exc:
+            self.close_connection=True
             self.send_json(400,{"error":str(exc)[:400]})
 
     def reoptimize_local_wall(self, body: dict) -> None:
