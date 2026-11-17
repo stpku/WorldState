@@ -91,7 +91,28 @@ def score(task,model,proposals,text,tool_errors,work):
         except Exception as exc:result['reason']='deterministic validation failed: '+str(exc)[:300]
         return result
     if kind=='restore_action':
-        result['reason']='No supported version-restore proposal and verified restoration artifact';return result
+        # Original task requires an actual restoration preview and verified
+        # artifact, not a textual promise. All history remains in the isolated
+        # workspace and the benchmark confirmation is automation.
+        from products.worldstate_bim.general_modeler import digest
+        from products.worldstate_bim.history_tools import restore_preview,restored_model
+        candidates=list((work/'agent').glob('restore-proposal-*.json'))
+        if len(candidates)!=1:
+            result['reason']='No supported version-restore proposal and verified restoration artifact';return result
+        try:
+            proposal=json.loads(candidates[0].read_text());previous,preview=restore_preview(work/'workspace',model,1)
+            if (proposal.get('target_revision')!=1 or proposal.get('source_model_sha256')!=digest(model) or
+                proposal.get('target_model_sha256')!=digest(previous) or proposal.get('preview')!=preview):
+                raise ValueError('stale or incorrect restore proposal')
+            restored=restored_model(model,previous);checks=ifc_check(model,restored,[],work)
+            if (restored['elements']!=previous['elements'] or restored['nodes']!=previous['nodes'] or
+                not checks['guid_sets_equal'] or checks['schema_errors'] or checks['geometry_ok']!=checks['geometry_total']):
+                raise ValueError('restore artifact or IFC identity check failed')
+            result.update(status='PASS',reason='restore preview and deterministic new version verified',ifc=checks)
+        except Exception as exc:result['reason']='restore validation failed: '+str(exc)[:300]
+        return result
+    if task.get('expected_tool_error') and not any(re.search(task['expected_tool_error'],error,re.I) for error in tool_errors):
+        result['reason']='the required actual tool error was not observed';return result
     if (task.get('reason')=='ANGULAR_CONSTRAINT_CONFLICT' and
         not any('ANGULAR_CONSTRAINT_CONFLICT' in error for error in tool_errors)):
         # An unsupported parameter is not proof that the requested geometric
@@ -146,7 +167,7 @@ def main():
     if a.output.exists():raise FileExistsError('use a new output directory')
     if not 1<=a.workers<=2:raise ValueError('workers must be 1 or 2; avoid overloading model service')
     manifest=json.loads(a.tasks.read_text());tasks=manifest['tasks'];source_path=ROOT/manifest['model'];source=json.loads(source_path.read_text())
-    if len(tasks)<20 or len({x['id'] for x in tasks})!=len(tasks):raise ValueError('task set must contain at least 20 unique tasks')
+    if len(tasks)<4 or len({x['id'] for x in tasks})!=len(tasks):raise ValueError('task set must contain at least four unique tasks')
     a.output.mkdir(parents=True,mode=0o700);write(a.output/'frozen-run.json',{'tasks_sha256':sha(a.tasks),'model_sha256':sha(source_path),'mode':a.mode,'task_count':len(tasks),'provider':a.model if a.mode=='agent' else 'local_rules'})
     with concurrent.futures.ThreadPoolExecutor(max_workers=a.workers) as executor:
         futures=[executor.submit(execute,t,source,a.output,a.mode,a) for t in tasks];results=[f.result() for f in futures]

@@ -321,6 +321,19 @@ def revise_element(model: dict[str, Any], element_id: str, attribute: str, value
             # list so a local edit cannot contaminate unrelated provenance.
             nodes[node_id]["evidence_refs"] = nodes[node_id]["evidence_refs"] + [ref]
         before, after = old, float(value)
+    elif kind == "IfcWall" and attribute in {"start_x", "start_y", "end_x", "end_y"}:
+        # An endpoint move is not a translation: keep the opposite endpoint
+        # fixed and reject conflicts with the actual shared-node constraints.
+        endpoint, axis = attribute.split("_")
+        node = nodes[element[endpoint]]
+        if node.get(axis) is None:
+            raise ValueError("wall endpoint position is unknown")
+        before = node[axis]
+        node[axis] = float(value)
+        node["status"] = status
+        node["evidence_refs"] = node["evidence_refs"] + [ref]
+        changed_nodes.add(node["id"])
+        after = float(value)
     elif kind == "IfcWall" and attribute in {"position_x", "position_y"}:
         axis = attribute[-1]
         a, b = nodes[element["start"]], nodes[element["end"]]

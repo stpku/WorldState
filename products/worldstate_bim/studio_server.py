@@ -11,6 +11,7 @@ import json
 import os
 import re
 import secrets
+import subprocess
 import tempfile
 import threading
 import uuid
@@ -34,6 +35,18 @@ _ASSETS={
     '/assets/three.module.js':('vendor/three-r128/three.module.js','text/javascript; charset=utf-8'),
     '/assets/OrbitControls.js':('vendor/three-r128/OrbitControls.js','text/javascript; charset=utf-8'),
 }
+
+
+def build_info() -> dict:
+    """Expose the actual local source commit without relying on a release tag."""
+    root=Path(__file__).resolve().parents[2]
+    try:
+        commit=subprocess.run(['git','-C',str(root),'rev-parse','--verify','HEAD'],capture_output=True,text=True,timeout=3,check=True).stdout.strip()
+        dirty=bool(subprocess.run(['git','-C',str(root),'status','--porcelain','--untracked-files=no'],capture_output=True,text=True,timeout=3,check=True).stdout.strip())
+        if not re.fullmatch(r'[0-9a-f]{40}',commit):raise ValueError('invalid revision')
+        return {'product':'0.2-research-preview','commit':commit,'tracked_changes':dirty}
+    except (OSError,subprocess.SubprocessError,ValueError):
+        return {'product':'0.2-research-preview','commit':None,'tracked_changes':None}
 
 
 def _write_json(path: Path, value: dict) -> None:
@@ -107,6 +120,7 @@ class StudioServer(ThreadingHTTPServer):
                 expected=Path(temp)/"model.ifc";export_room(self.model,expected)
                 _verify_geometry(ifcopenshell.open(str(expected)),ifcopenshell.open(str(self.model_dir/"model.ifc")))
         self.lock=threading.Lock();self.photo_io=threading.BoundedSemaphore(2);self.token=secrets.token_urlsafe(24)
+        self.build=build_info()
         self.agent_settings=agent_settings;self.agent_job=None
         self.vision_model=vision_model.resolve(strict=True) if vision_model is not None else None
         self.vision_provider=None
@@ -271,6 +285,7 @@ class Handler(BaseHTTPRequestHandler):
                               "general_modeler.html" if path=="/legacy-modeler" else "workbench.html")
                     page=Path(__file__).with_name(filename).read_text().replace("__WS_TOKEN__",self.server.token)
                     self.send_data(200,page.encode(),"text/html; charset=utf-8")
+                elif path=="/api/version":self.send_json(200,self.server.build)
                 elif path=="/api/project":self.send_json(200,{"project":self.server.project,"uploads":self.server.uploaded,
                                                                "has_model":self.server.model is not None, "vision_configured":self.server.vision_model is not None})
                 elif path=="/api/modeler/state":
@@ -365,6 +380,12 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/agent/accept-revision":
                     from .studio_agent import accept_revision
                     accept_revision(self,body);return
+                if path=="/api/agent/accept-restore":
+                    from .studio_agent import accept_restore
+                    accept_restore(self,body);return
+                if path=="/api/agent/accept-design":
+                    from .studio_agent import accept_design
+                    accept_design(self,body);return
                 if path=="/api/agent/preview-batch":
                     from .studio_agent import preview_batch
                     preview_batch(self,body);return

@@ -89,7 +89,18 @@ def status(server) -> dict:
             if item.get('status') != 'AI_PROPOSED_UNVERIFIED':raise ValueError('invalid revision proposal')
             revisions.append(item)
         except (ValueError, KeyError, OSError, TypeError):artifact_errors.append(path.stem)
+    restores=[];designs=[]
+    for prefix,expected,destination in (('restore-proposal-','AI_RESTORE_PROPOSED_UNVERIFIED',restores),
+                                        ('design-proposal-','AI_SIMULATED_DESIGN_PROPOSED',designs)):
+        for path in sorted(job['output'].glob(prefix+'*.json'))[:20]:
+            if not re.fullmatch(prefix+r'[0-9a-f]{32}\.json',path.name):continue
+            try:
+                item=read_json(path)
+                if item.get('id')!=path.stem or item.get('status')!=expected:raise ValueError('invalid proposal')
+                destination.append(item)
+            except (ValueError,KeyError,OSError,TypeError):artifact_errors.append(path.stem)
     public.update(events=events, hypotheses=hypotheses, observations=observations, revision_proposals=revisions,
+                  restore_proposals=restores,design_proposals=designs,
                   artifact_errors=artifact_errors);result['job'] = public
     return result
 
@@ -98,20 +109,25 @@ def start(handler, body: dict) -> None:
     server = handler.server;settings = server.agent_settings
     if settings is None:raise ValueError('未配置多模态建模 Agent；当前仍为本地规则模式')
     if server.project is None:raise ValueError('请先在隔离工作区打开或创建项目')
-    model_only = body.get('model_only') is True
+    model_only = body.get('model_only') is True;author_only=body.get('author_only') is True
+    if model_only and author_only:raise ValueError('请选择一种 Agent 工作模式')
+    if author_only and body.get('allow_external_text') is not True:
+        raise ValueError('请先明确同意将建模文字发送至已配置模型')
     if model_only and body.get('allow_external_model') is not True:
         raise ValueError('请先明确同意将模型构件信息发送至已配置模型')
-    if not model_only and body.get('allow_external_images') is not True:
+    if not model_only and not author_only and body.get('allow_external_images') is not True:
         raise ValueError('请先明确同意将选定照片发送至已配置模型')
     goal, images, selected = body.get('goal'), body.get('image_ids'), body.get('selected_id')
     if (not isinstance(goal, str) or not goal.strip() or len(goal) > 1000 or
-        not isinstance(images, list) or not (model_only and not images or 2 <= len(images) <= 8) or
+        not isinstance(images, list) or not ((model_only or author_only) and not images or 2 <= len(images) <= 8) or
         any(isinstance(i, bool) or not isinstance(i, int) for i in images) or len(set(images)) != len(images)):
         raise ValueError('请输入任务并选择 2–8 张不同的已注册照片')
     state = (server.project or {}).get('general_modeler')
     if model_only and (images or not server.model):
         raise ValueError('仅模型模式需要已保存模型，且不能发送照片')
-    if not model_only and (not state or not set(images) <= {c['image_id'] for c in state['cameras']}):
+    if author_only and (images or server.model or server.project.get('current_revision')):
+        raise ValueError('文字新建需要没有模型的项目，且不能发送照片')
+    if not model_only and not author_only and (not state or not set(images) <= {c['image_id'] for c in state['cameras']}):
         raise ValueError('所选照片未注册到当前项目')
     known = {o['id'] for o in (state or {}).get('objects', [])} | {e['id'] for e in (server.model or {}).get('elements', [])}
     if selected is not None and (not isinstance(selected, str) or selected not in known):
@@ -132,7 +148,7 @@ def start(handler, body: dict) -> None:
             from .agent_runner import run_codex_agent
             result = run_codex_agent(workspace=server.workspace, output=output, image_ids=images, goal=goal,
                 codex=settings['codex'], node=settings['node'], model=settings['model'],
-                timeout=settings['timeout'], selected_id=selected, model_only=model_only)
+                timeout=settings['timeout'], selected_id=selected, model_only=model_only,author_only=author_only)
             with server.lock:
                 job.update(status=result['status'], result=result['result'], candidates=result['candidates'],
                            error=result.get('error'))
@@ -330,3 +346,59 @@ def accept_batch(handler, body: dict) -> None:
     server.record('agent_batch_revision_accepted',proposal_ids=body['proposal_ids'],job_id=server.agent_job['id'],
                   operator=operator,warning='Ordered batch accepted; independent validation remains required')
     handler.send_json(200,{'model':server.model,'steps':preview['steps'],'comparison':preview['comparison']})
+
+
+def _ready_job(server,body:dict) -> dict:
+    job=server.agent_job
+    if not job or job['id']!=body.get('job_id') or job['status'] not in {'COMPLETED','COMPLETED_NO_SOLVED_CANDIDATE'}:
+        raise ValueError('Agent 任务不可用或尚未完成')
+    if body.get('confirmed') is not True:raise ValueError('请先明确确认预览内容')
+    return job
+
+
+def accept_restore(handler,body:dict) -> None:
+    """Restore a verified proposal as a new immutable version after confirmation."""
+    from .history_tools import restore_preview,restored_model
+    from .room_cli import save_version
+    server=handler.server;job=_ready_job(server,body);ident=body.get('proposal_id')
+    if not isinstance(ident,str) or not re.fullmatch(r'restore-proposal-[0-9a-f]{32}',ident):raise ValueError('恢复建议编号无效')
+    proposal=read_json(job['output']/(ident+'.json'));model=server.model;state=(server.project or {}).get('general_modeler')
+    if (not model or proposal.get('id')!=ident or proposal.get('status')!='AI_RESTORE_PROPOSED_UNVERIFIED' or
+        proposal.get('provider')!='codex-cli:'+server.agent_settings['model'] or proposal.get('project_id')!=model['project_id'] or
+        proposal.get('source_model_revision')!=model['revision'] or body.get('revision')!=model['revision'] or
+        proposal.get('source_model_sha256')!=digest(model) or (state and state.get('model_dirty'))):
+        raise ValueError('模型或恢复建议已改变；请重新预览')
+    previous,preview=restore_preview(server.workspace,model,proposal['target_revision'])
+    if proposal.get('target_model_sha256')!=digest(previous) or proposal.get('preview')!=preview:
+        raise ValueError('历史版本已改变；请重新预览')
+    if preview['geometry_issues']:raise ValueError('历史版本存在几何冲突')
+    restored=restored_model(model,previous);target=server.workspace/f"revision-{restored['revision']:03}"
+    save_version(restored,target);server.model,server.model_dir=restored,target;server.project['current_revision']=restored['revision']
+    operator='automation_accepted_unverified' if server.project.get('operator_kind')=='automation' else 'user_accepted_unverified'
+    server.record('agent_restore_accepted',proposal_id=ident,job_id=job['id'],source_revision=previous['revision'],operator=operator)
+    handler.send_json(200,{'model':restored,'preview':preview})
+
+
+def accept_design(handler,body:dict) -> None:
+    """Rebuild an explicitly confirmed simulated design without trusting IFC text."""
+    from .room_cli import save_version
+    from .text_author import build_design
+    server=handler.server;job=_ready_job(server,body);ident=body.get('proposal_id')
+    if not isinstance(ident,str) or not re.fullmatch(r'design-proposal-[0-9a-f]{32}',ident):raise ValueError('设计建议编号无效')
+    proposal=read_json(job['output']/(ident+'.json'));project=server.project
+    context={'project_id':project['id'],'current_revision':project.get('current_revision'),
+             'general_modeler':project.get('general_modeler'),'uploads':sorted(x['sha256'] for x in server.uploaded)}
+    if (server.model is not None or project.get('current_revision') or proposal.get('id')!=ident or
+        proposal.get('status')!='AI_SIMULATED_DESIGN_PROPOSED' or proposal.get('project_id')!=project['id'] or
+        proposal.get('provider')!='codex-cli:'+server.agent_settings['model'] or proposal.get('context_sha256')!=digest(context)):
+        raise ValueError('项目或设计建议已改变，请重新生成')
+    request=read_json(job['output']/'authorized-request.json')
+    if request.get('project_id')!=project['id'] or proposal.get('request_sha256')!=digest(request):raise ValueError('建模文字已改变')
+    model=build_design(proposal['spec'],project_id=project['id'],user_request=request['goal'])
+    if proposal.get('model_sha256')!=digest(model):raise ValueError('设计候选与确定性模型不一致')
+    target=server.workspace/'revision-001';save_version(model,target)
+    server.model,server.model_dir=model,target;project['current_revision']=1
+    operator='automation_accepted_unverified' if project.get('operator_kind')=='automation' else 'user_accepted_unverified'
+    server.record('agent_design_accepted',proposal_id=ident,job_id=job['id'],operator=operator,
+                  warning='Simulated design; not a real-world observation')
+    handler.send_json(201,{'model':model,'warning':'设计/模拟模型，不代表现场观测。'})

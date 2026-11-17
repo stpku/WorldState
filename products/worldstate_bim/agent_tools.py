@@ -33,7 +33,8 @@ class AgentTools:
     """Restrict operations to an explicitly selected workspace and output directory."""
 
     def __init__(self, workspace: Path, output: Path, provider: str = 'unspecified',
-                 approved_constraints: Path | None = None, allowed_images: set[int] | None = None):
+                 approved_constraints: Path | None = None, allowed_images: set[int] | None = None,
+                 *, allow_empty: bool = False, request_file: Path | None = None):
         self.workspace = workspace.resolve(strict=True)
         self.output = output.resolve(strict=True)
         if (self.workspace == self.output or self.workspace in self.output.parents or
@@ -44,15 +45,18 @@ class AgentTools:
         self.approved_constraints = read_json(approved_constraints) if approved_constraints else None
         self.state = self.project.get('general_modeler')
         if not isinstance(self.state, dict):
-            if not self.project.get('current_revision'):
+            if not self.project.get('current_revision') and not allow_empty:
                 raise ValueError('project has neither registered cameras nor a saved model')
             self.state = {'revision': 0, 'camera_mode': None, 'cameras': [], 'objects': []}
         self.cameras = {c['image_id']: c for c in self.state['cameras']}
         self.allowed_images = allowed_images
         if allowed_images is not None and not allowed_images <= self.cameras.keys():
             raise ValueError('allowed photos must belong to the registered project')
-        index = read_json(self.workspace / 'evidence-index.json')
+        index_path=self.workspace / 'evidence-index.json'
+        index = read_json(index_path) if index_path.exists() else {'uploads':[]} if allow_empty else read_json(index_path)
         self.uploads = {x['sha256']: x for x in index['uploads']}
+        self.allow_empty=allow_empty
+        self.request=read_json(request_file) if request_file else None
 
     def camera(self, image_id: int) -> dict:
         if (isinstance(image_id, bool) or image_id not in self.cameras or
@@ -334,7 +338,48 @@ class AgentTools:
 
     def inspect_element(self, args: dict) -> dict:
         from .modeling_tools import inspect_element
-        return inspect_element(self.model(), args.get('element_id'))
+        result=inspect_element(self.model(), args.get('element_id'))
+        kind=result['element']['ifc_type']
+        from .room_ir import DIMENSIONS
+        result['supported_revision_attributes']=list(DIMENSIONS.get(kind,()))+(['length','position_x','position_y','start_x','start_y','end_x','end_y'] if kind=='IfcWall' else [])
+        result['position_semantics']='position_x/y translate both wall endpoints; start_x/y and end_x/y move only that shared endpoint. All changes are constraint-checked.' if kind=='IfcWall' else None
+        return result
+
+    def list_versions(self, _: dict) -> dict:
+        from .history_tools import list_versions
+        return list_versions(self.workspace,self.model())
+
+    def preview_restore(self, args: dict) -> dict:
+        from .history_tools import restore_preview
+        model=self.model();previous,preview=restore_preview(self.workspace,model,args.get('source_revision'))
+        if preview['geometry_issues']:raise ValueError('historical model has geometric conflicts')
+        ident='restore-proposal-'+uuid.uuid4().hex
+        result={'id':ident,'status':'AI_RESTORE_PROPOSED_UNVERIFIED','provider':self.provider,'project_id':model['project_id'],
+                'source_model_revision':model['revision'],'source_model_sha256':digest(model),
+                'target_revision':previous['revision'],'target_model_sha256':digest(previous),'preview':preview}
+        with (self.output/(ident+'.json')).open('x') as stream:json.dump(result,stream,ensure_ascii=False,indent=2,allow_nan=False)
+        return result
+
+    def preview_design(self, args: dict) -> dict:
+        from .text_author import build_design
+        from .room_ifc import export_room
+        if not self.allow_empty or self.project.get('current_revision') or not isinstance(self.request,dict):
+            raise ValueError('text authoring requires an explicitly authorized empty project')
+        if self.request.get('project_id')!=self.project['id'] or not isinstance(self.request.get('goal'),str):
+            raise ValueError('authorized design request does not match the project')
+        spec=args.get('spec');model=build_design(spec,project_id=self.project['id'],user_request=self.request['goal'])
+        ident='design-proposal-'+uuid.uuid4().hex;model_path=self.output/(ident+'-model.json');ifc_path=self.output/(ident+'.ifc')
+        with model_path.open('x') as stream:json.dump(model,stream,ensure_ascii=False,indent=2,allow_nan=False)
+        export_room(model,ifc_path)
+        context={'project_id':self.project['id'],'current_revision':self.project.get('current_revision'),
+                 'general_modeler':self.project.get('general_modeler'),'uploads':sorted(self.uploads)}
+        result={'id':ident,'status':'AI_SIMULATED_DESIGN_PROPOSED','provider':self.provider,
+                'project_id':self.project['id'],'context_sha256':digest(context),'request_sha256':digest(self.request),
+                'spec':spec,'model_sha256':digest(model),'ifc_sha256':hashlib.sha256(ifc_path.read_bytes()).hexdigest(),
+                'element_counts':{kind:sum(e['ifc_type']==kind for e in model['elements']) for kind in ('IfcWall','IfcSlab','IfcDoor','IfcWindow','IfcOpeningElement','IfcSpace')},
+                'warning':'Simulated design, not observed reality. Numeric field association and assumptions require user review.'}
+        with (self.output/(ident+'.json')).open('x') as stream:json.dump(result,stream,ensure_ascii=False,indent=2,allow_nan=False)
+        return result
 
     def preview_revision(self, args: dict) -> dict:
         revision = self.project.get('current_revision')
@@ -499,6 +544,7 @@ class AgentTools:
                       'find_tracks': self.find_tracks, 'record_hypothesis': self.record_hypothesis,
                       'record_image_observation': self.record_image_observation,
                       'inspect_element': self.inspect_element, 'preview_revision': self.preview_revision,
+                      'list_versions':self.list_versions,'preview_restore':self.preview_restore,'preview_design':self.preview_design,
                       'solve_surface': self.solve_surface, 'solve_observations': self.solve_observations,
                       'compile_ifc': self.compile_ifc}
         if action not in operations or not isinstance(args, dict):raise ValueError('unsupported agent tool')
@@ -513,12 +559,17 @@ def main() -> int:
     parser.add_argument('--approved-constraints', type=Path)
     parser.add_argument('--allowed-images', help='Comma-separated operator-authorized registered image IDs')
     parser.add_argument('--deny-images', action='store_true', help='Restrict model-only tasks from all photo observations')
+    parser.add_argument('--author-only', action='store_true', help='Allow a blank project, without photo access')
+    parser.add_argument('--request-file',type=Path,help='Trusted authorized text request in the output directory')
     args = parser.parse_args()
     try:
         request = json.load(sys.stdin)
         if args.deny_images and args.allowed_images:raise ValueError('photo scope conflicts with model-only mode')
+        if args.author_only and (not args.deny_images or not args.request_file or args.request_file.resolve().parent!=args.output.resolve()):
+            raise ValueError('author-only mode requires a bounded trusted request and no photos')
         allowed = set() if args.deny_images else {int(x) for x in args.allowed_images.split(',')} if args.allowed_images else None
-        result = AgentTools(args.workspace, args.output, args.provider, args.approved_constraints, allowed).execute(request['action'], request.get('arguments', {}))
+        result = AgentTools(args.workspace, args.output, args.provider, args.approved_constraints, allowed,
+                            allow_empty=args.author_only,request_file=args.request_file).execute(request['action'], request.get('arguments', {}))
         print(json.dumps({'ok': True, 'result': result}, ensure_ascii=False, allow_nan=False))
         return 0
     except (ValueError, KeyError, TypeError, OSError, RuntimeError) as exc:

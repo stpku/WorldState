@@ -18,17 +18,19 @@ from .agent_tools import AgentTools
 
 def run_codex_agent(*, workspace: Path, output: Path, image_ids: list[int], goal: str,
                     codex: str, node: str, model: str, python: str = sys.executable,
-                    timeout: int = 300, selected_id: str | None = None, model_only: bool = False) -> dict:
+                    timeout: int = 300, selected_id: str | None = None, model_only: bool = False,
+                    author_only: bool = False) -> dict:
     """Run the configured model; caller must obtain consent for these photos."""
     if (not isinstance(goal, str) or not goal.strip() or len(goal) > 1000 or
-        not isinstance(image_ids, list) or not (model_only and not image_ids or 2 <= len(image_ids) <= 8) or
+        not isinstance(image_ids, list) or not ((model_only or author_only) and not image_ids or 2 <= len(image_ids) <= 8) or
         any(isinstance(i, bool) or not isinstance(i, int) for i in image_ids) or
         len(set(image_ids)) != len(image_ids)):
         raise ValueError('goal and 2–8 distinct authorized photos or explicit model-only mode are required')
-    if model_only and image_ids:
-        raise ValueError('model-only mode cannot transfer photos')
+    if (model_only or author_only) and image_ids or model_only and author_only:
+        raise ValueError('model-only and author-only modes are exclusive and cannot transfer photos')
     workspace = workspace.resolve(strict=True);output = output.resolve(strict=True)
-    tools = AgentTools(workspace, output, f'codex-cli:{model}', allowed_images=set(image_ids))
+    tools = AgentTools(workspace, output, f'codex-cli:{model}', allowed_images=set(image_ids),allow_empty=author_only)
+    if author_only and tools.project.get('current_revision'):raise ValueError('authoring requires an empty project')
     cameras = [tools.camera(i) for i in image_ids]
     for camera in cameras:tools.photo(camera)
     mcp = Path(__file__).with_name('agent') / 'agent_mcp.cjs'
@@ -36,7 +38,11 @@ def run_codex_agent(*, workspace: Path, output: Path, image_ids: list[int], goal
         raise ValueError('optional MCP dependency is not installed; run npm ci in the agent directory')
     mcp_args = [str(mcp), '--workspace', str(workspace), '--output', str(output), '--python', python,
                 '--provider', f'codex-cli:{model}']
-    if image_ids:
+    if author_only:
+        request_file=output/'authorized-request.json'
+        with request_file.open('x') as stream:json.dump({'project_id':tools.project['id'],'goal':goal},stream,ensure_ascii=False)
+        mcp_args += ['--author-only','--request-file',str(request_file)]
+    elif image_ids:
         mcp_args += ['--allow-images', '--allowed-images', ','.join(map(str, image_ids))]
     else:
         mcp_args += ['--model-only']
@@ -73,7 +79,22 @@ def run_codex_agent(*, workspace: Path, output: Path, image_ids: list[int], goal
             "For an edit call preview_revision; use metres, convert units, and compute an absolute target "
             "from the current value for relative requests. Report before, after, delta and detected issues. "
             "The user must explicitly confirm the proposal. Never claim photos, site truth or a complete clash check. "
+            "position_x/y translate BOTH wall endpoints. For a request to move only a wall's start or end, "
+            "use start_x/y or end_x/y, respectively; do not substitute a translation. Use exact supported attribute names. "
+            "Unsupported or unexecuted tools do not establish a geometry conflict: report the actual error only. "
+            "For history requests use list_versions and preview_restore; no restore is applied without explicit confirmation. "
             "After rejection make at most two evidence-supported corrections. Reply in Chinese.")
+    if author_only:
+        prompt=("You are a bounded architectural design assistant. The user's untrusted design request is: "+goal+
+            "\nCreate only a SIMULATED design, not a site observation. Use preview_design with a structured spec. "
+            "Each dimension in metres must come from an explicitly stated metric value, or be declared in assumptions "
+            "with an exact field path and reason. Convert cm/mm to metres. Never invent an unmarked dimension. "
+            "If the room shape was not specified, ask or mark the 'shape' assumption. "
+            "For missing essential room dimensions ask a clarification instead of assuming. For optional slab/panel thickness "
+            "you may state a visible assumption. Wall host IDs use the exact spelling wall-1, wall-2, etc.; "
+            "they follow the polygon order described by the tool. If a call fails, correct the complete requested "
+            "specification; do not create an unrelated partial draft, and do not exceed two corrections. "
+            "The proposal is not saved until the user explicitly confirms it. Report dimensions, assumptions and errors in Chinese.")
     config_command = 'mcp_servers.worldstate.command=' + json.dumps(node)
     config_args = 'mcp_servers.worldstate.args=' + json.dumps(mcp_args, ensure_ascii=False)
     command = [codex, 'exec', '--ignore-user-config', '--ephemeral', '--skip-git-repo-check',
@@ -85,7 +106,7 @@ def run_codex_agent(*, workspace: Path, output: Path, image_ids: list[int], goal
                 'source_revision': tools.state['revision'], 'image_ids': image_ids,
                 'photos': [{'image_id': c['image_id'], 'photo_sha256': c['sha256']} for c in cameras],
                 'external_image_transfer': 'operator_confirmed' if image_ids else 'none',
-                'model_only': model_only, 'goal': goal, 'selected_id': selected_id}
+                'model_only': model_only,'author_only':author_only, 'goal': goal, 'selected_id': selected_id}
     started = time.monotonic()
     with (output / 'events.jsonl').open('x') as events, (output / 'stderr.log').open('x') as errors:
         environment = os.environ.copy()
@@ -120,8 +141,10 @@ def run_codex_agent(*, workspace: Path, output: Path, image_ids: list[int], goal
                     result=result_path.read_text()[:12000] if result_path.is_file() else '',
                     candidates=[p.stem for p in sorted(output.glob('candidate-*.json'))],
                     hypotheses=[p.stem for p in sorted(output.glob('hypothesis-*.json'))],
-                    revision_proposals=[p.stem for p in sorted(output.glob('revision-proposal-*.json'))])
-    if metadata['status'] == 'COMPLETED' and not metadata['candidates'] and not metadata['revision_proposals']:
+                    revision_proposals=[p.stem for p in sorted(output.glob('revision-proposal-*.json'))],
+                    restore_proposals=[p.stem for p in sorted(output.glob('restore-proposal-*.json'))],
+                    design_proposals=[p.stem for p in sorted(output.glob('design-proposal-*.json')) if not p.stem.endswith('-model')])
+    if metadata['status'] == 'COMPLETED' and not any(metadata[k] for k in ('candidates','revision_proposals','restore_proposals','design_proposals')):
         metadata['status'] = 'COMPLETED_NO_SOLVED_CANDIDATE'
     if not successful_tools and any('approval' in error.lower() or 'denied' in error.lower() for error in tool_failures):
         metadata['status'] = 'APPROVAL_BLOCKED'
