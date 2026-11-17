@@ -1,0 +1,8 @@
+# Product-only dependencies verified with CPython 3.12.3; frozen Core stays dependency-free.
+ifcopenshell==0.8.4
+numpy==1.26.4
+scipy==1.13.1
+shapely==2.2.0
+Pillow==11.2.1
+opencv-python-headless==4.10.0.84
+pycolmap==4.2.1

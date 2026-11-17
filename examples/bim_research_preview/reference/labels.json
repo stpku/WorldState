@@ -1,0 +1,37 @@
+{
+  "1": {
+    "object_id": "door-1",
+    "ifc_type": "IfcDoor",
+    "semantic_id": 3
+  },
+  "2": {
+    "object_id": "slab-1",
+    "ifc_type": "IfcSlab",
+    "semantic_id": 2
+  },
+  "3": {
+    "object_id": "wall-1",
+    "ifc_type": "IfcWall",
+    "semantic_id": 1
+  },
+  "4": {
+    "object_id": "wall-2",
+    "ifc_type": "IfcWall",
+    "semantic_id": 1
+  },
+  "5": {
+    "object_id": "wall-3",
+    "ifc_type": "IfcWall",
+    "semantic_id": 1
+  },
+  "6": {
+    "object_id": "wall-4",
+    "ifc_type": "IfcWall",
+    "semantic_id": 1
+  },
+  "7": {
+    "object_id": "window-1",
+    "ifc_type": "IfcWindow",
+    "semantic_id": 4
+  }
+}

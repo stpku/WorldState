@@ -1,6 +1,16 @@
 # WorldState BIM — Evidence-to-Editable-BIM vertical slice
 
-**Status: experimental assisted Photo/Scan-to-BIM and local Studio; V0.2 is NOT release-ready.**
+**Current status: V0.2 Research Preview candidate.** The engineering-grade WS-RealRoom protocol remains incomplete; no real-room accuracy or human-efficiency claim is made. See the [preview protocol](../../benchmarks/RESEARCH_PREVIEW_PROTOCOL.md) and [release notes](RESEARCH_PREVIEW.md).
+
+| Capability | Status | Boundary |
+| --- | --- | --- |
+| Frozen WorldState Core contracts | STABLE | Contract/regression baseline, not a claim of downstream production certification. |
+| Local Studio, synthetic IFC edit/export and version history | PREVIEW | Explicit user confirmation; supported IFC edits only; no complete solid-clash check. |
+| Codex Agent model edits | PREVIEW | Optional authorized provider; suggestions require confirmation; version-restore tool unsupported. |
+| Photo-to-BIM, multiview matching and Scan-to-BIM | EXPERIMENTAL | Partial drafts, unknown scale/semantics and occlusion; no guaranteed complete room. |
+| Real-room accuracy and human cost | NOT_MEASURED | Original engineering protocol remains in force for future validation. |
+
+Try the [redistributable synthetic room](../../examples/bim_research_preview/README.md) and [WS-Synthetic](../../benchmarks/ws_synthetic/README.md). Synthetic images, camera poses and the initial IFC are generated from the same simulated source and do not demonstrate photo reconstruction.
 
 **Round 7:** [real multiview wall-floor lines](../../examples/bim_eyeful_room/round7/README.md) and the sparse-plane route were compared on the same development data. Studio can inspect the line candidates, triangulate attributed corner clicks and export a partial IFC; conflicting candidates remain excluded. Independent room accuracy, measured metric scale and human-cost savings are not measured.
 

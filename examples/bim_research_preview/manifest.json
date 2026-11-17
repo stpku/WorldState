@@ -1,0 +1,28 @@
+{
+  "schema": "worldstate-public-synthetic-example/0.1",
+  "dataset_split": "dev",
+  "seed": 717,
+  "license": "MIT",
+  "source": "self-generated IFC geometry and Blender render; no third-party photos or textures",
+  "files": {
+    "README.md": "778d394391ba47a37c60438c56091e60fd5a276b42e633fc1ac491679e53f6b4",
+    "input/cameras.json": "cab14fdf56e0eedefc28d3106b3cc35b5a593e1f956c244eaf20810ea33d6464",
+    "input/images/view-001.png": "f045de369aee30289cca4d5a15a164ef7a00fe040b2cfafd8ba2bc2290feeaee",
+    "input/images/view-002.png": "2629398569190b6877c6b9e40b76f60bb0999afddea1413ca8c80db477a445ad",
+    "input/images/view-003.png": "5c14a502a2c150c928027bc843a28065f5a28b270c1e8d750de47e41a885261a",
+    "input/images/view-004.png": "b40d0343a5d476f6bd9f9c788474d44da3e6034990fd58e4de8da7103775a5c3",
+    "input/images/view-005.png": "617bf4c0eda70f8f52cadc6ddcc1b17495b65b2c810e58342888b53a6f7d6e8c",
+    "input/images/view-006.png": "089e26cb278147184d7f76358b8577d8a1c8d29f5d231fdf18f988f05cab90d0",
+    "reference/cameras-exact.json": "ea9fba39c9ad07a7343b2faa567ccd5ea7412d0fca0aaf2299f9e72ea84b7f34",
+    "reference/feature-visibility.json": "8166d76a5ab5f783de5ca0971b6fccf2a283845419a5bd928d67677b06ac91f5",
+    "reference/labels.json": "8bac1a81f3a2ba84df287bced765e7af7c5fc4089705d90bf0e005fbce26869d",
+    "reference/model.ifc": "8d99bc7c6732ecd3aec40f2a66c662b91eb91fee10dd47995ffe88c69ef83081",
+    "reference/model.json": "8ee0c98cc927cb8d5515d6192e44fc7760f6c15de100f61a20be511c6d7f4c39",
+    "reference/view-001-truth.npz": "cf93d05d62ef4f8ca6f72d336232dc8186d262213351170b4b657d4fbc057af4",
+    "reference/view-002-truth.npz": "e8da327eaa2848ad9b470915cc58d4e2d49002084d5e1c7eee986654d624a6ca",
+    "reference/view-003-truth.npz": "b1a06e0f69fb8bd2cd2cd7770676c8675c06fc1c41d05491cca6b2d5b7ac41e1",
+    "reference/view-004-truth.npz": "11dfc03d13f620d4c237c43331ad1d6a8f5546a836f2ac022a39176343c224d2",
+    "reference/view-005-truth.npz": "192392b8975343c54c2be7e17a06a020eea3994af40d9af0678143206428fa6b",
+    "reference/view-006-truth.npz": "c0d822c7b21f2fb6c4e00ba2b7cb0bdc7a33cd9e8372c788b01ffa201918939d"
+  }
+}

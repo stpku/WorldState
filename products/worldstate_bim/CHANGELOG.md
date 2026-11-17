@@ -1,5 +1,13 @@
 # WorldState BIM changelog
 
+## Unreleased — 2026-11-17 Research Preview candidate
+
+- Add a separate [research-preview protocol](../../benchmarks/RESEARCH_PREVIEW_PROTOCOL.md) while preserving the original engineering-grade real-room protocol and its unmet status.
+- Add seedable synthetic rooms, IFC-derived RGB/depth/instance truth, frozen-reference checks, correspondence scoring and a redistributable simulated room. The frozen experiment measures matching only; no independent room model was submitted.
+- Evaluate 23 declared model-editing tasks using real Codex and the local-rule baseline. A stricter audit reports 21/23 Agent successes; unsupported angular reasoning and Agent version restore remain failures.
+- Add explicitly confirmed, ordered multi-proposal previews and versioned application in Studio. Partial write failures do not advance the current model but may leave an orphan directory for inspection.
+- Add full-scan geometric diagnostics and separate real/synthetic evidence. Independent real-room precision, human cost and engineering acceptance remain unmeasured.
+
 ## Unreleased — 2026-11-14
 
 - Count floor tracks sharing identical source pixels in two or more views only once, and reject cached exports whose floor support contains such duplicates. Add an opt-in local crop review that flags cross-scale semantic disagreements without changing the model; on one real development scene it identified a chair-leg conflict and the deduplicated floor was insufficient.

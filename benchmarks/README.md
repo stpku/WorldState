@@ -1,5 +1,7 @@
 # WorldState Benchmark（开发中）
 
+[Research Preview 协议](RESEARCH_PREVIEW_PROTOCOL.md)与工程级真实房间协议分别使用：预览可以依据公开数据、合成真值和自动化结果评估；[WS-RealRoom](ws_realroom/PROTOCOL.md)历史门槛与结果保持不变。无需提供自采房间或真人评测来继续研究版研发。
+
 | 套件 | 目的 | 本轮真实状态 |
 | --- | --- | --- |
 | WS-Geometry | 相同真实照片、相机位姿与重投影 | [TUM + CPU COLMAP 4/8/16/32](../acceptance/bim-reset-round2-20261113/STATUS.md)；不提供独立尺度或稠密完整性。 |
@@ -7,8 +9,10 @@
 | WS-BIM | 原生 IFC、可编辑性、拓扑和 GUID | 墙、板、门窗、开口及部分空间拓扑已有产品实现；真实扫描例已通过 Bonsai 墙长、墙高、窗位置修改和受限同步，完整房间尚未验收。 |
 | WS-RealRoom | 用户照片到可编辑 BIM 和人工成本 | [冻结协议](ws_realroom/PROTOCOL.md)与[采集和评测工具](ws_realroom/README.md)；真实独立验收房间未采集。 |
 | WS-Campus | 授权建筑公开展示 | 规划；校园素材没有新上传或对外发布。 |
+| WS-Synthetic | 隔离的合成 RGB、深度、几何与 IFC 真值 | [生成与冻结评测](ws_synthetic/README.md)；只报告合成表现。 |
+| WS-Agent | 固定自然语言任务、真实 Agent 与规则基线 | [23 项任务及本次结果](ws_agent/results/2026-11-17.json)；真人成本未测。 |
 
-WS-RealRoom 尚无满足冻结协议的独立验收场景。负责人可以在仓库外初始化隔离的采集目录，按其中清单采集并保管私有真值：
+WS-RealRoom 尚无满足冻结协议的独立验收场景。未来如需进行工程验证，可在仓库外初始化隔离采集目录：
 
 ```bash
 python3 benchmarks/ws_realroom/init_room.py /path/outside/repo/room-001 --room-id room-001
