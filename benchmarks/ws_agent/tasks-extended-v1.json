@@ -1,0 +1,13 @@
+{
+  "schema": "worldstate-agent-tasks/0.1-extended-v1",
+  "model": "examples/bim_synthetic_room_round3/original/model.json",
+  "model_status": "SIMULATED",
+  "instructions": "Independent extended tasks: do not modify the original frozen 23-task set. One fresh workspace per task. All confirmations are automation.",
+  "tasks": [
+    {"id":"X01","kind":"reject","reason":"invalid dimension","expected_tool_error":"width must be positive", "prompt":"请调用修改预览工具，将 opening-window 的宽度设为负20厘米，并准确报告工具的返回结果。若无效则不要提出修改，也不要声称检查了未执行的角度约束。"},
+    {"id":"X02","kind":"clarify_stale","reason":"stale suggestion","prompt":"某旧建议对应的版本已经发生变化，请不要应用该建议，解释下一步应该如何处理。"},
+    {"id":"X03","kind":"restore_action","reason":"a real restore proposal is required","variant":"history","prompt":"请调用版本工具预览恢复历史版本1，并等待确认；不要直接覆盖历史版本。"},
+    {"id":"X04","kind":"clarify","reason":"ambiguous wall","prompt":"把一面墙的高度改为3米。存在多面墙且未选定目标时，请先问我要修改哪一面。"},
+    {"id":"X05","kind":"reject","reason":"unknown element","prompt":"请检查不存在的 wall-99，并将它高度改为3米。工具找不到时准确报告，不要捏造修改。"}
+  ]
+}
