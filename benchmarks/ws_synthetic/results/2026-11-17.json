@@ -1,0 +1,106 @@
+{
+  "schema": "worldstate-synthetic-result/0.1",
+  "date": "2026-11-17",
+  "scope": "SYNTHETIC_ONLY_FROZEN_TEST",
+  "freeze_manifest_sha256": "201cdc40343488d04b32f828993f3688c4474e0639b1e8453fcfdd9def80d153",
+  "plan": "benchmarks/ws_synthetic/FROZEN_RUN_PLAN.md",
+  "rows": [
+    {
+      "scene": "3ad96a511bd4",
+      "mode": "gluestick",
+      "matching": {
+        "submitted": 0,
+        "checked_visible": 0,
+        "correct_at_3px": 0,
+        "visible_accuracy_at_3px": null,
+        "strict_evaluated": 0,
+        "strict_accuracy_at_3px": null,
+        "wall_checked": 0,
+        "wall_correct_at_3px": 0,
+        "wall_accuracy_at_3px": null,
+        "occluded_or_instance_mismatch": 0,
+        "outside_target": 0,
+        "invalid_source": 0,
+        "median_error_px": null,
+        "scope": "Synthetic exact-pose RGB-D oracle; 0.05 m visibility tolerance. Strict accuracy counts occluded/out-of-frame as failures; invalid source is excluded."
+      },
+      "model": "NOT_SUBMITTED",
+      "runtime_seconds": 1.911,
+      "peak_rss_mib": 538.5,
+      "weights_sha256": "5a7013a1987978c23d71f338f3673d80f9090c4791a955c2f9e1ed4f4dbb3207"
+    },
+    {
+      "scene": "3ad96a511bd4",
+      "mode": "tinyroma",
+      "matching": {
+        "submitted": 1000,
+        "checked_visible": 586,
+        "correct_at_3px": 0,
+        "visible_accuracy_at_3px": 0.0,
+        "strict_evaluated": 999,
+        "strict_accuracy_at_3px": 0.0,
+        "wall_checked": 585,
+        "wall_correct_at_3px": 0,
+        "wall_accuracy_at_3px": 0.0,
+        "occluded_or_instance_mismatch": 0,
+        "outside_target": 413,
+        "invalid_source": 1,
+        "median_error_px": 279.339609562011,
+        "scope": "Synthetic exact-pose RGB-D oracle; 0.05 m visibility tolerance. Strict accuracy counts occluded/out-of-frame as failures; invalid source is excluded."
+      },
+      "model": "NOT_SUBMITTED",
+      "runtime_seconds": 1.267,
+      "peak_rss_mib": 427.2,
+      "weights_sha256": "3e2ac3481f754243eb3f5c8ea0358667561f1ce139c3edd03d7d21927ffba30c"
+    },
+    {
+      "scene": "686c6a6176bb",
+      "mode": "gluestick",
+      "matching": {
+        "submitted": 4,
+        "checked_visible": 2,
+        "correct_at_3px": 2,
+        "visible_accuracy_at_3px": 1.0,
+        "strict_evaluated": 4,
+        "strict_accuracy_at_3px": 0.5,
+        "wall_checked": 1,
+        "wall_correct_at_3px": 1,
+        "wall_accuracy_at_3px": 1.0,
+        "occluded_or_instance_mismatch": 1,
+        "outside_target": 1,
+        "invalid_source": 0,
+        "median_error_px": 0.5274167465397132,
+        "scope": "Synthetic exact-pose RGB-D oracle; 0.05 m visibility tolerance. Strict accuracy counts occluded/out-of-frame as failures; invalid source is excluded."
+      },
+      "model": "NOT_SUBMITTED",
+      "runtime_seconds": 1.805,
+      "peak_rss_mib": 565.2,
+      "weights_sha256": "5a7013a1987978c23d71f338f3673d80f9090c4791a955c2f9e1ed4f4dbb3207"
+    },
+    {
+      "scene": "686c6a6176bb",
+      "mode": "tinyroma",
+      "matching": {
+        "submitted": 1000,
+        "checked_visible": 923,
+        "correct_at_3px": 313,
+        "visible_accuracy_at_3px": 0.3391115926327194,
+        "strict_evaluated": 1000,
+        "strict_accuracy_at_3px": 0.313,
+        "wall_checked": 500,
+        "wall_correct_at_3px": 166,
+        "wall_accuracy_at_3px": 0.332,
+        "occluded_or_instance_mismatch": 25,
+        "outside_target": 52,
+        "invalid_source": 0,
+        "median_error_px": 5.318306799503536,
+        "scope": "Synthetic exact-pose RGB-D oracle; 0.05 m visibility tolerance. Strict accuracy counts occluded/out-of-frame as failures; invalid source is excluded."
+      },
+      "model": "NOT_SUBMITTED",
+      "runtime_seconds": 1.274,
+      "peak_rss_mib": 427.5,
+      "weights_sha256": "3e2ac3481f754243eb3f5c8ea0358667561f1ce139c3edd03d7d21927ffba30c"
+    }
+  ],
+  "warning": "Known synthetic render poses; no wall models submitted; unreviewed correspondence only. Not real-room accuracy."
+}

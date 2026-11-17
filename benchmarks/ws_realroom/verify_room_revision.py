@@ -23,6 +23,7 @@ def signature(settings, entity):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('before-model','before-ifc','after-model','after-ifc','output'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--source-kind',choices=('synthetic','scan','other'),default='other')
     a=p.parse_args()
     if a.output.exists():raise FileExistsError('choose a new output')
     before=json.loads(a.before_model.read_text());after=json.loads(a.after_model.read_text())
@@ -53,9 +54,9 @@ def main():
         'guid_count_before':len(before_guids),'guid_count_after':len(after_guids),
         'guid_sets_equal':before_guids==after_guids,'affected_elements':sorted(affected),
         'unaffected_vertex_geometry_unchanged':unchanged,'unaffected_geometry_unexpectedly_changed':unexpected,
-        'geometry_compared':compared,'geometry_failures':failures,'ir_issues':geometry_issues(after),
+        'geometry_compared':compared,'geometry_failures':failures,'ir_issues':geometry_issues(after),'source_kind':a.source_kind,
         'limitations':['Vertex comparison does not establish semantic correctness or a complete solid clash check.',
-                       'Model geometry is scan-derived and unverified against site photos.']}
+                       'Source classification is caller-declared; this comparison is not independent site validation.']}
     a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');print(json.dumps(result,ensure_ascii=False))
 
 

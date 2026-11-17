@@ -1,0 +1,400 @@
+{
+  "schema": "worldstate-agent-benchmark-result/0.1",
+  "date": "2026-11-17",
+  "source": "simulated room; real Codex model; independent tasks",
+  "task_manifest_sha256": "c5dc07b923f664d1d7f6078fd3f91c7c9f3bc28293f5f2955bdaa981a5b3c545",
+  "source_model_sha256": "38bed78d51d5d74a22d34edccad5610a6bb11033387cf1ee2e070aa23e72c9fd",
+  "provider": "gpt-6.1-terra",
+  "original_automatic_grade": {
+    "passed": 22,
+    "tasks": 23
+  },
+  "audited_grade": {
+    "passed": 21,
+    "tasks": 23,
+    "success_rate": 0.9130434782608695
+  },
+  "rules_baseline": {
+    "passed": 0,
+    "tasks": 23,
+    "success_rate": 0.0,
+    "caveat": "Natural-language prompts were outside the current fixed local-rule grammar; one separate documented-format control did pass."
+  },
+  "total_input_tokens": 1556883,
+  "total_cached_input_tokens": 1330176,
+  "total_output_tokens": 9242,
+  "total_task_seconds": 496.58,
+  "model_fee": "NOT_MEASURED",
+  "human_cost": "NOT_MEASURED",
+  "audit_note": "A19 was downgraded: unsupported parameter errors did not verify the claimed angular conflict. A23 lacks a supported Agent restore proposal. A20 proposals were later confirmed by browser automation, not a person.",
+  "tasks": [
+    {
+      "id": "A01",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 23.757,
+      "usage": {
+        "input_tokens": 76579,
+        "cached_input_tokens": 58880,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 446,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 7,
+      "tool_failures": 0
+    },
+    {
+      "id": "A02",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.401,
+      "usage": {
+        "input_tokens": 77530,
+        "cached_input_tokens": 59392,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 427,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 8,
+      "tool_failures": 0
+    },
+    {
+      "id": "A03",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 22.597,
+      "usage": {
+        "input_tokens": 59632,
+        "cached_input_tokens": 41984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 438,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 7,
+      "tool_failures": 0
+    },
+    {
+      "id": "A04",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.953,
+      "usage": {
+        "input_tokens": 58615,
+        "cached_input_tokens": 41984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 376,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0
+    },
+    {
+      "id": "A05",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.935,
+      "usage": {
+        "input_tokens": 59655,
+        "cached_input_tokens": 53120,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 446,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 7,
+      "tool_failures": 0
+    },
+    {
+      "id": "A06",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 25.293,
+      "usage": {
+        "input_tokens": 76487,
+        "cached_input_tokens": 58880,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 421,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 7,
+      "tool_failures": 0
+    },
+    {
+      "id": "A07",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 25.707,
+      "usage": {
+        "input_tokens": 93721,
+        "cached_input_tokens": 75776,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 624,
+        "reasoning_output_tokens": 27
+      },
+      "tool_calls": 8,
+      "tool_failures": 1
+    },
+    {
+      "id": "A08",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.021,
+      "usage": {
+        "input_tokens": 74090,
+        "cached_input_tokens": 57472,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 342,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0
+    },
+    {
+      "id": "A09",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.814,
+      "usage": {
+        "input_tokens": 74416,
+        "cached_input_tokens": 68864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 401,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0
+    },
+    {
+      "id": "A10",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 22.816,
+      "usage": {
+        "input_tokens": 74463,
+        "cached_input_tokens": 68864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 391,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0
+    },
+    {
+      "id": "A11",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.617,
+      "usage": {
+        "input_tokens": 74465,
+        "cached_input_tokens": 68864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 412,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0
+    },
+    {
+      "id": "A12",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.745,
+      "usage": {
+        "input_tokens": 74069,
+        "cached_input_tokens": 68352,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 390,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0
+    },
+    {
+      "id": "A13",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 22.324,
+      "usage": {
+        "input_tokens": 74074,
+        "cached_input_tokens": 68480,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 376,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0
+    },
+    {
+      "id": "A14",
+      "status": "PASS",
+      "audit_reason": "no mutation proposal and an explicit matching explanation",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 23.398,
+      "usage": {
+        "input_tokens": 76724,
+        "cached_input_tokens": 70144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 522,
+        "reasoning_output_tokens": 45
+      },
+      "tool_calls": 8,
+      "tool_failures": 1
+    },
+    {
+      "id": "A15",
+      "status": "PASS",
+      "audit_reason": "no mutation proposal and an explicit matching explanation",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 17.668,
+      "usage": {
+        "input_tokens": 58350,
+        "cached_input_tokens": 53120,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 295,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 4,
+      "tool_failures": 0
+    },
+    {
+      "id": "A16",
+      "status": "PASS",
+      "audit_reason": "no mutation proposal and an explicit matching explanation",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 21.177,
+      "usage": {
+        "input_tokens": 74299,
+        "cached_input_tokens": 68864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 403,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 1
+    },
+    {
+      "id": "A17",
+      "status": "PASS",
+      "audit_reason": "no mutation proposal and an explicit matching explanation",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 13.575,
+      "usage": {
+        "input_tokens": 41744,
+        "cached_input_tokens": 37760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 149,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 1,
+      "tool_failures": 0
+    },
+    {
+      "id": "A18",
+      "status": "PASS",
+      "audit_reason": "no mutation proposal and an explicit matching explanation",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 14.973,
+      "usage": {
+        "input_tokens": 42874,
+        "cached_input_tokens": 38272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 219,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 1,
+      "tool_failures": 0
+    },
+    {
+      "id": "A19",
+      "status": "FAIL",
+      "audit_reason": "geometry conflict was asserted without a matching deterministic constraint rejection",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 32.268,
+      "usage": {
+        "input_tokens": 94405,
+        "cached_input_tokens": 87552,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 619,
+        "reasoning_output_tokens": 47
+      },
+      "tool_calls": 8,
+      "tool_failures": 2
+    },
+    {
+      "id": "A20",
+      "status": "PASS",
+      "audit_reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 24.323,
+      "usage": {
+        "input_tokens": 59691,
+        "cached_input_tokens": 53504,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 513,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 7,
+      "tool_failures": 0
+    },
+    {
+      "id": "A21",
+      "status": "PASS",
+      "audit_reason": "no mutation proposal and an explicit matching explanation",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 17.254,
+      "usage": {
+        "input_tokens": 41758,
+        "cached_input_tokens": 37760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 310,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 1,
+      "tool_failures": 0
+    },
+    {
+      "id": "A22",
+      "status": "PASS",
+      "audit_reason": "no mutation proposal and an explicit matching explanation",
+      "original_automated_grade": "PASS",
+      "elapsed_seconds": 16.905,
+      "usage": {
+        "input_tokens": 41773,
+        "cached_input_tokens": 24320,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 348,
+        "reasoning_output_tokens": 33
+      },
+      "tool_calls": 1,
+      "tool_failures": 0
+    },
+    {
+      "id": "A23",
+      "status": "FAIL",
+      "audit_reason": "No supported version-restore proposal and verified restoration artifact",
+      "original_automated_grade": "FAIL",
+      "elapsed_seconds": 21.061,
+      "usage": {
+        "input_tokens": 77469,
+        "cached_input_tokens": 67968,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 374,
+        "reasoning_output_tokens": 42
+      },
+      "tool_calls": 2,
+      "tool_failures": 0
+    }
+  ]
+}

@@ -92,6 +92,11 @@ def score(task,model,proposals,text,tool_errors,work):
         return result
     if kind=='restore_action':
         result['reason']='No supported version-restore proposal and verified restoration artifact';return result
+    if (task.get('reason')=='ANGULAR_CONSTRAINT_CONFLICT' and
+        not any('ANGULAR_CONSTRAINT_CONFLICT' in error for error in tool_errors)):
+        # An unsupported parameter is not proof that the requested geometric
+        # constraint was checked, even if the assistant asserts a conflict.
+        result['reason']='geometry conflict was asserted without a matching deterministic constraint rejection';return result
     patterns={
       'OPENING_OUTSIDE_WALL':r'opening_outside_wall|越界|超出|墙长|过短|太短',
       'OPENING_ABOVE_WALL':r'opening_above_wall|墙高|门洞|门高|超出|太矮',
