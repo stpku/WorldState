@@ -1,0 +1,327 @@
+{
+  "schema": "worldstate-author-tasks/0.1",
+  "description": "Frozen simulated authoring tasks; one independent blank project per task. Never treat outputs as observations.",
+  "tasks": [
+    {
+      "id": "T01",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长4米、宽3米、高2.8米、墙厚0.12米、楼板厚0.15米。墙1从原点沿长边，依次逆时针编号；不要门窗。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 4,
+        "width_m": 3,
+        "height_m": 2.8,
+        "wall_thickness_m": 0.12,
+        "slab_thickness_m": 0.15,
+        "openings": [],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T02",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长5.2米、宽3.7米、高3米、墙厚0.15米、楼板厚0.18米。墙1从原点沿长边，依次逆时针编号；不要门窗。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 5.2,
+        "width_m": 3.7,
+        "height_m": 3,
+        "wall_thickness_m": 0.15,
+        "slab_thickness_m": 0.18,
+        "openings": [],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T03",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长600厘米、宽450厘米、高270厘米、墙厚10厘米、楼板厚20厘米。墙1从原点沿长边，依次逆时针编号；不要门窗。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 6,
+        "width_m": 4.5,
+        "height_m": 2.7,
+        "wall_thickness_m": 0.1,
+        "slab_thickness_m": 0.2,
+        "openings": [],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T04",
+      "kind": "create",
+      "prompt": "创建L形模拟房间：总长5米、总宽4米、高2.8米、墙厚0.12米、楼板厚0.15米；右上角缺口长2米、宽1.5米。墙1从原点沿长边，依次逆时针编号；不要门窗。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "l_shape",
+        "length_m": 5,
+        "width_m": 4,
+        "height_m": 2.8,
+        "wall_thickness_m": 0.12,
+        "slab_thickness_m": 0.15,
+        "openings": [],
+        "assumptions": {},
+        "notch_length_m": 2,
+        "notch_width_m": 1.5
+      }
+    },
+    {
+      "id": "T05",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长4米、宽3米、高2.8米、墙厚0.12米、楼板厚0.15米。墙1从原点沿长边逆时针编号；墙1上有一扇门，偏移1米、宽0.9米、高2.1米、底高0米、门板厚0.04米。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 4,
+        "width_m": 3,
+        "height_m": 2.8,
+        "wall_thickness_m": 0.12,
+        "slab_thickness_m": 0.15,
+        "openings": [
+          {
+            "kind": "door",
+            "wall": "wall-1",
+            "offset_m": 1,
+            "width_m": 0.9,
+            "height_m": 2.1,
+            "sill_m": 0,
+            "panel_thickness_m": 0.04
+          }
+        ],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T06",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长4.5米、宽3.2米、高2.9米、墙厚0.14米、楼板厚0.16米。墙1从原点沿长边逆时针编号；墙3有一扇窗，偏移0.8米、宽1.2米、高1.1米、底高0.9米、窗板厚0.04米。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 4.5,
+        "width_m": 3.2,
+        "height_m": 2.9,
+        "wall_thickness_m": 0.14,
+        "slab_thickness_m": 0.16,
+        "openings": [
+          {
+            "kind": "window",
+            "wall": "wall-3",
+            "offset_m": 0.8,
+            "width_m": 1.2,
+            "height_m": 1.1,
+            "sill_m": 0.9,
+            "panel_thickness_m": 0.04
+          }
+        ],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T07",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长5米、宽4米、高3米、墙厚0.12米、楼板厚0.15米。墙1从原点沿长边逆时针编号；墙1有门，偏移1米、宽0.9米、高2.1米、底高0米、门板厚0.04米；墙3有窗，偏移1.5米、宽1.2米、高1.1米、底高0.9米、窗板厚0.04米。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 5,
+        "width_m": 4,
+        "height_m": 3,
+        "wall_thickness_m": 0.12,
+        "slab_thickness_m": 0.15,
+        "openings": [
+          {
+            "kind": "door",
+            "wall": "wall-1",
+            "offset_m": 1,
+            "width_m": 0.9,
+            "height_m": 2.1,
+            "sill_m": 0,
+            "panel_thickness_m": 0.04
+          },
+          {
+            "kind": "window",
+            "wall": "wall-3",
+            "offset_m": 1.5,
+            "width_m": 1.2,
+            "height_m": 1.1,
+            "sill_m": 0.9,
+            "panel_thickness_m": 0.04
+          }
+        ],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T08",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长6米、宽4米、高3米、墙厚0.12米、楼板厚0.15米。墙1从原点沿长边逆时针编号；墙1上有两扇窗，第一扇偏移0.5米，第二扇偏移3米；每扇宽1米、高1.1米、底高0.9米、窗板厚0.04米。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 6,
+        "width_m": 4,
+        "height_m": 3,
+        "wall_thickness_m": 0.12,
+        "slab_thickness_m": 0.15,
+        "openings": [
+          {
+            "kind": "window",
+            "wall": "wall-1",
+            "offset_m": 0.5,
+            "width_m": 1,
+            "height_m": 1.1,
+            "sill_m": 0.9,
+            "panel_thickness_m": 0.04
+          },
+          {
+            "kind": "window",
+            "wall": "wall-1",
+            "offset_m": 3,
+            "width_m": 1,
+            "height_m": 1.1,
+            "sill_m": 0.9,
+            "panel_thickness_m": 0.04
+          }
+        ],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T09",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长5.4米、宽4.2米、高3.1米、墙厚0.2米、楼板厚0.2米。墙1从原点沿长边逆时针编号；墙2有门，偏移2米、宽1米、高2.2米、底高0米、板厚0.05米。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 5.4,
+        "width_m": 4.2,
+        "height_m": 3.1,
+        "wall_thickness_m": 0.2,
+        "slab_thickness_m": 0.2,
+        "openings": [
+          {
+            "kind": "door",
+            "wall": "wall-2",
+            "offset_m": 2,
+            "width_m": 1,
+            "height_m": 2.2,
+            "sill_m": 0,
+            "panel_thickness_m": 0.05
+          }
+        ],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T10",
+      "kind": "create",
+      "prompt": "创建L形模拟房间：总长7米、总宽5米、高3米、墙厚0.15米、楼板厚0.2米，右上角缺口长2米、宽1米。墙1从原点沿长边逆时针编号；墙1有门，偏移1米、宽1米、高2.1米、底高0米、板厚0.04米。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "l_shape",
+        "length_m": 7,
+        "width_m": 5,
+        "height_m": 3,
+        "wall_thickness_m": 0.15,
+        "slab_thickness_m": 0.2,
+        "openings": [
+          {
+            "kind": "door",
+            "wall": "wall-1",
+            "offset_m": 1,
+            "width_m": 1,
+            "height_m": 2.1,
+            "sill_m": 0,
+            "panel_thickness_m": 0.04
+          }
+        ],
+        "assumptions": {},
+        "notch_length_m": 2,
+        "notch_width_m": 1
+      }
+    },
+    {
+      "id": "T11",
+      "kind": "create",
+      "prompt": "创建矩形模拟房间：长4.6米、宽3.4米、高2.65米、墙厚0.11米、楼板厚0.14米。墙1从原点沿长边逆时针编号；墙4有窗，偏移0.7米、宽0.8米、高1.2米、底高1米、板厚0.03米。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 4.6,
+        "width_m": 3.4,
+        "height_m": 2.65,
+        "wall_thickness_m": 0.11,
+        "slab_thickness_m": 0.14,
+        "openings": [
+          {
+            "kind": "window",
+            "wall": "wall-4",
+            "offset_m": 0.7,
+            "width_m": 0.8,
+            "height_m": 1.2,
+            "sill_m": 1,
+            "panel_thickness_m": 0.03
+          }
+        ],
+        "assumptions": {}
+      }
+    },
+    {
+      "id": "T12",
+      "kind": "clarify",
+      "prompt": "创建矩形房间：长4米、宽3米、墙厚0.12米、楼板厚0.15米。房高没有确定，不要假设，请先询问。",
+      "reason": "missing height"
+    },
+    {
+      "id": "T13",
+      "kind": "clarify",
+      "prompt": "创建矩形房间：长4米、宽3米、高2.8米、楼板厚0.15米。墙厚没有确定，不要假设，请先询问。",
+      "reason": "missing wall thickness"
+    },
+    {
+      "id": "T14",
+      "kind": "reject",
+      "prompt": "创建L形房间：总长4米、总宽3米、高2.8米、墙厚0.12米、楼板厚0.15米，右上角缺口长5米、宽1米。若几何不可能则拒绝。",
+      "reason": "notch exceeds overall size"
+    },
+    {
+      "id": "T15",
+      "kind": "reject",
+      "prompt": "创建矩形房间：长4米、宽3米、高2.8米、墙厚0.12米、楼板厚0.15米。墙1从原点沿长边逆时针编号；墙1有门，偏移3.8米、宽0.9米、高2.1米、底高0米、板厚0.04米。若门洞越出墙则拒绝。",
+      "reason": "opening outside host"
+    },
+    {
+      "id": "T16",
+      "kind": "clarify",
+      "prompt": "创建矩形房间：长4米、宽3米、高2.8米、墙厚0.12米、楼板厚0.15米；放一扇门，偏移1米、宽0.9米、高2.1米、底高0米、板厚0.04米。门的宿主墙没有指定，请先询问。",
+      "reason": "unspecified host wall"
+    },
+    {
+      "id": "T17",
+      "kind": "sequence",
+      "prompt": "先创建矩形模拟房间：长4米、宽3米、高2.8米、墙厚0.12米、楼板厚0.15米，墙1从原点沿长边逆时针编号；然后将墙2高度设为2.9米，最后恢复到版本1并保持构件身份。",
+      "expected": {
+        "schema": "worldstate-bim-text-design/0.1",
+        "shape": "rectangle",
+        "length_m": 4,
+        "width_m": 3,
+        "height_m": 2.8,
+        "wall_thickness_m": 0.12,
+        "slab_thickness_m": 0.15,
+        "openings": [],
+        "assumptions": {}
+      },
+      "reason": "requires separate confirmed edit and restore turns",
+      "expected_edit": {
+        "element_id": "wall-2",
+        "attribute": "height",
+        "value": 2.9
+      },
+      "restore_revision": 1
+    }
+  ]
+}
