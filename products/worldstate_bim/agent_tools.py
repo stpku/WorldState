@@ -53,7 +53,9 @@ class AgentTools:
         if allowed_images is not None and not allowed_images <= self.cameras.keys():
             raise ValueError('allowed photos must belong to the registered project')
         index_path=self.workspace / 'evidence-index.json'
-        index = read_json(index_path) if index_path.exists() else {'uploads':[]} if allow_empty else read_json(index_path)
+        # A text-only project has no image index until its first upload. Never
+        # weaken the requirement when registered cameras need photo evidence.
+        index = read_json(index_path) if index_path.exists() else {'uploads':[]} if allow_empty or not self.cameras else read_json(index_path)
         self.uploads = {x['sha256']: x for x in index['uploads']}
         self.allow_empty=allow_empty
         self.request=read_json(request_file) if request_file else None

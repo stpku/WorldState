@@ -1,7 +1,10 @@
 """Synthetic authoring and restoration safety; no real-world accuracy claims."""
 import copy
 import json
+import subprocess
+import sys
 import threading
+from pathlib import Path
 import ifcopenshell
 import pytest
 
@@ -75,6 +78,9 @@ def test_design_acceptance_requires_confirmation_and_unchanged_project(tmp_path)
         request.write_text(original)
         code,reply=api(server,'/api/agent/accept-design',{**body,'confirmed':True});assert code==201
         assert reply['model']['revision']==1 and reply['model']['evidence'][0]['status']=='simulated'
+        assert not (workspace/'evidence-index.json').exists()
+        text_only_tools=AgentTools(workspace,output,'codex-cli:synthetic',allowed_images=set())
+        assert text_only_tools.list_versions({})['current_revision']==1
         assert api(server,'/api/agent/accept-design',{**body,'confirmed':True})[0]==400
     finally:server.shutdown();server.server_close();thread.join()
 
@@ -95,3 +101,17 @@ def test_restore_preview_rejects_stale_or_changed_history_and_creates_new_versio
         assert (workspace/'revision-001'/'model.ifc').exists() and (workspace/'revision-002'/'model.ifc').exists()
         assert api(server,'/api/agent/accept-restore',body)[0]==400
     finally:server.shutdown();server.server_close();thread.join()
+
+
+def test_public_text_demo_import_is_isolated_and_never_overwrites(tmp_path):
+    workspace=tmp_path/'demo'
+    command=[sys.executable,'-m','benchmarks.ws_author.prepare_demo','--output',str(workspace),'--operator','automation']
+    root=Path(__file__).resolve().parents[3]
+    subprocess.run(command,cwd=root,check=True,capture_output=True,text=True)
+    project=json.loads((workspace/'photo-project.json').read_text())
+    model=json.loads((workspace/'revision-001/model.json').read_text())
+    assert project['operator_kind']=='automation' and project['id']==model['project_id']
+    assert ifcopenshell.open(str(workspace/'revision-001/model.ifc')).schema=='IFC4'
+    original=(workspace/'revision-001/model.ifc').read_bytes()
+    assert subprocess.run(command,cwd=root,capture_output=True).returncode!=0
+    assert (workspace/'revision-001/model.ifc').read_bytes()==original
