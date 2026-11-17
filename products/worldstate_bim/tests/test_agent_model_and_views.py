@@ -138,3 +138,70 @@ def test_projection_repair_binds_photos_and_persists_fit_provenance(tmp_path):
         assert code==200 and reply['model']['revision']==3
         assert reply['model']['evidence'][-1]['projection_evidence']['views']==proposal['projection_evidence']['views']
     finally:server.shutdown();server.server_close();thread.join()
+
+
+def test_batch_proposals_recompute_atomically_and_reject_stale_or_invalid(tmp_path):
+    import threading
+    import ifcopenshell
+    from benchmarks.ws_agent.run import setup
+    from examples.bim_synthetic_room_round3.generate import synthetic_room
+    from products.worldstate_bim.studio_server import StudioServer
+    from products.worldstate_bim.tests.test_studio_server import api
+    workspace,model=setup(tmp_path/'task',synthetic_room(),{})
+    output=tmp_path/'agent';output.mkdir()
+    tools=AgentTools(workspace,output,'codex-cli:synthetic',allowed_images=set())
+    first=tools.preview_revision({'element_id':'wall-2','attribute':'height','value':2.9,'reason':'synthetic batch'})
+    second=tools.preview_revision({'element_id':'opening-door','attribute':'offset','value':1.2,'reason':'synthetic batch'})
+    settings={'model':'synthetic','output_root':tmp_path,'codex':'unused','node':'unused','timeout':1}
+    server=StudioServer(0,None,workspace,agent_settings=settings)
+    server.agent_job={'id':'agent-'+'d'*32,'status':'COMPLETED','source_revision':0,'image_ids':[],'output':output,'candidates':[]}
+    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+    try:
+        request={'job_id':server.agent_job['id'],'proposal_ids':[first['id'],second['id']],'revision':1}
+        code,preview=api(server,'/api/agent/preview-batch',request)
+        assert code==200 and [x['after'] for x in preview['steps']]==[2.9,1.2]
+        assert server.model['revision']==1 and not (workspace/'revision-002').exists()
+        assert api(server,'/api/agent/accept-batch',{**request,'batch_sha256':preview['batch_sha256']})[0]==400
+        assert api(server,'/api/agent/accept-batch',{**request,'batch_sha256':'invalid','confirmed':True})[0]==400
+        # A proposal changed after preview must invalidate the approval digest.
+        path=output/(second['id']+'.json');saved=path.read_text();modified=json.loads(saved);modified['value']=1.25;path.write_text(json.dumps(modified))
+        assert api(server,'/api/agent/accept-batch',{**request,'batch_sha256':preview['batch_sha256'],'confirmed':True})[0]==400
+        modified=json.loads(saved);modified['reason']='changed after preview';path.write_text(json.dumps(modified))
+        assert api(server,'/api/agent/accept-batch',{**request,'batch_sha256':preview['batch_sha256'],'confirmed':True})[0]==400
+        path.write_text(saved)
+        assert api(server,'/api/agent/accept-batch',{**request,'batch_sha256':preview['batch_sha256'],'confirmed':True},authorized=False)[0]==403
+        code,result=api(server,'/api/agent/accept-batch',{**request,'batch_sha256':preview['batch_sha256'],'confirmed':True})
+        assert code==200 and result['model']['revision']==3
+        assert (workspace/'revision-002'/'model.ifc').is_file() and (workspace/'revision-003'/'model.ifc').is_file()
+        revised=result['model'];assert next(e for e in revised['elements'] if e['id']=='wall-2')['parameters']['height']['value']==2.9
+        assert next(e for e in revised['elements'] if e['id']=='opening-door')['parameters']['offset']['value']==1.2
+        assert api(server,'/api/agent/accept-batch',{**request,'batch_sha256':preview['batch_sha256'],'confirmed':True})[0]==400
+        before=ifcopenshell.open(str(workspace/'revision-001'/'model.ifc'));after=ifcopenshell.open(str(workspace/'revision-003'/'model.ifc'))
+        assert {e.GlobalId for e in before.by_type('IfcProduct')}=={e.GlobalId for e in after.by_type('IfcProduct')}
+        assert len(after.by_type('IfcDoor'))==1 and len(after.by_type('IfcRelVoidsElement'))==2
+    finally:server.shutdown();server.server_close();thread.join()
+
+
+def test_batch_io_failure_does_not_advance_current_model(tmp_path,monkeypatch):
+    import threading
+    from benchmarks.ws_agent.run import setup
+    from examples.bim_synthetic_room_round3.generate import synthetic_room
+    from products.worldstate_bim import studio_agent
+    from products.worldstate_bim.studio_server import StudioServer
+    from products.worldstate_bim.tests.test_studio_server import api
+    workspace,_=setup(tmp_path/'task',synthetic_room(),{});output=tmp_path/'agent';output.mkdir()
+    tools=AgentTools(workspace,output,'codex-cli:synthetic',allowed_images=set())
+    first=tools.preview_revision({'element_id':'wall-2','attribute':'height','value':2.9,'reason':'synthetic batch'})
+    second=tools.preview_revision({'element_id':'opening-door','attribute':'offset','value':1.2,'reason':'synthetic batch'})
+    server=StudioServer(0,None,workspace,agent_settings={'model':'synthetic','output_root':tmp_path,'codex':'unused','node':'unused','timeout':1})
+    server.agent_job={'id':'agent-'+'e'*32,'status':'COMPLETED','source_revision':0,'image_ids':[],'output':output,'candidates':[]}
+    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+    try:
+        request={'job_id':server.agent_job['id'],'proposal_ids':[first['id'],second['id']],'revision':1}
+        preview=api(server,'/api/agent/preview-batch',request)[1]
+        def failed_link(*args,**kwargs):raise OSError('injected failure')
+        monkeypatch.setattr(studio_agent.os,'link',failed_link)
+        code,response=api(server,'/api/agent/accept-batch',{**request,'batch_sha256':preview['batch_sha256'],'confirmed':True})
+        assert code==400 and '当前模型未更新' in response['error']
+        assert server.model['revision']==1 and json.loads((workspace/'photo-project.json').read_text())['current_revision']==1
+    finally:server.shutdown();server.server_close();thread.join()

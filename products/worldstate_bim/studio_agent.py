@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 from pathlib import Path
 import re
+import tempfile
 import threading
 import uuid
 from datetime import datetime, timezone
@@ -257,3 +259,74 @@ def accept_revision(handler, body: dict) -> None:
     server.record('agent_revision_accepted', proposal_id=ident, job_id=job['id'], operator=operator,
                   warning='Agent proposal accepted; independent validation remains required')
     handler.send_json(200, {'model': revised, 'diff': diff, 'comparison': compare_revisions(model, revised)})
+
+
+def _checked_batch(server, body: dict) -> tuple[dict, list[tuple[dict, dict, dict]]]:
+    """Recompute an ordered set of proposals without modifying the workspace."""
+    from .modeling_tools import compare_revisions, update_element, validate_geometry
+    job=server.agent_job;model=server.model;state=(server.project or {}).get('general_modeler')
+    if not job or job['id']!=body.get('job_id') or job['status'] not in {'COMPLETED','COMPLETED_NO_SOLVED_CANDIDATE'}:
+        raise ValueError('Agent 任务不可用或尚未完成')
+    ids=body.get('proposal_ids')
+    if (not isinstance(ids,list) or not 2<=len(ids)<=8 or
+        any(not isinstance(x,str) or not re.fullmatch(r'revision-proposal-[0-9a-f]{32}',x) for x in ids) or
+        len(set(ids))!=len(ids)):
+        raise ValueError('请选择 2–8 项不同的修改建议')
+    if not model or body.get('revision')!=model['revision'] or (state and state.get('model_dirty')):
+        raise ValueError('模型或照片观察已改变；请重新生成修改建议')
+    source_hash=digest(model);current=copy.deepcopy(model);steps=[];preview=[]
+    for ident in ids:
+        proposal=read_json(job['output']/(ident+'.json'))
+        if (proposal.get('id')!=ident or proposal.get('status')!='AI_PROPOSED_UNVERIFIED' or
+            proposal.get('provider')!='codex-cli:'+server.agent_settings['model'] or
+            proposal.get('project_id')!=model['project_id'] or proposal.get('source_model_revision')!=model['revision'] or
+            proposal.get('source_model_sha256')!=source_hash or proposal.get('projection_evidence')):
+            raise ValueError('建议来源不符、已过期或需要单独核验照片证据')
+        current,diff=update_element(current,proposal['element_id'],proposal['attribute'],proposal['value'],
+                                    reason=proposal['reason'],operator='analyst')
+        current['evidence'][-1].update(kind='agent_proposed_revision',provider=proposal['provider'],proposal_id=ident,
+                                       confirmation='accepted_unverified')
+        steps.append((copy.deepcopy(current),diff,proposal))
+        preview.append({'proposal_id':ident,'element_id':proposal['element_id'],'attribute':proposal['attribute'],
+                        'before':diff['before'],'after':diff['after'],'affected_elements':diff['affected_elements'],
+                        'reason':proposal['reason'],'validation':validate_geometry(current)})
+    signature=digest({'source_model_sha256':source_hash,'steps':preview})
+    return {'revision':model['revision'],'batch_sha256':signature,'steps':preview,
+            'comparison':compare_revisions(model,current),
+            'warning':'顺序重新计算；墙轴提示不是完整三维实体碰撞检查。'},steps
+
+
+def preview_batch(handler, body: dict) -> None:
+    preview,_=_checked_batch(handler.server,body)
+    handler.send_json(200,preview)
+
+
+def accept_batch(handler, body: dict) -> None:
+    """Save all validated steps before advancing the current project version."""
+    if body.get('confirmed') is not True:raise ValueError('请先明确确认批量修改预览')
+    server=handler.server;preview,steps=_checked_batch(server,body)
+    if body.get('batch_sha256')!=preview['batch_sha256']:
+        raise ValueError('批量预览已失效；请重新检查并确认')
+    from .room_cli import save_version
+    targets=[server.workspace/f"revision-{model['revision']:03}" for model,_,_ in steps]
+    if any(path.exists() or path.is_symlink() for path in targets):
+        raise ValueError('目标版本目录已存在；未应用任何修改')
+    # Stage first. Final directories are created exclusively, and each file is
+    # linked without overwriting existing paths. An interrupted save can leave
+    # an orphan directory, but never advances the project to a partial batch.
+    with tempfile.TemporaryDirectory(prefix='.ws-batch-',dir=server.workspace) as temp:
+        staged=[]
+        for model,diff,_ in steps:
+            path=Path(temp)/f"revision-{model['revision']:03}";save_version(model,path,diff=diff);staged.append(path)
+        try:
+            for source,target in zip(staged,targets):
+                target.mkdir(mode=0o700)
+                for item in source.iterdir():os.link(item,target/item.name)
+        except OSError as exc:
+            raise ValueError('批量保存中断，当前模型未更新；请检查新建的版本目录') from exc
+    server.model,server.model_dir=steps[-1][0],targets[-1]
+    server.project['current_revision']=server.model['revision']
+    operator='automation_accepted_unverified' if server.project.get('operator_kind')=='automation' else 'user_accepted_unverified'
+    server.record('agent_batch_revision_accepted',proposal_ids=body['proposal_ids'],job_id=server.agent_job['id'],
+                  operator=operator,warning='Ordered batch accepted; independent validation remains required')
+    handler.send_json(200,{'model':server.model,'steps':preview['steps'],'comparison':preview['comparison']})

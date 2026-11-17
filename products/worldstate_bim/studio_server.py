@@ -365,6 +365,12 @@ class Handler(BaseHTTPRequestHandler):
                 if path=="/api/agent/accept-revision":
                     from .studio_agent import accept_revision
                     accept_revision(self,body);return
+                if path=="/api/agent/preview-batch":
+                    from .studio_agent import preview_batch
+                    preview_batch(self,body);return
+                if path=="/api/agent/accept-batch":
+                    from .studio_agent import accept_batch
+                    accept_batch(self,body);return
                 if path=="/api/project":self.create_project(body);return
                 if path=="/api/geometry/reconstruct":self.reconstruct_photos(body);return
                 if path=="/api/fusion/reconstruct":self.reconstruct_fusion(body);return
