@@ -1,0 +1,624 @@
+{
+  "status": "COMPLETED",
+  "tasks": 17,
+  "passed": 11,
+  "success_rate": 0.6470588235294118,
+  "model_cost": "NOT_MEASURED",
+  "human_cost": "NOT_MEASURED",
+  "results": [
+    {
+      "id": "T01",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 17.61,
+      "usage": {
+        "input_tokens": 41057,
+        "cached_input_tokens": 37888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 275,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "geometry_ok": 5,
+        "geometry_total": 5,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 17.929
+    },
+    {
+      "id": "T02",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 19.22,
+      "usage": {
+        "input_tokens": 41069,
+        "cached_input_tokens": 37888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 281,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "geometry_ok": 5,
+        "geometry_total": 5,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 19.263
+    },
+    {
+      "id": "T03",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 18.92,
+      "usage": {
+        "input_tokens": 41064,
+        "cached_input_tokens": 37888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 291,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "geometry_ok": 5,
+        "geometry_total": 5,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 18.958
+    },
+    {
+      "id": "T04",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 20.06,
+      "usage": {
+        "input_tokens": 41154,
+        "cached_input_tokens": 37888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 337,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 6,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "ifc_counts": {
+          "IfcWall": 6,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 20.111
+    },
+    {
+      "id": "T05",
+      "kind": "create",
+      "status": "FAIL",
+      "reason": "expected exactly one design proposal",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 44.43,
+      "usage": {
+        "input_tokens": 130180,
+        "cached_input_tokens": 120576,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1067,
+        "reasoning_output_tokens": 18
+      },
+      "successful_tools": 2,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "elapsed_seconds": 44.428
+    },
+    {
+      "id": "T06",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 44.97,
+      "usage": {
+        "input_tokens": 135509,
+        "cached_input_tokens": 125696,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1142,
+        "reasoning_output_tokens": 11
+      },
+      "successful_tools": 1,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 1,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 1,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "geometry_ok": 6,
+        "geometry_total": 6,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 45.019
+    },
+    {
+      "id": "T07",
+      "kind": "create",
+      "status": "FAIL",
+      "reason": "expected exactly one design proposal",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 48.05,
+      "usage": {
+        "input_tokens": 115809,
+        "cached_input_tokens": 110976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1398,
+        "reasoning_output_tokens": 65
+      },
+      "successful_tools": 2,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "elapsed_seconds": 48.052
+    },
+    {
+      "id": "T08",
+      "kind": "create",
+      "status": "FAIL",
+      "reason": "expected exactly one design proposal",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 46.88,
+      "usage": {
+        "input_tokens": 131051,
+        "cached_input_tokens": 125696,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1291,
+        "reasoning_output_tokens": 22
+      },
+      "successful_tools": 2,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "elapsed_seconds": 46.877
+    },
+    {
+      "id": "T09",
+      "kind": "create",
+      "status": "FAIL",
+      "reason": "expected exactly one design proposal",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "elapsed_provider_seconds": 35.95,
+      "usage": {
+        "input_tokens": 103022,
+        "cached_input_tokens": 98432,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 916,
+        "reasoning_output_tokens": 12
+      },
+      "successful_tools": 0,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "elapsed_seconds": 35.95
+    },
+    {
+      "id": "T10",
+      "kind": "create",
+      "status": "FAIL",
+      "reason": "expected exactly one design proposal",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 47.82,
+      "usage": {
+        "input_tokens": 146695,
+        "cached_input_tokens": 136832,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1279,
+        "reasoning_output_tokens": 18
+      },
+      "successful_tools": 2,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "elapsed_seconds": 47.826
+    },
+    {
+      "id": "T11",
+      "kind": "create",
+      "status": "FAIL",
+      "reason": "expected exactly one design proposal",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 44.97,
+      "usage": {
+        "input_tokens": 130771,
+        "cached_input_tokens": 125440,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1066,
+        "reasoning_output_tokens": 28
+      },
+      "successful_tools": 2,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "elapsed_seconds": 44.974
+    },
+    {
+      "id": "T12",
+      "kind": "clarify",
+      "status": "PASS",
+      "reason": "no model proposal; provider explained the missing or impossible condition",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "elapsed_provider_seconds": 8.38,
+      "usage": {
+        "input_tokens": 13274,
+        "cached_input_tokens": 11136,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 78,
+        "reasoning_output_tokens": 19
+      },
+      "successful_tools": 0,
+      "tool_failures": [],
+      "elapsed_seconds": 8.385
+    },
+    {
+      "id": "T13",
+      "kind": "clarify",
+      "status": "PASS",
+      "reason": "no model proposal; provider explained the missing or impossible condition",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "elapsed_provider_seconds": 19.41,
+      "usage": {
+        "input_tokens": 26977,
+        "cached_input_tokens": 22272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 152,
+        "reasoning_output_tokens": 8
+      },
+      "successful_tools": 0,
+      "tool_failures": [],
+      "elapsed_seconds": 19.411
+    },
+    {
+      "id": "T14",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no model proposal; provider explained the missing or impossible condition",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "elapsed_provider_seconds": 17.4,
+      "usage": {
+        "input_tokens": 40740,
+        "cached_input_tokens": 37888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 307,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 0,
+      "tool_failures": [
+        "preview_design: {\"error\":\"notch must be smaller than the overall room dimensions\"}"
+      ],
+      "elapsed_seconds": 17.403
+    },
+    {
+      "id": "T15",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no model proposal; provider explained the missing or impossible condition",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "elapsed_provider_seconds": 29.58,
+      "usage": {
+        "input_tokens": 84253,
+        "cached_input_tokens": 80256,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 722,
+        "reasoning_output_tokens": 42
+      },
+      "successful_tools": 0,
+      "tool_failures": [
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}",
+        "preview_design: {\"error\":\"opening needs a valid door/window kind and host wall\"}"
+      ],
+      "elapsed_seconds": 29.584
+    },
+    {
+      "id": "T16",
+      "kind": "clarify",
+      "status": "PASS",
+      "reason": "no model proposal; provider explained the missing or impossible condition",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "elapsed_provider_seconds": 15.75,
+      "usage": {
+        "input_tokens": 26983,
+        "cached_input_tokens": 13184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 319,
+        "reasoning_output_tokens": 20
+      },
+      "successful_tools": 0,
+      "tool_failures": [],
+      "elapsed_seconds": 15.751
+    },
+    {
+      "id": "T17",
+      "kind": "sequence",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 22.06,
+      "usage": {
+        "input_tokens": 55577,
+        "cached_input_tokens": 37888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 363,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 0
+        },
+        "geometry_ok": 5,
+        "geometry_total": 5,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "sequence": {
+        "edit": {
+          "provider": "codex-cli:gpt-6.1-terra",
+          "source_project_id": "ws-author-T17-0bac198606e044129e0a0a3c4c10a2e7",
+          "source_revision": 0,
+          "image_ids": [],
+          "photos": [],
+          "external_image_transfer": "none",
+          "model_only": true,
+          "author_only": false,
+          "goal": "然后将墙2高度设为2.9米；请只生成预览，等待确认。",
+          "selected_id": null,
+          "status": "COMPLETED",
+          "returncode": 0,
+          "elapsed_seconds": 20.11,
+          "usage": {
+            "input_tokens": 72772,
+            "cached_input_tokens": 64384,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 306,
+            "reasoning_output_tokens": 0
+          },
+          "successful_tools": 3,
+          "tool_failures": [],
+          "result": "已生成墙2高度修改预览，尚未应用：\n\n- 修改前：2.8 米\n- 修改后：2.9 米\n- 变化：增加 0.1 米\n- 受影响元素：墙2、房间1\n\n检查中未发现关联的宿主或洞口，预览验证也未报告问题。该预览仍为未验证草案，不能视为完整碰撞检查。\n\n请明确确认是否应用此修改。",
+          "candidates": [],
+          "hypotheses": [],
+          "revision_proposals": [
+            "revision-proposal-1e4ca28f63414666a359bc7813e1958c"
+          ],
+          "restore_proposals": [],
+          "design_proposals": []
+        },
+        "restore": {
+          "provider": "codex-cli:gpt-6.1-terra",
+          "source_project_id": "ws-author-T17-0bac198606e044129e0a0a3c4c10a2e7",
+          "source_revision": 0,
+          "image_ids": [],
+          "photos": [],
+          "external_image_transfer": "none",
+          "model_only": true,
+          "author_only": false,
+          "goal": "请预览恢复到版本1并保持构件身份。；等待确认。",
+          "selected_id": null,
+          "status": "COMPLETED",
+          "returncode": 0,
+          "elapsed_seconds": 24.07,
+          "usage": {
+            "input_tokens": 75361,
+            "cached_input_tokens": 54272,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 385,
+            "reasoning_output_tokens": 0
+          },
+          "successful_tools": 4,
+          "tool_failures": [],
+          "result": "已预览从当前版本 2 恢复到版本 1，**尚未应用恢复**。\n\n- `wall-2` 高度：2.9 m → 2.8 m，变化 **−0.1 m**；厚度和基准标高不变。\n- 构件及节点均无新增或删除，构件 ID 保持不变；节点位置无变化。\n- 已检查 `wall-2` 的关联：它与 `wall-1`、`wall-3` 相连，未列出宿主或洞口关联。\n- 预览未报告几何问题。历史版本和恢复方案均未经独立验证，预览也不构成完整碰撞检查。\n\n请明确确认：是否按此方案恢复到版本 1？",
+          "candidates": [],
+          "hypotheses": [],
+          "revision_proposals": [],
+          "restore_proposals": [
+            "restore-proposal-bbd0d87b79cd46689ffe0b17e73bc6c0"
+          ],
+          "design_proposals": []
+        },
+        "restored_revision": 3,
+        "guid_preserved": true,
+        "confirmation": "automation"
+      },
+      "elapsed_seconds": 66.366
+    }
+  ],
+  "run_manifest": {
+    "tasks_sha256": "430a02e70b35446226a89f72b975d3ba95b299a5ea8986065f7363a54d4249f6",
+    "protocol_sha256": "10321792e710d9070d26126f23788e8e228e0062495b5a3269cb68dbf8bc23c8",
+    "task_count": 17,
+    "provider": "gpt-6.1-terra",
+    "mode": "actual_agent",
+    "automated_confirmation": true
+  },
+  "source_sha256": [
+    "0a5d44666508eaa5753ba83b84343883d08dfbe07b753faf89e2d5573c03c594  products/worldstate_bim/agent_runner.py",
+    "fdc023af954eaf146cd90c8f619948bee3270f1063bb9be65d12b5b6f8f2cf24  products/worldstate_bim/agent_tools.py",
+    "a64ca2edc6743a7f4bc24422590de8d56fb00ac039d6b71c2b967f14fc24f2b4  products/worldstate_bim/agent/agent_mcp.cjs",
+    "8438f5d23ee41b4d69cac47e28286d37fbf34d654da30c0f6333940f41ba5211  products/worldstate_bim/text_author.py",
+    "1f2eb4fe1b8cc51ac7d95aecefb235c1369f787d148d379dde9df669730175c9  products/worldstate_bim/room_ir.py",
+    "90f351819ff2b01cbdfd7bdd69d3f085027127ff65d899e2077c967f8a56f22c  benchmarks/ws_author/run.py",
+    "430a02e70b35446226a89f72b975d3ba95b299a5ea8986065f7363a54d4249f6  benchmarks/ws_author/tasks.json"
+  ]
+}

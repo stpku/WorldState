@@ -1,0 +1,38 @@
+{
+  "before_revision": 1,
+  "after_revision": 2,
+  "ifc_schema": "IFC4",
+  "schema_issue_count": 0,
+  "guid_count_before": 13,
+  "guid_count_after": 13,
+  "guid_sets_equal": true,
+  "affected_elements": [
+    "room-1",
+    "wall-2"
+  ],
+  "unaffected_vertex_geometry_unchanged": [
+    "door-1",
+    "slab-1",
+    "wall-1",
+    "wall-3",
+    "wall-4",
+    "window-1"
+  ],
+  "unaffected_geometry_unexpectedly_changed": [],
+  "geometry_compared": [
+    "door-1",
+    "slab-1",
+    "wall-1",
+    "wall-2",
+    "wall-3",
+    "wall-4",
+    "window-1"
+  ],
+  "geometry_failures": [],
+  "ir_issues": [],
+  "source_kind": "synthetic",
+  "limitations": [
+    "Vertex comparison does not establish semantic correctness or a complete solid clash check.",
+    "Source classification is caller-declared; this comparison is not independent site validation."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "engine": "web-ifc",
+  "counts": {
+    "walls": 4,
+    "slabs": 1,
+    "doors": 1,
+    "windows": 1,
+    "openings": 2,
+    "voids": 2,
+    "fills": 2
+  },
+  "products_with_geometry": 7,
+  "products_total": 7,
+  "unique_guids": 7,
+  "product_guids": [
+    "0H_vVOFuDTjf_Csr5s7SFN",
+    "0JsbDiwBjIWO3b441pczGI",
+    "0dn$oqekjTABV4OEX_7lwZ",
+    "0hKM8xZRDKIhVcMmoqzcGk",
+    "0wjew9KR1IM8qb2ZZH55TZ",
+    "0xT$5$wCfGVh1qK3pdT3MU",
+    "3P46Kp2prQp8qz$c96K9Fs"
+  ],
+  "schema": "IFC4"
+}

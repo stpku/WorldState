@@ -1,0 +1,1241 @@
+{
+  "status": "COMPLETED",
+  "mode": "agent",
+  "tasks": 23,
+  "passed": 23,
+  "success_rate": 1.0,
+  "model_cost": "NOT_MEASURED",
+  "human_cost": "NOT_MEASURED",
+  "caveats": [
+    "Synthetic independent tasks. Multi-proposal scoring simulates deterministic confirmation; it does not prove atomic UI application.",
+    "Restore action remains failed unless a supported restore proposal and verified artifact exist."
+  ],
+  "results": [
+    {
+      "id": "A01",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-1",
+          "length",
+          4.2
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-1",
+          "attribute": "length",
+          "before": 4.0,
+          "after": 4.2,
+          "changed_nodes": [
+            "n2",
+            "n3",
+            "n4"
+          ],
+          "affected_elements": [
+            "door-1",
+            "opening-door",
+            "opening-window",
+            "room-1",
+            "slab-1",
+            "wall-1",
+            "wall-2",
+            "wall-3",
+            "wall-4",
+            "window-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 24.543,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 78517,
+        "cached_input_tokens": 71296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 480,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 7,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A02",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-1",
+          "length",
+          4.5
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-1",
+          "attribute": "length",
+          "before": 4.0,
+          "after": 4.5,
+          "changed_nodes": [
+            "n2",
+            "n3",
+            "n4"
+          ],
+          "affected_elements": [
+            "door-1",
+            "opening-door",
+            "opening-window",
+            "room-1",
+            "slab-1",
+            "wall-1",
+            "wall-2",
+            "wall-3",
+            "wall-4",
+            "window-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 22.697,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 78323,
+        "cached_input_tokens": 57344,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 381,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 7,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A03",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-2",
+          "height",
+          2.9
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-1",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-3",
+            "same_vertices": true
+          },
+          {
+            "id": "door-1",
+            "same_vertices": true
+          },
+          {
+            "id": "window-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-2",
+          "attribute": "height",
+          "before": 2.8,
+          "after": 2.9,
+          "changed_nodes": [],
+          "affected_elements": [
+            "room-1",
+            "wall-2"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 20.225,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 58933,
+        "cached_input_tokens": 53632,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 307,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 3,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A04",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-2",
+          "height",
+          2.9
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-1",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-3",
+            "same_vertices": true
+          },
+          {
+            "id": "door-1",
+            "same_vertices": true
+          },
+          {
+            "id": "window-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-2",
+          "attribute": "height",
+          "before": 2.8,
+          "after": 2.9,
+          "changed_nodes": [],
+          "affected_elements": [
+            "room-1",
+            "wall-2"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 19.339,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 58914,
+        "cached_input_tokens": 42496,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 319,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 3,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A05",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-2",
+          "height",
+          3
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-1",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-3",
+            "same_vertices": true
+          },
+          {
+            "id": "door-1",
+            "same_vertices": true
+          },
+          {
+            "id": "window-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-2",
+          "attribute": "height",
+          "before": 2.8,
+          "after": 3.0,
+          "changed_nodes": [],
+          "affected_elements": [
+            "room-1",
+            "wall-2"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 25.121,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 61439,
+        "cached_input_tokens": 55552,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 316,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 3,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A06",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-3",
+          "height",
+          2.95
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-1",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-2",
+            "same_vertices": true
+          },
+          {
+            "id": "door-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-3",
+          "attribute": "height",
+          "before": 2.8,
+          "after": 2.95,
+          "changed_nodes": [],
+          "affected_elements": [
+            "opening-window",
+            "room-1",
+            "wall-3",
+            "window-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 22.039,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 59671,
+        "cached_input_tokens": 53760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 342,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 5,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A07",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-2",
+          "position_x",
+          4.1
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-2",
+          "attribute": "position_x",
+          "before": 4,
+          "after": 4.1,
+          "changed_nodes": [
+            "n2",
+            "n3"
+          ],
+          "affected_elements": [
+            "door-1",
+            "opening-door",
+            "opening-window",
+            "room-1",
+            "slab-1",
+            "wall-1",
+            "wall-2",
+            "wall-3",
+            "window-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 27.008,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 78170,
+        "cached_input_tokens": 71040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 510,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 7,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A08",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "opening-window",
+          "offset",
+          1.2
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-1",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-2",
+            "same_vertices": true
+          },
+          {
+            "id": "door-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "opening-window",
+          "attribute": "offset",
+          "before": 1.0,
+          "after": 1.2,
+          "changed_nodes": [],
+          "affected_elements": [
+            "opening-window",
+            "room-1",
+            "wall-3",
+            "window-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 22.349,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 76065,
+        "cached_input_tokens": 69888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 364,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 5,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A09",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "opening-window",
+          "width",
+          1.1
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-1",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-2",
+            "same_vertices": true
+          },
+          {
+            "id": "door-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "opening-window",
+          "attribute": "width",
+          "before": 1.0,
+          "after": 1.1,
+          "changed_nodes": [],
+          "affected_elements": [
+            "opening-window",
+            "room-1",
+            "wall-3",
+            "window-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 28.058,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 75888,
+        "cached_input_tokens": 69760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 382,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 5,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A10",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "opening-door",
+          "offset",
+          1.2
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-2",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-3",
+            "same_vertices": true
+          },
+          {
+            "id": "window-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "opening-door",
+          "attribute": "offset",
+          "before": 1.0,
+          "after": 1.2,
+          "changed_nodes": [],
+          "affected_elements": [
+            "door-1",
+            "opening-door",
+            "room-1",
+            "wall-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 21.69,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 75976,
+        "cached_input_tokens": 69760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 369,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 5,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A11",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "opening-door",
+          "width",
+          0.8
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-2",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-3",
+            "same_vertices": true
+          },
+          {
+            "id": "window-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "opening-door",
+          "attribute": "width",
+          "before": 0.9,
+          "after": 0.8,
+          "changed_nodes": [],
+          "affected_elements": [
+            "door-1",
+            "opening-door",
+            "room-1",
+            "wall-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 24.371,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 75917,
+        "cached_input_tokens": 69760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 427,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 5,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A12",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "opening-door",
+          "height",
+          2.15
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-2",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-3",
+            "same_vertices": true
+          },
+          {
+            "id": "window-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "opening-door",
+          "attribute": "height",
+          "before": 2.1,
+          "after": 2.15,
+          "changed_nodes": [],
+          "affected_elements": [
+            "door-1",
+            "opening-door",
+            "room-1",
+            "wall-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 23.815,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 75520,
+        "cached_input_tokens": 67456,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 357,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 5,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A13",
+      "kind": "edit",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "opening-window",
+          "height",
+          1.1
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-1",
+            "same_vertices": true
+          },
+          {
+            "id": "wall-2",
+            "same_vertices": true
+          },
+          {
+            "id": "door-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "opening-window",
+          "attribute": "height",
+          "before": 1.2,
+          "after": 1.1,
+          "changed_nodes": [],
+          "affected_elements": [
+            "opening-window",
+            "room-1",
+            "wall-3",
+            "window-1"
+          ],
+          "reason_ref": "revision-2"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 23.766,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 75438,
+        "cached_input_tokens": 69376,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 333,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 5,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A14",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 22.79,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 59551,
+        "cached_input_tokens": 51712,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 410,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 4,
+      "tool_failures": [
+        "preview_revision: {\"error\":\"revision creates geometric conflicts: opening-door:OPENING_OUTSIDE_WALL, opening-window:OPENING_OUTSIDE_WALL\"}"
+      ],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A15",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 23.024,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 61044,
+        "cached_input_tokens": 54784,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 350,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 4,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A16",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 23.021,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 75786,
+        "cached_input_tokens": 69760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 382,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 4,
+      "tool_failures": [
+        "preview_revision: {\"error\":\"width must be positive or an allowed zero\"}"
+      ],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A17",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 13.763,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 42365,
+        "cached_input_tokens": 38016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 140,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A18",
+      "kind": "clarify",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 18.059,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 42369,
+        "cached_input_tokens": 38016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 216,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A19",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 26.061,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 78732,
+        "cached_input_tokens": 71424,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 446,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 6,
+      "tool_failures": [
+        "preview_revision: {\"error\":\"revision creates geometric conflicts: right-angle-1:ANGULAR_CONSTRAINT_CONFLICT, right-angle-2:ANGULAR_CONSTRAINT_CONFLICT\"}"
+      ],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A20",
+      "kind": "multi",
+      "status": "PASS",
+      "reason": "expected proposal(s), synthetic IR and IFC checks passed",
+      "actual_proposals": [
+        [
+          "wall-2",
+          "height",
+          2.9
+        ],
+        [
+          "opening-door",
+          "offset",
+          1.2
+        ]
+      ],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [
+          {
+            "id": "wall-3",
+            "same_vertices": true
+          },
+          {
+            "id": "window-1",
+            "same_vertices": true
+          }
+        ],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "diffs": [
+        {
+          "previous_revision": 1,
+          "revision": 2,
+          "element_id": "wall-2",
+          "attribute": "height",
+          "before": 2.8,
+          "after": 2.9,
+          "changed_nodes": [],
+          "affected_elements": [
+            "room-1",
+            "wall-2"
+          ],
+          "reason_ref": "revision-2"
+        },
+        {
+          "previous_revision": 2,
+          "revision": 3,
+          "element_id": "opening-door",
+          "attribute": "offset",
+          "before": 1.0,
+          "after": 1.2,
+          "changed_nodes": [],
+          "affected_elements": [
+            "door-1",
+            "opening-door",
+            "room-1",
+            "wall-1"
+          ],
+          "reason_ref": "revision-3"
+        }
+      ],
+      "mode": "agent",
+      "elapsed_seconds": 24.775,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 60883,
+        "cached_input_tokens": 51584,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 460,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 7,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A21",
+      "kind": "clarify_stale",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 18.439,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 42481,
+        "cached_input_tokens": 38016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 300,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 2,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A22",
+      "kind": "restore",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 21.617,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 60620,
+        "cached_input_tokens": 39296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 298,
+        "reasoning_output_tokens": 29
+      },
+      "successful_tools": 3,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "A23",
+      "kind": "restore_action",
+      "status": "PASS",
+      "reason": "restore preview and deterministic new version verified",
+      "actual_proposals": [],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "mode": "agent",
+      "elapsed_seconds": 21.717,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 74389,
+        "cached_input_tokens": 68608,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 347,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 4,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    }
+  ],
+  "run_manifest": {
+    "tasks_sha256": "c5dc07b923f664d1d7f6078fd3f91c7c9f3bc28293f5f2955bdaa981a5b3c545",
+    "model_sha256": "38bed78d51d5d74a22d34edccad5610a6bb11033387cf1ee2e070aa23e72c9fd",
+    "mode": "agent",
+    "task_count": 23,
+    "provider": "gpt-6.1-terra"
+  },
+  "source_sha256": [
+    "0a5d44666508eaa5753ba83b84343883d08dfbe07b753faf89e2d5573c03c594  products/worldstate_bim/agent_runner.py",
+    "fdc023af954eaf146cd90c8f619948bee3270f1063bb9be65d12b5b6f8f2cf24  products/worldstate_bim/agent_tools.py",
+    "a64ca2edc6743a7f4bc24422590de8d56fb00ac039d6b71c2b967f14fc24f2b4  products/worldstate_bim/agent/agent_mcp.cjs",
+    "1f2eb4fe1b8cc51ac7d95aecefb235c1369f787d148d379dde9df669730175c9  products/worldstate_bim/room_ir.py",
+    "c5dc07b923f664d1d7f6078fd3f91c7c9f3bc28293f5f2955bdaa981a5b3c545  benchmarks/ws_agent/tasks.json"
+  ]
+}

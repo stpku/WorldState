@@ -1,0 +1,282 @@
+{
+  "tasks": 6,
+  "passed": 6,
+  "results": [
+    {
+      "id": "T05",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 20.57,
+      "usage": {
+        "input_tokens": 41670,
+        "cached_input_tokens": 35584,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 365,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "geometry_ok": 6,
+        "geometry_total": 6,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 20.663
+    },
+    {
+      "id": "T07",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 20.26,
+      "usage": {
+        "input_tokens": 41852,
+        "cached_input_tokens": 38272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 439,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 1,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 2
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 1,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 2
+        },
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 20.633
+    },
+    {
+      "id": "T08",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 21.64,
+      "usage": {
+        "input_tokens": 43541,
+        "cached_input_tokens": 36736,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 411,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 2,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 2
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 2,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 2
+        },
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 21.711
+    },
+    {
+      "id": "T09",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 19.56,
+      "usage": {
+        "input_tokens": 41505,
+        "cached_input_tokens": 38144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 344,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "geometry_ok": 6,
+        "geometry_total": 6,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 19.609
+    },
+    {
+      "id": "T10",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 19.76,
+      "usage": {
+        "input_tokens": 41569,
+        "cached_input_tokens": 38144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 400,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 6,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "ifc_counts": {
+          "IfcWall": 6,
+          "IfcSlab": 1,
+          "IfcDoor": 1,
+          "IfcWindow": 0,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "geometry_ok": 8,
+        "geometry_total": 8,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 19.827
+    },
+    {
+      "id": "T11",
+      "kind": "create",
+      "status": "PASS",
+      "reason": "actual provider proposal matches frozen simulated design and IFC checks",
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED",
+      "provider_status": "COMPLETED",
+      "elapsed_provider_seconds": 18.17,
+      "usage": {
+        "input_tokens": 41546,
+        "cached_input_tokens": 38144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 363,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "ifc": {
+        "schema": "IFC4",
+        "schema_errors": 0,
+        "expected_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 1,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "ifc_counts": {
+          "IfcWall": 4,
+          "IfcSlab": 1,
+          "IfcDoor": 0,
+          "IfcWindow": 1,
+          "IfcSpace": 1,
+          "IfcOpeningElement": 1
+        },
+        "geometry_ok": 6,
+        "geometry_total": 6,
+        "host_relations_ok": true,
+        "ir_issues": []
+      },
+      "elapsed_seconds": 18.223
+    }
+  ],
+  "run_manifest": {
+    "task_sha256": "430a02e70b35446226a89f72b975d3ba95b299a5ea8986065f7363a54d4249f6",
+    "purpose": "targeted development rerun after inspecting v1; not an independent or blinded test",
+    "ids": [
+      "T05",
+      "T07",
+      "T08",
+      "T09",
+      "T10",
+      "T11"
+    ]
+  }
+}

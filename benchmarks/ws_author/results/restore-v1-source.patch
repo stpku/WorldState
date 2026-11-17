@@ -1,0 +1,67 @@
+--- a/products/worldstate_bim/agent_tools.py
++++ b/products/worldstate_bim/agent_tools.py
+@@ -53,9 +53,7 @@
+         if allowed_images is not None and not allowed_images <= self.cameras.keys():
+             raise ValueError('allowed photos must belong to the registered project')
+         index_path=self.workspace / 'evidence-index.json'
+-        # A text-only project has no image index until its first upload. Never
+-        # weaken the requirement when registered cameras need photo evidence.
+-        index = read_json(index_path) if index_path.exists() else {'uploads':[]} if allow_empty or not self.cameras else read_json(index_path)
++        index = read_json(index_path) if index_path.exists() else {'uploads':[]} if allow_empty else read_json(index_path)
+         self.uploads = {x['sha256']: x for x in index['uploads']}
+         self.allow_empty=allow_empty
+         self.request=read_json(request_file) if request_file else None
+--- a/products/worldstate_bim/agent_runner.py
++++ b/products/worldstate_bim/agent_runner.py
+@@ -89,11 +89,8 @@
+             "\nCreate only a SIMULATED design, not a site observation. Use preview_design with a structured spec. "
+             "Each dimension in metres must come from an explicitly stated metric value, or be declared in assumptions "
+             "with an exact field path and reason. Convert cm/mm to metres. Never invent an unmarked dimension. "
+-            "If the room shape was not specified, ask or mark the 'shape' assumption. "
+             "For missing essential room dimensions ask a clarification instead of assuming. For optional slab/panel thickness "
+-            "you may state a visible assumption. Wall host IDs use the exact spelling wall-1, wall-2, etc.; "
+-            "they follow the polygon order described by the tool. If a call fails, correct the complete requested "
+-            "specification; do not create an unrelated partial draft, and do not exceed two corrections. "
++            "you may state a visible assumption. Wall numbering follows the polygon order described by the tool. "
+             "The proposal is not saved until the user explicitly confirms it. Report dimensions, assumptions and errors in Chinese.")
+     config_command = 'mcp_servers.worldstate.command=' + json.dumps(node)
+     config_args = 'mcp_servers.worldstate.args=' + json.dumps(mcp_args, ensure_ascii=False)
+--- a/products/worldstate_bim/text_author.py
++++ b/products/worldstate_bim/text_author.py
+@@ -55,15 +55,7 @@
+         return value,'simulated'
+     length,ls=field(spec,'length_m');width,ws=field(spec,'width_m');height,hs=field(spec,'height_m')
+     thick,ts=field(spec,'wall_thickness_m');slab,ss=field(spec,'slab_thickness_m')
+-    shape=spec.get('shape')
+-    shape_patterns={'rectangle':r'矩形|长方形|正方形|方形|rectangle|rectangular|square',
+-                    'l_shape':r'(?<![A-Za-z])l\s*(?:形|型|[- ]\s*shaped?)(?![A-Za-z])'}
+-    if shape not in shape_patterns:raise ValueError('shape must be rectangle or l_shape')
+-    if not re.search(shape_patterns[shape],user_request,re.I) and 'shape' not in assumptions:
+-        raise ValueError('room shape was not specified; ask the user or declare a shape assumption')
+-    shape_assumed='shape' in assumptions
+-    if shape_assumed:used.add('shape')
+-    layout_assumed=ls=='assumed' or ws=='assumed' or shape_assumed
++    layout_assumed=ls=='assumed' or ws=='assumed'
+     if spec.get('shape')=='rectangle':points=[(0,0),(length,0),(length,width),(0,width)]
+     elif spec.get('shape')=='l_shape':
+         notch_l,nls=field(spec,'notch_length_m');notch_w,nws=field(spec,'notch_width_m')
+@@ -87,7 +79,7 @@
+             raise ValueError('opening fields must be complete and explicitly structured')
+         kind=item['kind'];wall=item['wall']
+         if kind not in counts or not isinstance(wall,str) or wall not in {w['id'] for w in walls}:
+-            raise ValueError('opening needs a door/window kind and a host ID such as wall-1; valid IDs: '+', '.join(w['id'] for w in walls))
++            raise ValueError('opening needs a valid door/window kind and host wall')
+         counts[kind]+=1;fill=f'{kind}-{counts[kind]}';opening=f'opening-{i}';params={}
+         for key in ('offset','width','height','sill'):
+             value,status=field(item,key+'_m',f'openings.{i-1}.{key}_m',zero=key in {'offset','sill'});params[key]=q(value,status)
+--- a/products/worldstate_bim/agent/agent_mcp.cjs
++++ b/products/worldstate_bim/agent/agent_mcp.cjs
+@@ -31,7 +31,7 @@
+  {name:'preview_revision',description:'Validate an edit. For walls position_x/y translates both endpoints; start_x/y or end_x/y moves only the corresponding shared endpoint, and all constraints are checked. Unsupported parameters are NOT evidence of a conflict.',inputSchema:object({element_id:{type:'string'},attribute:{type:'string',enum:['length','height','thickness','base_elevation','position_x','position_y','start_x','start_y','end_x','end_y','offset','width','sill','panel_thickness','elevation']},value:{type:'number'},reason:{type:'string'}},['element_id','attribute','value','reason'])},
+  {name:'list_versions',description:'List valid historical model versions without changing the project.',inputSchema:object({})},
+  {name:'preview_restore',description:'Compare one historical model to the current version, without applying changes; the user must confirm restoration.',inputSchema:object({source_revision:{type:'integer',minimum:1}},['source_revision'])},
+- {name:'preview_design',description:'Create a simulated room design draft. Dimensions are metres and must be in the user request or explicitly marked as assumptions. Wall 1 is (0,0) to (length,0); wall indices follow the counter-clockwise polygon. L-shape removes the upper-right notch. Every door/window must have host wall ID spelled wall-1 through wall-6, offset, width, height, sill and panel thickness. No model is committed until explicit user confirmation.',inputSchema:object({spec:object({schema:{type:'string',enum:['worldstate-bim-text-design/0.1']},shape:{type:'string',enum:['rectangle','l_shape']},length_m:{type:'number'},width_m:{type:'number'},height_m:{type:'number'},wall_thickness_m:{type:'number'},slab_thickness_m:{type:'number'},notch_length_m:{type:'number'},notch_width_m:{type:'number'},openings:{type:'array',maxItems:16,items:object({kind:{type:'string',enum:['door','window']},wall:{type:'string',pattern:'^wall-[1-6]$',description:'Host wall ID, e.g. wall-1, following polygon order'},offset_m:{type:'number'},width_m:{type:'number'},height_m:{type:'number'},sill_m:{type:'number'},panel_thickness_m:{type:'number'}},['kind','wall','offset_m','width_m','height_m','sill_m','panel_thickness_m'])},assumptions:{type:'object',additionalProperties:{type:'string'}}},['schema','shape','length_m','width_m','height_m','wall_thickness_m','slab_thickness_m','openings','assumptions'])},['spec'])},
++ {name:'preview_design',description:'Create a simulated room design draft. Dimensions are metres and must be in the user request or explicitly marked as assumptions. Wall 1 is (0,0) to (length,0); wall indices follow the counter-clockwise polygon. L-shape removes the upper-right notch. Every door/window must have host wall, offset, width, height, sill and panel thickness. No model is committed until explicit user confirmation.',inputSchema:object({spec:object({schema:{type:'string',enum:['worldstate-bim-text-design/0.1']},shape:{type:'string',enum:['rectangle','l_shape']},length_m:{type:'number'},width_m:{type:'number'},height_m:{type:'number'},wall_thickness_m:{type:'number'},slab_thickness_m:{type:'number'},notch_length_m:{type:'number'},notch_width_m:{type:'number'},openings:{type:'array',maxItems:16,items:object({kind:{type:'string',enum:['door','window']},wall:{type:'string'},offset_m:{type:'number'},width_m:{type:'number'},height_m:{type:'number'},sill_m:{type:'number'},panel_thickness_m:{type:'number'}},['kind','wall','offset_m','width_m','height_m','sill_m','panel_thickness_m'])},assumptions:{type:'object',additionalProperties:{type:'string'}}},['schema','shape','length_m','width_m','height_m','wall_thickness_m','slab_thickness_m','openings','assumptions'])},['spec'])},
+  {name:'compile_ifc',description:'Compile a solved candidate only when the operator has provided explicit scale, up, thickness and approximation approval. The output is an unverified partial IFC draft.',inputSchema:object({candidate_id:{type:'string'}},['candidate_id'])}
+ ];
+ const exposed=options.authorOnly?tools.filter(t=>['inspect_scene','preview_design'].includes(t.name)):options.modelOnly?tools.filter(t=>['inspect_scene','inspect_element','preview_revision','list_versions','preview_restore'].includes(t.name)):tools.filter(t=>t.name!=='preview_design');

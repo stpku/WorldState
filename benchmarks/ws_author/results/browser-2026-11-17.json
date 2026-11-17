@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "operator": "automation",
+  "source": "synthetic_design",
+  "counts": {
+    "IfcWall": 4,
+    "IfcOpeningElement": 2,
+    "IfcDoor": 1,
+    "IfcWindow": 1,
+    "IfcSlab": 1,
+    "IfcSpace": 1
+  },
+  "design_job": "agent-1e1a2cefb6014963be345a44c4c112eb",
+  "restore_job": "agent-17848eef4be04147a2a95208ca8dbb1f",
+  "edit_revision": 2,
+  "restored_revision": 3,
+  "dialogs": 4,
+  "errors": []
+}

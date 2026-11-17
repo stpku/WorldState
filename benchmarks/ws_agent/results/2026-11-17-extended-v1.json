@@ -1,0 +1,144 @@
+{
+  "status": "COMPLETED",
+  "mode": "agent",
+  "tasks": 5,
+  "passed": 5,
+  "success_rate": 1.0,
+  "model_cost": "NOT_MEASURED",
+  "human_cost": "NOT_MEASURED",
+  "caveats": [
+    "Synthetic independent tasks. Multi-proposal scoring simulates deterministic confirmation; it does not prove atomic UI application.",
+    "Restore action remains failed unless a supported restore proposal and verified artifact exist."
+  ],
+  "results": [
+    {
+      "id": "X01",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 22.672,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 76102,
+        "cached_input_tokens": 70016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 371,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 4,
+      "tool_failures": [
+        "preview_revision: {\"error\":\"width must be positive or an allowed zero\"}"
+      ],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "X02",
+      "kind": "clarify_stale",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 17.955,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 42492,
+        "cached_input_tokens": 38016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 279,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 2,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "X03",
+      "kind": "restore_action",
+      "status": "PASS",
+      "reason": "restore preview and deterministic new version verified",
+      "actual_proposals": [],
+      "ifc": {
+        "ifc4": true,
+        "schema_errors": 0,
+        "guid_sets_equal": true,
+        "keep": [],
+        "geometry_ok": 7,
+        "geometry_total": 7,
+        "ir_issues": [],
+        "links": {
+          "voids": 2,
+          "fills": 2
+        }
+      },
+      "mode": "agent",
+      "elapsed_seconds": 22.079,
+      "provider_status": "COMPLETED",
+      "usage": {
+        "input_tokens": 77578,
+        "cached_input_tokens": 68480,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 336,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 4,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "X04",
+      "kind": "clarify",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 15.251,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 42414,
+        "cached_input_tokens": 38016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 201,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    },
+    {
+      "id": "X05",
+      "kind": "reject",
+      "status": "PASS",
+      "reason": "no mutation proposal and an explicit matching explanation",
+      "actual_proposals": [],
+      "mode": "agent",
+      "elapsed_seconds": 14.148,
+      "provider_status": "COMPLETED_NO_SOLVED_CANDIDATE",
+      "usage": {
+        "input_tokens": 42486,
+        "cached_input_tokens": 38016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 179,
+        "reasoning_output_tokens": 0
+      },
+      "successful_tools": 1,
+      "tool_failures": [
+        "inspect_element: {\"error\":\"element not found\"}"
+      ],
+      "model_fee": "NOT_MEASURED",
+      "human_labor": "NOT_MEASURED"
+    }
+  ],
+  "run_manifest": {
+    "tasks_sha256": "2b001c5137213f307fd7b41c9bc8512a8522cabd56a5288d480dbbf655d514c9",
+    "model_sha256": "38bed78d51d5d74a22d34edccad5610a6bb11033387cf1ee2e070aa23e72c9fd",
+    "mode": "agent",
+    "task_count": 5,
+    "provider": "gpt-6.1-terra"
+  }
+}

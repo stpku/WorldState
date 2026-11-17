@@ -1,0 +1,532 @@
+{
+  "schema": "worldstate-bim-room-ir/0.3",
+  "project_id": "photo-room-4c425aa3dd304a7092816709ace26a86",
+  "mode": "assisted",
+  "revision": 1,
+  "coordinate_system": {
+    "name": "simulated design coordinates, origin explicitly conventional",
+    "unit": "m"
+  },
+  "evidence": [
+    {
+      "id": "design-request",
+      "kind": "text_design",
+      "status": "simulated",
+      "source_text": "创建矩形模拟房间：长5米、宽4米、高3米、墙厚0.12米、楼板厚0.15米。墙1从原点沿长边逆时针编号；墙1有门，偏移1米、宽0.9米、高2.1米、底高0米、门板厚0.04米；墙3有窗，偏移1.5米、宽1.2米、高1.1米、底高0.9米、窗板厚0.04米。",
+      "assumptions": {},
+      "warning": "Design intent only; not a photograph, site observation or measurement."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "x": 0,
+      "y": 0,
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    },
+    {
+      "id": "n2",
+      "x": 5,
+      "y": 0,
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    },
+    {
+      "id": "n3",
+      "x": 5,
+      "y": 4,
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    },
+    {
+      "id": "n4",
+      "x": 0,
+      "y": 4,
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    }
+  ],
+  "storeys": [
+    {
+      "id": "storey-1",
+      "elevation": {
+        "value": 0,
+        "unit": "m",
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ],
+        "note": "Text design proposal; not a physical measurement"
+      }
+    }
+  ],
+  "elements": [
+    {
+      "id": "wall-1",
+      "ifc_type": "IfcWall",
+      "start": "n1",
+      "end": "n2",
+      "axis_reference": "centerline",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "base_elevation": {
+          "value": 0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "wall-2",
+      "ifc_type": "IfcWall",
+      "start": "n2",
+      "end": "n3",
+      "axis_reference": "centerline",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "base_elevation": {
+          "value": 0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "wall-3",
+      "ifc_type": "IfcWall",
+      "start": "n3",
+      "end": "n4",
+      "axis_reference": "centerline",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "base_elevation": {
+          "value": 0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "wall-4",
+      "ifc_type": "IfcWall",
+      "start": "n4",
+      "end": "n1",
+      "axis_reference": "centerline",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "height": {
+          "value": 3,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "thickness": {
+          "value": 0.12,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "base_elevation": {
+          "value": 0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "opening-1",
+      "ifc_type": "IfcOpeningElement",
+      "host": "wall-1",
+      "fill": "door-1",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 1,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "width": {
+          "value": 0.9,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "height": {
+          "value": 2.1,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "sill": {
+          "value": 0,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "door-1",
+      "ifc_type": "IfcDoor",
+      "opening": "opening-1",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "opening-2",
+      "ifc_type": "IfcOpeningElement",
+      "host": "wall-3",
+      "fill": "window-1",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "offset": {
+          "value": 1.5,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "width": {
+          "value": 1.2,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "height": {
+          "value": 1.1,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "sill": {
+          "value": 0.9,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "window-1",
+      "ifc_type": "IfcWindow",
+      "opening": "opening-2",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "panel_thickness": {
+          "value": 0.04,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "slab-1",
+      "ifc_type": "IfcSlab",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "outline": [
+        "n1",
+        "n2",
+        "n3",
+        "n4"
+      ],
+      "outline_status": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "parameters": {
+        "elevation": {
+          "value": -0.15,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        },
+        "thickness": {
+          "value": 0.15,
+          "unit": "m",
+          "status": "simulated",
+          "evidence_refs": [
+            "design-request"
+          ],
+          "note": "Text design proposal; not a physical measurement"
+        }
+      }
+    },
+    {
+      "id": "room-1",
+      "ifc_type": "IfcSpace",
+      "storey": "storey-1",
+      "classification": {
+        "status": "simulated",
+        "evidence_refs": [
+          "design-request"
+        ]
+      },
+      "boundary_walls": [
+        "wall-1",
+        "wall-2",
+        "wall-3",
+        "wall-4"
+      ],
+      "boundary_status": "closed_confirmed",
+      "parameters": {}
+    }
+  ],
+  "constraints": [
+    {
+      "id": "right-1",
+      "kind": "perpendicular",
+      "a": "wall-1",
+      "b": "wall-2",
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    },
+    {
+      "id": "right-2",
+      "kind": "perpendicular",
+      "a": "wall-2",
+      "b": "wall-3",
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    },
+    {
+      "id": "right-3",
+      "kind": "perpendicular",
+      "a": "wall-3",
+      "b": "wall-4",
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    },
+    {
+      "id": "right-4",
+      "kind": "perpendicular",
+      "a": "wall-4",
+      "b": "wall-1",
+      "status": "simulated",
+      "evidence_refs": [
+        "design-request"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "UNVERIFIED_DESIGN",
+    "scope": "SIMULATED_TEXT_TO_BIM"
+  },
+  "author_spec": {
+    "schema": "worldstate-bim-text-design/0.1",
+    "shape": "rectangle",
+    "length_m": 5,
+    "width_m": 4,
+    "height_m": 3,
+    "wall_thickness_m": 0.12,
+    "slab_thickness_m": 0.15,
+    "openings": [
+      {
+        "kind": "door",
+        "wall": "wall-1",
+        "offset_m": 1,
+        "width_m": 0.9,
+        "height_m": 2.1,
+        "sill_m": 0,
+        "panel_thickness_m": 0.04
+      },
+      {
+        "kind": "window",
+        "wall": "wall-3",
+        "offset_m": 1.5,
+        "width_m": 1.2,
+        "height_m": 1.1,
+        "sill_m": 0.9,
+        "panel_thickness_m": 0.04
+      }
+    ],
+    "assumptions": {}
+  }
+}
