@@ -39,4 +39,8 @@ A20 的真实 Agent 建议经隔离 Playwright 自动确认后，在 Studio 按�
 
 Core、产品及新增基准回归 **270 passed**，80 条 IfcOpenShell `datetime.utcnow()` 弃用警告。原工作区 5 处未提交修改、Core 公开契约、历史结果和现有用户项目均保留。自动化多浏览器在受限 `/tmp` 下的历史崩溃未被本轮证明完全修复；磁盘临时目录是测试缓解而非根因结论。真实 Windows 客户端、现场独立精度、人工成本和模型实际费用均 `NOT_MEASURED`。
 
+现有 Studio 服务已切换到独立 `c8f3e85` 部署副本，沿用既有本地工作区、Tailscale 映射和权限。切换前备份工作区，7 个项目与模型文件的 SHA-256 在切换后不变；服务器端 Chromium 使用 Windows User-Agent 通过 HTTPS 验证 29 张照片、只读求解和 IFC 下载，项目版本与事件数未变。非法 Host、Origin 和缺少令牌的批量 API 请求均返回 403。服务器系统服务已启用，但本轮没有重启整机或实际操作 Windows 客户端。
+
+按预览协议，本候选的既有 BIM 编辑与合成演示范围为 **Research Preview Ready**；照片建模与扫描语义仍为 `EXPERIMENTAL`。具体验收边界见[候选状态](../../acceptance/research-preview-20261117/STATUS.md)；没有合并 main、创建公开 Release 或打正式标签。
+
 本地记录在 `~/.cache/worldstate-research-preview/`；公开结果摘要不包含 ETH3D 原图、扫描、受限权重或隐私资料。公开合成示例由自生成几何与材质构成，随仓库 MIT 许可分发；[Blender 手册](https://docs.blender.org/manual/en/latest/getting_started/about/license.html)说明其软件许可不自动覆盖用户创建的作品。[IfcOpenShell/Bonsai 官方说明](https://docs.ifcopenshell.org/introduction)分别列出 LGPL 与 GPL 许可。GlueStick 官方组合的 SuperPoint 为[非商业用途](https://github.com/cvg/GlueStick#licence-)，不打包其代码或权重。

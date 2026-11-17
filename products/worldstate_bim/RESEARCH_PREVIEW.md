@@ -1,6 +1,6 @@
 # WorldState BIM V0.2 — Research Preview 候选
 
-**定位：AI-native Evidence-to-BIM Studio 研究预览；不是工程级测量工具或正式生产版本。** 本文件描述候选，不是公开 Release 或 Git 标签。保留原 [WS-RealRoom 工程验收协议](../../benchmarks/ws_realroom/PROTOCOL.md)，该协议尚未完成。
+**状态：Research Preview Ready（既有 BIM 编辑与合成演示范围）**。本文件描述可审查候选，不是公开 Release、Git 标签或工程级测量认证。[候选验收记录](../../acceptance/research-preview-20261117/STATUS.md)列出门槛与证据；原 [WS-RealRoom 工程验收协议](../../benchmarks/ws_realroom/PROTOCOL.md)保持未完成。
 
 ## 交付与安装
 

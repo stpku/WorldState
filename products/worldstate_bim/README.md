@@ -1,6 +1,6 @@
 # WorldState BIM — Evidence-to-Editable-BIM vertical slice
 
-**Current status: V0.2 Research Preview candidate.** The engineering-grade WS-RealRoom protocol remains incomplete; no real-room accuracy or human-efficiency claim is made. See the [preview protocol](../../benchmarks/RESEARCH_PREVIEW_PROTOCOL.md) and [release notes](RESEARCH_PREVIEW.md).
+**Current status: V0.2 Research Preview Ready for the existing-BIM and synthetic-demo scope.** This is a release candidate, not a public release or engineering certification. The engineering-grade WS-RealRoom protocol remains incomplete; no real-room accuracy or human-efficiency claim is made. See the [preview protocol](../../benchmarks/RESEARCH_PREVIEW_PROTOCOL.md) and [release notes](RESEARCH_PREVIEW.md).
 
 | Capability | Status | Boundary |
 | --- | --- | --- |
